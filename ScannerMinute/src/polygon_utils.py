@@ -29,9 +29,13 @@ def process_bar(ticker, bar):
     datetime_utc = datetime.utcfromtimestamp(bar.timestamp / 1000).strftime(
         "%Y%m%d_%H%M%S"
     )
+    # date_utc = datetime.utcfromtimestamp(bar.timestamp / 1000).strftime("%Y%m%d")
+    # time_utc = datetime.utcfromtimestamp(bar.timestamp / 1000).strftime("%H%M%S")
     res = [
         ticker,
         datetime_utc,
+        # date_utc,
+        # time_utc,
         bar.open,
         bar.high,
         bar.low,

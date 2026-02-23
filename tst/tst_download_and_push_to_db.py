@@ -10,7 +10,7 @@ def main():
     )
     # print(data)
     duckdb_utils.save_bars("AAPL", data)
-    df = duckdb_utils.query_bars(["AAPL"], "2025-01-01", "2025-02-01")
+    df = duckdb_utils.query_bars(["AAPL"], "20250101_210000", "20250201_210000")
     print(df)
 
 
