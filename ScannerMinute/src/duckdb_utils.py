@@ -1,4 +1,5 @@
 import logging
+import os
 import duckdb
 import pandas as pd
 from datetime import datetime
@@ -6,7 +7,7 @@ from pathlib import Path
 from ScannerMinute.src import polygon_utils
 from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
-DATA_DIR = f"{PROJECT_ROOT_DIR}/data/polygon"
+DATA_DIR = f"{PROJECT_ROOT_DIR}/data/polygon/historical/"
 """
 Calculation how many smaples are for ticker in a month:
 16*60*25 = 24000 samples per month per ticker
@@ -48,6 +49,7 @@ def bars_to_df(ticker: str, bars: list) -> pd.DataFrame:
 
 def save_bars(ticker: str, bars: list, conn_input=None, data_dir: str = DATA_DIR):
     """Save bars for a ticker to partitioned parquet files."""
+    os.makedirs(data_dir, exist_ok=True)
     df = pd.DataFrame(bars, columns=polygon_utils.COLUMNS)
     if df.empty:
         return

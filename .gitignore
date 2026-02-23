@@ -12,3 +12,12 @@
 **.env.test**
 **.env.production**
 **api_keys/**
+**data/**
+**logs/**
+**notebooks/**
+**scripts/**
+**tests/**
+**docs/**
+**examples/**
+**tutorials/**
+**tutorials/**

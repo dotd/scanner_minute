@@ -1,6 +1,7 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from polygon import RESTClient
+from ScannerMinute.src import snapshot_utils
 
 
 def get_polygon_client():
@@ -70,3 +71,26 @@ def get_ticker_data_from_polygon(
         vec = process_bar(ticker, bar)
         data.append(vec)
     return data
+
+
+def get_rounded_time_utc(modulo_secs=10):
+    t = datetime.now(timezone.utc)
+    current_time = t.strftime("%H%M%S")
+    key_time_HM = t.strftime("%H%M")
+    key_time_S = t.strftime("%S")
+    key_time_S_rounded = str(int(key_time_S) // modulo_secs * modulo_secs).zfill(2)
+    key_time_round = key_time_HM + key_time_S_rounded
+    return current_time, key_time_round, t
+
+
+def get_snapshot_from_polygon(
+    client,  # client for polygon API
+    tickers=None,  # list of tickers to get snapshot for
+):
+    current_time, key_time_round, t = get_rounded_time_utc()
+    items = client.get_snapshot_all("stocks", tickers=tickers)
+    snapshots = list()
+    for item in items:
+        snapshot = snapshot_utils.Snapshot(item)
+        snapshots.append(snapshot)
+    return snapshots, current_time, key_time_round, t

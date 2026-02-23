@@ -1,1 +1,1 @@
-# scanner_minute
+# Scanner Minute - a minute resolution stock scanner
