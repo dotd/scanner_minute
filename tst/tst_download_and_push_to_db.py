@@ -6,11 +6,11 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 def main():
     client = polygon_utils.get_polygon_client()
     data = polygon_utils.get_ticker_data_from_polygon(
-        client, "AAPL", "minute", "2025-01-01", "2025-02-01"
+        client, "AAPL", "minute", "2024-01-01", "2025-02-01"
     )
     # print(data)
     duckdb_utils.save_bars("AAPL", data)
-    df = duckdb_utils.query_bars(["AAPL"], "20250101_210000", "20250201_210000")
+    df = duckdb_utils.query_bars(["AAPL"], "20240110_210000", "20240120_210000")
     print(df)
 
 
