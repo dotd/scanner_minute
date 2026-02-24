@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timezone
+from calendar import monthrange
 from polygon import RESTClient
 from ScannerMinute.src import snapshot_utils
 
@@ -75,6 +76,48 @@ def get_ticker_data_from_polygon(
         vec = process_bar(ticker, bar)
         data.append(vec)
     return data
+
+
+def generate_monthly_ranges(date_start: str, date_end: str) -> list[tuple[str, str]]:
+    """
+    Split a date range into monthly chunks.
+    Input format: "YYYY-MM-DD"
+    Returns list of (month_start, month_end) tuples in the same format.
+    """
+    start = datetime.strptime(date_start, "%Y-%m-%d")
+    end = datetime.strptime(date_end, "%Y-%m-%d")
+    ranges = []
+    current = start
+    while current <= end:
+        year, month = current.year, current.month
+        last_day = monthrange(year, month)[1]
+        month_end = datetime(year, month, last_day)
+        chunk_end = min(month_end, end)
+        ranges.append((current.strftime("%Y-%m-%d"), chunk_end.strftime("%Y-%m-%d")))
+        # Move to 1st of next month
+        if month == 12:
+            current = datetime(year + 1, 1, 1)
+        else:
+            current = datetime(year, month + 1, 1)
+    return ranges
+
+
+def download_and_save_ticker(client, ticker, timespan, date_start, date_end):
+    """
+    Download data month-by-month and save each chunk to DuckDB immediately.
+    This avoids hitting the 50,000 sample API limit per request.
+    """
+    from ScannerMinute.src import duckdb_utils
+
+    monthly_ranges = generate_monthly_ranges(date_start, date_end)
+    for month_start, month_end in monthly_ranges:
+        logging.info(f"Processing {ticker}: {month_start} to {month_end}")
+        data = get_ticker_data_from_polygon(client, ticker, timespan, month_start, month_end)
+        if data:
+            duckdb_utils.save_bars(ticker, data)
+            logging.info(f"Saved {len(data)} bars for {ticker} ({month_start} to {month_end})")
+        else:
+            logging.info(f"No data for {ticker} ({month_start} to {month_end})")
 
 
 def get_rounded_time_utc(modulo_secs=10):

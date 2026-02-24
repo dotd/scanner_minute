@@ -13,7 +13,7 @@
 **.env.production**
 **api_keys/**
 **data/**
-**logs/**
+**/logs/**
 **notebooks/**
 **scripts/**
 **tests/**
@@ -21,3 +21,4 @@
 **examples/**
 **tutorials/**
 **tutorials/**
+data_snapshots/**
