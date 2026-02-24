@@ -4,6 +4,7 @@ import pprint
 import argparse
 import time
 import pickle
+from rocksdict import Rdict
 from datetime import datetime, timezone
 from collections import OrderedDict
 from ScannerMinute.src import logging_utils, snapshot_utils
@@ -12,16 +13,35 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 from massive.rest.models import TickerSnapshot, Agg
 
 
-class TimeSnapshots:
-    def __init__(self, t=None, snapshots=None):
-        self.time = t
-        self.snapshots = snapshots
+class MyRdict:
+    """
+    This class is a wrapper around the Rdict database.
+    It is used to store the snapshots of the tickers.
+    """
 
-    def __str__(self):
-        return f"TimeSnapshots(t={self.time}, snapshots={len(self.snapshots)})"
+    def __init__(self, path):
+        self.db = Rdict(path)
 
-    def __repr__(self):
-        return self.__str__()
+    def get(self, key):
+        return self.db.get(key)
+
+    def set(self, key, value):
+        self.db.put(key, pickle.dumps(value))
+
+    def get_last(self, K):
+        # Get the last K snapshots from the Rdict database.
+        it = self.db.iter()
+        it.seek_to_last()
+
+        results = []
+        for _ in range(K):
+            if not it.valid():
+                break
+            key = it.key()
+            value = pickle.loads(it.value())
+            results.append((key, value))
+            it.prev()
+        return results
 
 
 def get_args_realtime():
@@ -46,24 +66,7 @@ def get_args_realtime():
     return args
 
 
-def get_current_date_utc():
-    return datetime.now(timezone.utc).strftime("%Y%m%d")
-
-
-def get_rounded_time(modulo_secs=10):
-    t = datetime.now(timezone.utc)
-    current_time = t.strftime("%H%M%S")
-    key_time_HM = t.strftime("%H%M")
-    key_time_S = t.strftime("%S")
-    key_time_S_rounded = str(int(key_time_S) // modulo_secs * modulo_secs).zfill(2)
-    key_time_round = key_time_HM + key_time_S_rounded
-    return current_time, key_time_round
-
-
-def make_folders(current_date):
-    time_folder = f"{PROJECT_ROOT_DIR}/data_snapshots/time/{current_date}"
-    os.makedirs(time_folder, exist_ok=True)
-    return time_folder
+# datetime.now(timezone.utc).strftime("%Y%m%d")
 
 
 def get_tickers_data_from_time_data(time_data):
@@ -121,6 +124,12 @@ def scan_for_breakouts(day_data, past_samples, threshold):
                 )
 
 
+def process_items(items):
+    snapshots = [snapshot_utils.Snapshot(item) for item in items]
+    snapshots = {snapshot["ticker"]: snapshot for snapshot in snapshots}
+    return snapshots
+
+
 def run_realtime(
     tickers,  # None
     scanning_period_secs,  # 10
@@ -135,58 +144,28 @@ def run_realtime(
         include_time=include_time,
     )
 
-    current_date = get_current_date_utc()
-    snapshots_time_folder = make_folders(current_date)
-    list_of_time_snapshots = load_or_prepare_day_data(snapshots_time_folder)
-    tickers2snapshots = get_tickers_data_from_time_data(list_of_time_snapshots)
-
     client = polygon_utils.get_polygon_client()
-    prev_key_time_rounded = None
-    for i in range(100000):
+    rocks_dict = MyRdict(f"{PROJECT_ROOT_DIR}/rdict_data")
+
+    for i in range(3):
+        key_time_now_utc = datetime.now(timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )  #  ISO 8601 format: YYYY-MM-DDTHH:MM:SS.SSSSSS
         # snapshots is a list of TickerSnapshot objects where each object is the info for a single ticker
-        snapshots = client.get_snapshot_all("stocks", tickers=tickers)
-        # aapl_idx = utils.find_first_index(snapshots, lambda x: x.ticker == "AAPL"); snapshot = snapshots[aapl_idx]; pr = Snapshot(snapshot); pprint.pprint(pr);
-
-        _, key_time_rounded = get_rounded_time(modulo_secs=scanning_period_secs)
-        # logging.info(f"{i:05d} key_time: {key_time}, key_time_round: {key_time_round} len day_data: {len(day_data)}")
-        # If it is a new key, let's add it to the list.
-        if key_time_rounded != prev_key_time_rounded:
-            # We add an empty TimeSnapshots object to the list
-            list_of_time_snapshots.append(TimeSnapshots(t=key_time_rounded))
-
-            # Save previous rounded time
-            if prev_key_time_rounded is not None:
-                filename = f"{snapshots_time_folder}/{prev_key_time_rounded}.pkl"
-                with open(filename, "wb") as f:
-                    logging.info(f"Saving snapshots to {filename}")
-                    # Note that we are saving the snapshots of the previous time, not the current one
-                    pickle.dump(list_of_time_snapshots[-2].snapshots, f)
-            else:
-                logging.info(f" No previous key time rounded")
-
-        # Going over the snapshots and adding them to the day_data
-        ticker_snapshots_dict = dict()  # ticker -> Snapshots
-        for entry_idx, item in enumerate(snapshots):
-            # verify this is an TickerSnapshot and verify this is an Agg
-            if isinstance(item, TickerSnapshot) and isinstance(item.prev_day, Agg):
-                snapshot = snapshot_utils.Snapshot(item, time_rounded=key_time_rounded)
-                # logging.info(f"pr:\n{pprint.pformat(pr, indent=4)}")
-                ticker = snapshot["ticker"]
-                if ticker not in tickers2snapshots:
-                    tickers2snapshots[ticker] = OrderedDict()
-                tickers2snapshots[ticker][key_time_rounded] = snapshot
-                ticker_snapshots_dict[ticker] = snapshot
-        list_of_time_snapshots[-1].snapshots = ticker_snapshots_dict
-
-        # logging.info(f"End i: {i}")
-        time.sleep(sleep_secs)
-        prev_key_time_rounded = key_time_rounded
-        prev_snapshots = snapshots
-        scan_for_breakouts(
-            list_of_time_snapshots,
-            past_samples=past_samples,
-            threshold=breakout_threshold,
+        items = client.get_snapshot_all("stocks", tickers=tickers)
+        # Let's translate the items to Snapshot objects
+        snapshots = process_items(items)
+        rocks_dict.set(key_time_now_utc, snapshots)
+        logging.info(
+            f"Pushed {len(snapshots)} snapshots to Rdict with key {key_time_now_utc}"
         )
+
+        time.sleep(sleep_secs)
+
+    last_snapshots = rocks_dict.get_last(2)
+    for key, value in last_snapshots:
+        logging.info(f"key: {key}")
+        logging.info(f"value:\n{pprint.pformat(value["AAPL"], indent=4)}")
 
 
 def tst_run_realtime():
