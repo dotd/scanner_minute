@@ -5,6 +5,8 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 def main():
     client = polygon_utils.get_polygon_client()
+    # The number of samples in a day is 16*60 = 960
+    # The number of samples in a month is 960*30 = 28800
     data = polygon_utils.get_ticker_data_from_polygon(
         client, "AAPL", "minute", "2024-01-01", "2025-02-01"
     )

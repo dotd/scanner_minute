@@ -141,3 +141,13 @@ def get_snapshot_from_polygon(
         snapshot = snapshot_utils.Snapshot(item)
         snapshots.append(snapshot)
     return snapshots, current_time, key_time_round, t
+
+
+def get_all_tickers_from_snapshot(client) -> list[str]:
+    """
+    Download a single snapshot of all stocks and extract the list of tickers.
+    """
+    items = client.get_snapshot_all("stocks")
+    tickers = [item.ticker for item in items if hasattr(item, "ticker") and item.ticker is not None]
+    logging.info(f"Found {len(tickers)} tickers from snapshot")
+    return sorted(tickers)

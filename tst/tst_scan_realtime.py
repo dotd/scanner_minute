@@ -66,9 +66,6 @@ def get_args_realtime():
     return args
 
 
-# datetime.now(timezone.utc).strftime("%Y%m%d")
-
-
 def get_tickers_data_from_time_data(time_data):
     tickers_data = dict()
     for time_snapshots in time_data:
