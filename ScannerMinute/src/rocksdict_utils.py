@@ -66,7 +66,7 @@ def _writer_worker(db_path, result_queue):
             key = f"{timespan}{SEPARATOR}{ticker}{SEPARATOR}{iso_dt}"
             wb[key] = pickle.dumps(bar)
         db.write(wb)
-        logging.info(f"Wrote {len(data)} bars for {ticker} to RocksDB")
+        logging.info(f"[WRITER] Wrote {len(data)} bars for {ticker} to RocksDB")
     db.close()
 
 
@@ -121,6 +121,44 @@ def download_and_store(db_path, num_threads, tasks):
     logging.info(
         f"Download: {t_download:.1f}s, Total (download+write): {t_total:.1f}s, Tasks: {len(tasks)}"
     )
+
+
+def get_first_and_last_time(db_path, timespan, ticker):
+    """
+    Return the first and last timestamps (ISO 8601 strings) stored in RocksDB
+    for a given (timespan, ticker) pair.
+
+    Parameters:
+        db_path: str — path to RocksDB directory
+        timespan: str — e.g. "minute"
+        ticker: str — e.g. "AAPL"
+
+    Returns:
+        (str, str) or (None, None) — e.g. ("2024-01-02T09:30:00", "2024-06-15T15:59:00")
+    """
+    db = Rdict(db_path, access_type=AccessType.read_only())
+    prefix = f"{timespan}{SEPARATOR}{ticker}{SEPARATOR}"
+
+    # First time: seek to the prefix start
+    first_time = None
+    it = db.iter()
+    it.seek(prefix)
+    if it.valid():
+        key = it.key()
+        if key.startswith(prefix):
+            first_time = key[len(prefix):]
+
+    # Last time: seek past the end of all keys with this prefix
+    last_time = None
+    it.seek(prefix + "\x7f")
+    it.prev()
+    if it.valid():
+        key = it.key()
+        if key.startswith(prefix):
+            last_time = key[len(prefix):]
+
+    db.close()
+    return first_time, last_time
 
 
 def read_bars(db_path, timespan, tickers, start_time, end_time):
