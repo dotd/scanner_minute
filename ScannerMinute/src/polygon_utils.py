@@ -102,6 +102,21 @@ def generate_monthly_ranges(date_start: str, date_end: str) -> list[tuple[str, s
     return ranges
 
 
+def generate_tasks(tickers: list[str], date_start: str, date_end: str) -> list[tuple]:
+    """
+    Generate (ticker, month_start, month_end, "minute") task tuples
+    for every ticker x monthly chunk.
+
+    Input format for dates: "YYYY-MM-DD"
+    """
+    monthly_ranges = generate_monthly_ranges(date_start, date_end)
+    tasks = []
+    for ticker in tickers:
+        for month_start, month_end in monthly_ranges:
+            tasks.append((ticker, month_start, month_end, "minute"))
+    return tasks
+
+
 def download_and_save_ticker(client, ticker, timespan, date_start, date_end):
     """
     Download data month-by-month and save each chunk to DuckDB immediately.

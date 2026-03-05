@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import time
 
+from ScannerMinute.definitions import PROJECT_ROOT_DIR
+
 
 class ColorHandler(logging.StreamHandler):
     # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
@@ -29,19 +31,28 @@ class ColorHandler(logging.StreamHandler):
         # self.stream.write(f"%(levelname)s: %(message)s")
 
 
-def setup_logging(log_level="INFO", log_folder=None, include_time=False):
+def setup_logging(
+    log_level="INFO",
+    log_folder=f"{PROJECT_ROOT_DIR}/logs/",
+    include_time=False,
+):
+    logging.addLevelName(logging.DEBUG, "D")
+    logging.addLevelName(logging.INFO, "I")
+    logging.addLevelName(logging.WARNING, "W")
+    logging.addLevelName(logging.ERROR, "E")
+    logging.addLevelName(logging.CRITICAL, "C")
     date_time_str = time.strftime("%Y%m%d_%H%M%S")
     log_file = f"{log_folder}/log_{date_time_str}.log"
     os.makedirs(f"{log_folder}") if not os.path.exists(f"{log_folder}") else None
-    log_format = (
-        "%(asctime)s %(levelname)s: %(message)s"
-        if include_time
-        else "%(levelname)s: %(message)s"
-    )
     logging.basicConfig(
         level=getattr(logging, log_level),
         handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
-        format=log_format,
+        format=(
+            "%(asctime)s %(levelname)s %(message)s"
+            if include_time
+            else "%(.1s)s: %(message)s"
+        ),
+        datefmt="%Y%m%d_%H%M%S",
     )
     logging.info(f"log_file:  {log_file} log_level: {log_level}")
     return log_file
