@@ -1,7 +1,7 @@
 import logging
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from ScannerMinute.src import rocksdict_utils
 from ScannerMinute.src import polygon_utils
 from ScannerMinute.src import logging_utils
@@ -87,20 +87,28 @@ def read_bars(
     tickers: list[str] = TICKERS,
     date_start: str = "2024-01-01",
     date_end: str = datetime.now().strftime("%Y-%m-%d"),
+    timespan: str = "minute",
+    db_path: str = rocksdict_utils.DEFAULT_DB_PATH,
+    head_tail_lines: int = 10,
+    print_head_tail: bool = False,
 ):
-    db_path = rocksdict_utils.DEFAULT_DB_PATH
     # 3. Read back and print
     t0 = time.time()
-    results = rocksdict_utils.read_bars(
-        db_path, "minute", tickers, date_start, date_end
-    )
-    t_read = time.time() - t0
-    logging.info(f"Read {len(results)} bars in {t_read:.2f}s")
-    for bar in results:
-        logging.info(bar)
+    for ticker in tickers:
+        t_read_start = time.time()
+        results = rocksdict_utils.read_bars(
+            db_path, timespan, [ticker], date_start, date_end
+        )
+        t_read = time.time() - t_read_start
+        logging.info(f"Read {len(results)} bars in {t_read:.2f}s")
+        if print_head_tail:
+            for bar in results[:head_tail_lines] + results[-head_tail_lines:]:
+                logging.info(bar)
+    logging.info(f"Total read time: {time.time() - t0:.1f}s")
+    return results
 
 
-if __name__ == "__main__":
+def tst_rocksdict_utils(limit_tickers, prior_days, date_start=None):
     t0 = time.time()
     logging_utils.setup_logging(
         log_level="INFO",
@@ -108,9 +116,13 @@ if __name__ == "__main__":
         include_time=True,
     )
 
-    date_start = "2026-03-01"
+    date_start = (
+        (datetime.now() - timedelta(days=prior_days)).strftime("%Y-%m-%d")
+        if date_start is None
+        else date_start
+    )
     today = datetime.now().strftime("%Y-%m-%d")
-    tickers = TICKERS[0:5]
+    tickers = TICKERS[0:limit_tickers]
     num_threads = max(
         1, min(10, len(tickers) // 2)
     )  # number of threads is at least 1 and at most 10, and at most half the number of tickers
@@ -122,3 +134,7 @@ if __name__ == "__main__":
 
     t1 = time.time()
     logging.info(f"Total script time: {t1 - t0:.1f}s")
+
+
+if __name__ == "__main__":
+    tst_rocksdict_utils(limit_tickers=5, prior_days=365, date_start="2026-01-01")

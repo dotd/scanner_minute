@@ -1,7 +1,9 @@
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from calendar import monthrange
 from polygon import RESTClient
+
+
 from ScannerMinute.src import snapshot_utils
 
 
@@ -60,9 +62,7 @@ def get_ticker_data_from_polygon(
     """
     This function downloads the data from polygon API and returns list of lists with the data.
     """
-    logging.info(
-        f"Downloading from Polygon API: {ticker} {timespan} {date_start} until {date_end}"
-    )
+    logging.info(f"Download {ticker} {timespan} {date_start} {date_end}")
     bars = client.get_aggs(
         ticker=ticker,
         multiplier=1,
@@ -102,18 +102,51 @@ def generate_monthly_ranges(date_start: str, date_end: str) -> list[tuple[str, s
     return ranges
 
 
-def generate_tasks(tickers: list[str], date_start: str, date_end: str) -> list[tuple]:
+def generate_tasks(
+    tickers: list[str], date_start: str, date_end: str, db_path: str = None
+) -> list[tuple]:
     """
-    Generate (ticker, month_start, month_end, "minute") task tuples
+    Generate (ticker, month_start, month_end, "minute", idx) task tuples
     for every ticker x monthly chunk.
+
+    If db_path is provided, checks each ticker's last timestamp in RocksDB.
+    If data already exists up to some date, only generates tasks from the day
+    after that date to date_end. If the DB is already up to date, skips the ticker.
 
     Input format for dates: "YYYY-MM-DD"
     """
-    monthly_ranges = generate_monthly_ranges(date_start, date_end)
+    from ScannerMinute.src.rocksdict_utils import get_first_and_last_time
+
     tasks = []
+    idx_task = 0
     for ticker in tickers:
+        ticker_start = date_start
+
+        if db_path:
+            _, last_time = get_first_and_last_time(db_path, "minute", ticker)
+            if last_time:
+                last_date = last_time[:10]  # "2024-01-15T09:30:00" → "2024-01-15"
+                if last_date >= date_end:
+                    logging.info(
+                        f"Skipping {ticker}: DB already has data up to {last_date}"
+                    )
+                    continue
+                day_after_last = (
+                    datetime.strptime(last_date, "%Y-%m-%d") + timedelta(days=1)
+                ).strftime("%Y-%m-%d")
+                ticker_start = day_after_last
+                logging.info(
+                    f"{ticker}: DB has data up to {last_date}, tasks from {ticker_start}"
+                )
+
+        monthly_ranges = generate_monthly_ranges(ticker_start, date_end)
         for month_start, month_end in monthly_ranges:
-            tasks.append((ticker, month_start, month_end, "minute"))
+            tasks.append((ticker, month_start, month_end, "minute", idx_task))
+            idx_task += 1
+
+    logging.info(f"Generated {len(tasks)} tasks for {len(tickers)} tickers")
+    for idx_task, task in enumerate(tasks):
+        logging.info(f"Task {idx_task}: {task}")
     return tasks
 
 
@@ -127,10 +160,14 @@ def download_and_save_ticker(client, ticker, timespan, date_start, date_end):
     monthly_ranges = generate_monthly_ranges(date_start, date_end)
     for month_start, month_end in monthly_ranges:
         logging.info(f"Processing {ticker}: {month_start} to {month_end}")
-        data = get_ticker_data_from_polygon(client, ticker, timespan, month_start, month_end)
+        data = get_ticker_data_from_polygon(
+            client, ticker, timespan, month_start, month_end
+        )
         if data:
             duckdb_utils.save_bars(ticker, data)
-            logging.info(f"Saved {len(data)} bars for {ticker} ({month_start} to {month_end})")
+            logging.info(
+                f"Saved {len(data)} bars for {ticker} ({month_start} to {month_end})"
+            )
         else:
             logging.info(f"No data for {ticker} ({month_start} to {month_end})")
 
@@ -163,6 +200,35 @@ def get_all_tickers_from_snapshot(client) -> list[str]:
     Download a single snapshot of all stocks and extract the list of tickers.
     """
     items = client.get_snapshot_all("stocks")
-    tickers = [item.ticker for item in items if hasattr(item, "ticker") and item.ticker is not None]
+    tickers = [
+        item.ticker
+        for item in items
+        if hasattr(item, "ticker") and item.ticker is not None
+    ]
     logging.info(f"Found {len(tickers)} tickers from snapshot")
     return sorted(tickers)
+
+
+def get_trading_days(
+    client,
+    from_=(datetime.now(timezone.utc) - timedelta(days=7 * 365)).strftime(
+        "%Y-%m-%d"
+    ),  # a year ago from today
+    to=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+    ticker="AAPL",
+):
+    bars = client.get_aggs(
+        ticker=ticker,
+        multiplier=1,
+        timespan="day",
+        from_=from_,
+        to=to,
+        limit=50000,
+    )
+    trading_days = list()
+    for bar in bars:
+        if bar.volume > 0:
+            value = datetime.utcfromtimestamp(bar.timestamp / 1000)
+            datetime_str = value.strftime("%Y-%m-%d")
+            trading_days.append(datetime_str)
+    return trading_days

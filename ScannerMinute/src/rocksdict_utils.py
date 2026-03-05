@@ -35,12 +35,12 @@ def _download_worker(worker_id, task_queue, result_queue):
         task = task_queue.get()
         if task is None:
             break
-        ticker, start_date, end_date, timespan = task
+        ticker, start_date, end_date, timespan, idx_task = task
         try:
             data = polygon_utils.get_ticker_data_from_polygon(
                 client, ticker, timespan, start_date, end_date
             )
-            result_queue.put((ticker, timespan, data))
+            result_queue.put((ticker, timespan, data, idx_task))
             logging.info(
                 f"{tag} Downloaded {len(data)} bars for {ticker} ({start_date} to {end_date})"
             )
@@ -56,7 +56,7 @@ def _writer_worker(db_path, result_queue):
         item = result_queue.get()
         if item is None:
             break
-        ticker, timespan, data = item
+        ticker, timespan, data, idx_task = item
         if not data:
             continue
         wb = WriteBatch()
@@ -66,7 +66,9 @@ def _writer_worker(db_path, result_queue):
             key = f"{timespan}{SEPARATOR}{ticker}{SEPARATOR}{iso_dt}"
             wb[key] = pickle.dumps(bar)
         db.write(wb)
-        logging.info(f"[WRITER] Wrote {len(data)} bars for {ticker} to RocksDB")
+        logging.info(
+            f"[WRITER] Wrote {len(data)} bars for {ticker} to RocksDB (Task {idx_task}/{data[0][1]}-{data[-1][1]})"
+        )
     db.close()
 
 
@@ -146,7 +148,7 @@ def get_first_and_last_time(db_path, timespan, ticker):
     if it.valid():
         key = it.key()
         if key.startswith(prefix):
-            first_time = key[len(prefix):]
+            first_time = key[len(prefix) :]
 
     # Last time: seek past the end of all keys with this prefix
     last_time = None
@@ -155,7 +157,7 @@ def get_first_and_last_time(db_path, timespan, ticker):
     if it.valid():
         key = it.key()
         if key.startswith(prefix):
-            last_time = key[len(prefix):]
+            last_time = key[len(prefix) :]
 
     db.close()
     return first_time, last_time
