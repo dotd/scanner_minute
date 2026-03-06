@@ -5,60 +5,7 @@ from datetime import datetime, timedelta
 from ScannerMinute.src import rocksdict_utils
 from ScannerMinute.src import polygon_utils
 from ScannerMinute.src import logging_utils
-
-
-TICKERS = [
-    "AAPL",
-    "MSFT",
-    "GOOGL",
-    "AMZN",
-    "NVDA",
-    "META",
-    "TSLA",
-    "BRK.B",
-    "JPM",
-    "V",
-    "UNH",
-    "XOM",
-    "JNJ",
-    "WMT",
-    "PG",
-    "MA",
-    "HD",
-    "CVX",
-    "MRK",
-    "ABBV",
-    "LLY",
-    "PEP",
-    "KO",
-    "COST",
-    "AVGO",
-    "MCD",
-    "TMO",
-    "CSCO",
-    "ACN",
-    "ABT",
-    "DHR",
-    "CRM",
-    "NEE",
-    "LIN",
-    "TXN",
-    "AMD",
-    "PM",
-    "CMCSA",
-    "NKE",
-    "UPS",
-    "INTC",
-    "HON",
-    "ORCL",
-    "AMGN",
-    "RTX",
-    "LOW",
-    "QCOM",
-    "BA",
-    "CAT",
-    "GS",
-]
+from ScannerMinute.src.ticker_utils import TICKERS
 
 
 def download_and_store(
@@ -108,7 +55,7 @@ def read_bars(
     return results
 
 
-def tst_rocksdict_utils(limit_tickers, prior_days, date_start=None):
+def tst_rocksdict_utils(limit_tickers=100000, prior_days=365, date_start=None):
     t0 = time.time()
     logging_utils.setup_logging(
         log_level="INFO",
@@ -137,4 +84,4 @@ def tst_rocksdict_utils(limit_tickers, prior_days, date_start=None):
 
 
 if __name__ == "__main__":
-    tst_rocksdict_utils(limit_tickers=5, prior_days=365, date_start="2026-01-01")
+    tst_rocksdict_utils(limit_tickers=50, prior_days=365, date_start="2026-01-01")

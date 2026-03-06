@@ -2,62 +2,9 @@ import logging
 import os
 import time
 from datetime import datetime, timedelta
-from ScannerMinute.src import polygon_utils
+from ScannerMinute.src import memory_utils
 from ScannerMinute.src import logging_utils
-
-
-TICKERS = [
-    "AAPL",
-    "MSFT",
-    "GOOGL",
-    "AMZN",
-    "NVDA",
-    "META",
-    "TSLA",
-    "BRK.B",
-    "JPM",
-    "V",
-    "UNH",
-    "XOM",
-    "JNJ",
-    "WMT",
-    "PG",
-    "MA",
-    "HD",
-    "CVX",
-    "MRK",
-    "ABBV",
-    "LLY",
-    "PEP",
-    "KO",
-    "COST",
-    "AVGO",
-    "MCD",
-    "TMO",
-    "CSCO",
-    "ACN",
-    "ABT",
-    "DHR",
-    "CRM",
-    "NEE",
-    "LIN",
-    "TXN",
-    "AMD",
-    "PM",
-    "CMCSA",
-    "NKE",
-    "UPS",
-    "INTC",
-    "HON",
-    "ORCL",
-    "AMGN",
-    "RTX",
-    "LOW",
-    "QCOM",
-    "BA",
-    "CAT",
-    "GS",
-]
+from ScannerMinute.src.ticker_utils import TICKERS
 
 
 def download_to_memory(
@@ -67,7 +14,7 @@ def download_to_memory(
     num_threads: int = 10,
 ):
     t0 = time.time()
-    result_dict = polygon_utils.download_tickers_multithread(
+    result_dict = memory_utils.download_tickers_multithread(
         tickers, date_start, date_end=date_end, num_threads=num_threads
     )
     t_download = time.time() - t0

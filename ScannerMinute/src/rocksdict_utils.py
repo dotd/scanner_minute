@@ -9,6 +9,11 @@ from datetime import datetime
 from rocksdict import Rdict, WriteBatch, AccessType
 
 from ScannerMinute.src import polygon_utils
+from ScannerMinute.src.memory_utils import (
+    ProgressTracker,
+    build_ticker_task_counts,
+    check_ticker_done,
+)
 from ScannerMinute.definitions import PROJECT_ROOT_DIR, SEPARATOR
 
 DEFAULT_DB_PATH = f"{PROJECT_ROOT_DIR}/data_rocksdict/"
@@ -26,7 +31,9 @@ def _datetime_utc_to_iso8601(datetime_utc_str):
     return dt.strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def _download_worker(worker_id, task_queue, result_queue):
+def _download_worker(
+    worker_id, task_queue, result_queue, progress, ticker_task_counts, ticker_task_lock
+):
     """Worker thread: creates its own Polygon client, pulls tasks, pushes results."""
     tag = f"[W{worker_id}]"
     logging.info(f"{tag} Starting download worker")
@@ -41,11 +48,17 @@ def _download_worker(worker_id, task_queue, result_queue):
                 client, ticker, timespan, start_date, end_date
             )
             result_queue.put((ticker, timespan, data, idx_task))
+            with ticker_task_lock:
+                ticker_done = check_ticker_done(ticker_task_counts, ticker)
             logging.info(
                 f"{tag} Downloaded {len(data)} bars for {ticker} ({start_date} to {end_date})"
             )
+            progress.tick(tag, ticker, ticker_done)
         except Exception as e:
             logging.error(f"{tag} Error downloading {ticker}: {e}")
+            with ticker_task_lock:
+                ticker_done = check_ticker_done(ticker_task_counts, ticker)
+            progress.tick(tag, ticker, ticker_done)
     logging.info(f"{tag} Worker finished")
 
 
@@ -95,11 +108,25 @@ def download_and_store(db_path, num_threads, tasks):
     for _ in range(num_threads):
         task_queue.put(None)
 
+    # Progress tracking
+    ticker_task_counts = build_ticker_task_counts(tasks)
+    total_tickers = len(set(task[0] for task in tasks))
+    progress = ProgressTracker(len(tasks), total_tickers)
+    ticker_task_lock = threading.Lock()
+
     # Start download workers
     download_threads = []
     for i in range(num_threads):
         t = threading.Thread(
-            target=_download_worker, args=(i, task_queue, result_queue)
+            target=_download_worker,
+            args=(
+                i,
+                task_queue,
+                result_queue,
+                progress,
+                ticker_task_counts,
+                ticker_task_lock,
+            ),
         )
         t.start()
         download_threads.append(t)
