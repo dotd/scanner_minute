@@ -15,12 +15,17 @@ class ProgressTracker:
         self._total_tasks = total_tasks
         self._total_tickers = total_tickers
         self._done_tasks = 0
+        self._failed_tasks = 0
         self._completed_tickers = set()
+        self._failed_tickers = set()
         self._start_time = time.time()
 
-    def tick(self, tag, ticker, ticker_done):
+    def tick(self, tag, ticker, ticker_done, failed=False):
         with self._lock:
             self._done_tasks += 1
+            if failed:
+                self._failed_tasks += 1
+                self._failed_tickers.add(ticker)
             if ticker_done:
                 self._completed_tickers.add(ticker)
             elapsed = time.time() - self._start_time
@@ -31,6 +36,7 @@ class ProgressTracker:
             logging.info(
                 f"{tag} Tasks: {self._done_tasks}/{self._total_tasks} | "
                 f"Tickers: {len(self._completed_tickers)}/{self._total_tickers} | "
+                f"Failed: {self._failed_tasks} tasks, {len(self._failed_tickers)} tickers | "
                 f"avg {avg_per_task:.2f}s/task | "
                 f"remaining: {remaining_tasks} tasks, {remaining_tickers} tickers | "
                 f"ETA {eta:.1f}s | last: {ticker}"
@@ -81,7 +87,7 @@ def _download_worker(
             logging.error(f"{tag} Error downloading {ticker}: {e}")
             with result_lock:
                 ticker_done = check_ticker_done(ticker_task_counts, ticker)
-            progress.tick(tag, ticker, ticker_done)
+            progress.tick(tag, ticker, ticker_done, failed=True)
     logging.info(f"{tag} Worker finished")
 
 

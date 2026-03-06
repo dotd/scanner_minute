@@ -58,7 +58,7 @@ def _download_worker(
             logging.error(f"{tag} Error downloading {ticker}: {e}")
             with ticker_task_lock:
                 ticker_done = check_ticker_done(ticker_task_counts, ticker)
-            progress.tick(tag, ticker, ticker_done)
+            progress.tick(tag, ticker, ticker_done, failed=True)
     logging.info(f"{tag} Worker finished")
 
 
