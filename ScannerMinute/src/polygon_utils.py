@@ -209,6 +209,88 @@ def get_all_tickers_from_snapshot(client) -> list[str]:
     return sorted(tickers)
 
 
+def _download_worker(worker_id, task_queue, result_dict, result_lock):
+    """Worker thread: downloads tasks and stores results in a shared dict."""
+    tag = f"[W{worker_id}]"
+    logging.info(f"{tag} Starting download worker")
+    client = get_polygon_client()
+    while True:
+        task = task_queue.get()
+        if task is None:
+            break
+        ticker, start_date, end_date, timespan, idx_task = task
+        try:
+            data = get_ticker_data_from_polygon(
+                client, ticker, timespan, start_date, end_date
+            )
+            with result_lock:
+                if ticker not in result_dict:
+                    result_dict[ticker] = []
+                result_dict[ticker].extend(data)
+            logging.info(
+                f"{tag} Downloaded {len(data)} bars for {ticker} ({start_date} to {end_date})"
+            )
+        except Exception as e:
+            logging.error(f"{tag} Error downloading {ticker}: {e}")
+    logging.info(f"{tag} Worker finished")
+
+
+def download_tickers_multithread(
+    tickers: list[str],
+    date_start: str,
+    date_end: str = None,
+    num_threads: int = 4,
+    timespan: str = "minute",
+) -> dict[str, list[list]]:
+    """
+    Download ticker data from Polygon using multiple threads.
+
+    Parameters:
+        tickers: list of ticker symbols
+        date_start: start date "YYYY-MM-DD"
+        date_end: end date "YYYY-MM-DD", defaults to today
+        num_threads: number of download threads
+        timespan: e.g. "minute"
+
+    Returns:
+        dict mapping ticker → list of bar lists (matching COLUMNS schema)
+    """
+    import threading
+    from queue import Queue
+
+    if date_end is None:
+        date_end = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    tasks = generate_tasks(tickers, date_start, date_end)
+    num_threads = min(num_threads, len(tasks)) if tasks else 0
+
+    task_queue = Queue()
+    for task in tasks:
+        task_queue.put(task)
+    for _ in range(num_threads):
+        task_queue.put(None)
+
+    result_dict = {}
+    result_lock = threading.Lock()
+
+    threads = []
+    for i in range(num_threads):
+        t = threading.Thread(
+            target=_download_worker, args=(i, task_queue, result_dict, result_lock)
+        )
+        t.start()
+        threads.append(t)
+
+    for t in threads:
+        t.join()
+
+    logging.info(
+        f"Downloaded {sum(len(v) for v in result_dict.values())} total bars "
+        f"for {len(result_dict)} tickers"
+    )
+    return result_dict
+
+
 def get_trading_days(
     client,
     from_=(datetime.now(timezone.utc) - timedelta(days=7 * 365)).strftime(
