@@ -102,9 +102,6 @@ NASDAQ100_TICKERS = [
     "ZS",
 ]
 
-# Combined S&P 500 + NASDAQ-100, deduplicated and sorted
-SP500_AND_NASDAQ100_TICKERS = sorted(set(SP500_TICKERS + NASDAQ100_TICKERS))
-
 ETF_TICKERS = [
     # --- Broad Market ---
     "SPY",   # SPDR S&P 500 ETF Trust
@@ -249,4 +246,10 @@ ETF_TICKERS = [
     "FXY",   # Invesco CurrencyShares Japanese Yen Trust
     "FXB",   # Invesco CurrencyShares British Pound Trust
 ]
+
+# Combined S&P 500 + NASDAQ-100, deduplicated and sorted
+SP500_AND_NASDAQ100_TICKERS = sorted(set(SP500_TICKERS + NASDAQ100_TICKERS))
+
+# Combined S&P 500 + NASDAQ-100 + ETFs, deduplicated and sorted
+ALL_TICKERS = sorted(set(SP500_TICKERS + NASDAQ100_TICKERS + ETF_TICKERS))
 # fmt: on
