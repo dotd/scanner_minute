@@ -101,4 +101,152 @@ NASDAQ100_TICKERS = [
     "XEL",
     "ZS",
 ]
+
+# Combined S&P 500 + NASDAQ-100, deduplicated and sorted
+SP500_AND_NASDAQ100_TICKERS = sorted(set(SP500_TICKERS + NASDAQ100_TICKERS))
+
+ETF_TICKERS = [
+    # --- Broad Market ---
+    "SPY",   # SPDR S&P 500 ETF Trust
+    "IVV",   # iShares Core S&P 500 ETF
+    "VOO",   # Vanguard S&P 500 ETF
+    "VTI",   # Vanguard Total Stock Market ETF
+    "QQQ",   # Invesco QQQ Trust (NASDAQ-100)
+    "QQQM",  # Invesco NASDAQ 100 ETF (lower expense ratio)
+    "DIA",   # SPDR Dow Jones Industrial Average ETF
+    "IWM",   # iShares Russell 2000 ETF (small cap)
+    "IWF",   # iShares Russell 1000 Growth ETF
+    "IWD",   # iShares Russell 1000 Value ETF
+    "MDY",   # SPDR S&P MidCap 400 ETF
+    "IJR",   # iShares Core S&P Small-Cap ETF
+    "IJH",   # iShares Core S&P Mid-Cap ETF
+    "RSP",   # Invesco S&P 500 Equal Weight ETF
+    "VTV",   # Vanguard Value ETF
+    "VUG",   # Vanguard Growth ETF
+    "SCHD",  # Schwab U.S. Dividend Equity ETF
+    "VIG",   # Vanguard Dividend Appreciation ETF
+    "DVY",   # iShares Select Dividend ETF
+    "DGRO",  # iShares Core Dividend Growth ETF
+    # --- Sector ETFs ---
+    "XLK",   # Technology Select Sector SPDR
+    "XLF",   # Financial Select Sector SPDR
+    "XLV",   # Health Care Select Sector SPDR
+    "XLE",   # Energy Select Sector SPDR
+    "XLI",   # Industrial Select Sector SPDR
+    "XLY",   # Consumer Discretionary Select Sector SPDR
+    "XLP",   # Consumer Staples Select Sector SPDR
+    "XLU",   # Utilities Select Sector SPDR
+    "XLB",   # Materials Select Sector SPDR
+    "XLRE",  # Real Estate Select Sector SPDR
+    "XLC",   # Communication Services Select Sector SPDR
+    "VGT",   # Vanguard Information Technology ETF
+    "VHT",   # Vanguard Health Care ETF
+    "VFH",   # Vanguard Financials ETF
+    "VDE",   # Vanguard Energy ETF
+    "VIS",   # Vanguard Industrials ETF
+    "VCR",   # Vanguard Consumer Discretionary ETF
+    "VDC",   # Vanguard Consumer Staples ETF
+    "VNQ",   # Vanguard Real Estate ETF
+    # --- Thematic / Industry ---
+    "ARKK",  # ARK Innovation ETF
+    "ARKW",  # ARK Next Generation Internet ETF
+    "ARKG",  # ARK Genomic Revolution ETF
+    "ARKF",  # ARK Fintech Innovation ETF
+    "SMH",   # VanEck Semiconductor ETF
+    "SOXX",  # iShares Semiconductor ETF
+    "XBI",   # SPDR S&P Biotech ETF
+    "IBB",   # iShares Biotechnology ETF
+    "IYR",   # iShares U.S. Real Estate ETF
+    "ITB",   # iShares U.S. Home Construction ETF
+    "XHB",   # SPDR S&P Homebuilders ETF
+    "KRE",   # SPDR S&P Regional Banking ETF
+    "KBE",   # SPDR S&P Bank ETF
+    "XOP",   # SPDR S&P Oil & Gas Exploration & Production ETF
+    "OIH",   # VanEck Oil Services ETF
+    "GDX",   # VanEck Gold Miners ETF
+    "GDXJ",  # VanEck Junior Gold Miners ETF
+    "SLV",   # iShares Silver Trust
+    "GLD",   # SPDR Gold Shares
+    "IAU",   # iShares Gold Trust
+    "HACK",  # ETFMG Prime Cyber Security ETF
+    "CIBR",  # First Trust NASDAQ Cybersecurity ETF
+    "BOTZ",  # Global X Robotics & AI ETF
+    "ROBO",  # Robo Global Robotics & Automation ETF
+    "LIT",   # Global X Lithium & Battery Tech ETF
+    "TAN",   # Invesco Solar ETF
+    "ICLN",  # iShares Global Clean Energy ETF
+    "QCLN",  # First Trust NASDAQ Clean Edge Green Energy ETF
+    "JETS",  # U.S. Global Jets ETF
+    "KWEB",  # KraneShares CSI China Internet ETF
+    "MCHI",  # iShares MSCI China ETF
+    # --- International ---
+    "VEA",   # Vanguard FTSE Developed Markets ETF
+    "VWO",   # Vanguard FTSE Emerging Markets ETF
+    "EFA",   # iShares MSCI EAFE ETF (developed ex-US)
+    "EEM",   # iShares MSCI Emerging Markets ETF
+    "IEMG",  # iShares Core MSCI Emerging Markets ETF
+    "VXUS",  # Vanguard Total International Stock ETF
+    "EWJ",   # iShares MSCI Japan ETF
+    "EWG",   # iShares MSCI Germany ETF
+    "EWU",   # iShares MSCI United Kingdom ETF
+    "EWZ",   # iShares MSCI Brazil ETF
+    "FXI",   # iShares China Large-Cap ETF
+    "INDA",  # iShares MSCI India ETF
+    "EWT",   # iShares MSCI Taiwan ETF
+    "EWY",   # iShares MSCI South Korea ETF
+    # --- Fixed Income / Bonds ---
+    "AGG",   # iShares Core U.S. Aggregate Bond ETF
+    "BND",   # Vanguard Total Bond Market ETF
+    "TLT",   # iShares 20+ Year Treasury Bond ETF
+    "IEF",   # iShares 7-10 Year Treasury Bond ETF
+    "SHY",   # iShares 1-3 Year Treasury Bond ETF
+    "TIP",   # iShares TIPS Bond ETF
+    "LQD",   # iShares iBoxx $ Investment Grade Corporate Bond ETF
+    "HYG",   # iShares iBoxx $ High Yield Corporate Bond ETF
+    "JNK",   # SPDR Bloomberg High Yield Bond ETF
+    "MUB",   # iShares National Muni Bond ETF
+    "BNDX",  # Vanguard Total International Bond ETF
+    "EMB",   # iShares J.P. Morgan USD Emerging Markets Bond ETF
+    "VCSH",  # Vanguard Short-Term Corporate Bond ETF
+    "VCIT",  # Vanguard Intermediate-Term Corporate Bond ETF
+    "VGSH",  # Vanguard Short-Term Treasury ETF
+    "VGIT",  # Vanguard Intermediate-Term Treasury ETF
+    "VGLT",  # Vanguard Long-Term Treasury ETF
+    "BIL",   # SPDR Bloomberg 1-3 Month T-Bill ETF
+    "SHV",   # iShares Short Treasury Bond ETF
+    # --- Leveraged & Inverse ---
+    "TQQQ",  # ProShares UltraPro QQQ (3x NASDAQ-100)
+    "SQQQ",  # ProShares UltraPro Short QQQ (-3x NASDAQ-100)
+    "SPXL",  # Direxion Daily S&P 500 Bull 3X
+    "SPXS",  # Direxion Daily S&P 500 Bear 3X
+    "UPRO",  # ProShares UltraPro S&P 500 (3x)
+    "SSO",   # ProShares Ultra S&P 500 (2x)
+    "SDS",   # ProShares UltraShort S&P 500 (-2x)
+    "QLD",   # ProShares Ultra QQQ (2x NASDAQ-100)
+    "SOXL",  # Direxion Daily Semiconductor Bull 3X
+    "SOXS",  # Direxion Daily Semiconductor Bear 3X
+    "LABU",  # Direxion Daily S&P Biotech Bull 3X
+    "LABD",  # Direxion Daily S&P Biotech Bear 3X
+    "TNA",   # Direxion Daily Small Cap Bull 3X
+    "TZA",   # Direxion Daily Small Cap Bear 3X
+    "UVXY",  # ProShares Ultra VIX Short-Term Futures (1.5x)
+    "SVXY",  # ProShares Short VIX Short-Term Futures (-0.5x)
+    # --- Volatility ---
+    "VXX",   # iPath Series B S&P 500 VIX Short-Term Futures ETN
+    "VIXY",  # ProShares VIX Short-Term Futures ETF
+    # --- Commodities ---
+    "USO",   # United States Oil Fund
+    "UNG",   # United States Natural Gas Fund
+    "DBA",   # Invesco DB Agriculture Fund
+    "DBC",   # Invesco DB Commodity Index Tracking Fund
+    "PDBC",  # Invesco Optimum Yield Diversified Commodity Strategy
+    "CORN",  # Teucrium Corn Fund
+    "WEAT",  # Teucrium Wheat Fund
+    "SOYB",  # Teucrium Soybean Fund
+    # --- Currency ---
+    "UUP",   # Invesco DB US Dollar Index Bullish Fund
+    "FXE",   # Invesco CurrencyShares Euro Trust
+    "FXY",   # Invesco CurrencyShares Japanese Yen Trust
+    "FXB",   # Invesco CurrencyShares British Pound Trust
+]
 # fmt: on
