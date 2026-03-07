@@ -5,6 +5,7 @@ from ScannerMinute.src.aws_utils import (
     list_images,
     launch_instance,
     create_key_pair,
+    create_security_group,
 )
 
 
@@ -86,6 +87,21 @@ def tst_create_key_pair():
     return pem_path
 
 
+def tst_create_security_group():
+    logging_utils.setup_logging(log_level="INFO", include_time=True)
+
+    logging.info("Creating security group...")
+    sg_id = create_security_group()
+
+    if sg_id:
+        logging.info(f"Security group ID: {sg_id}")
+    else:
+        logging.error("Failed to create security group.")
+    return sg_id
+
+
 if __name__ == "__main__":
-    tst_aws_connection()
-    tst_list_images()
+    # tst_aws_connection()
+    # tst_list_images()
+    # tst_create_key_pair()
+    tst_create_security_group()

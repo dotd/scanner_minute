@@ -155,6 +155,11 @@ def create_key_pair(
     import stat
 
     ec2 = boto3.client("ec2", region_name=region)
+    # If key exists, say it exists, and you need to delete it first, and just return without creating it again.
+    response = ec2.describe_key_pairs(KeyNames=[key_name])
+    if response["KeyPairs"]:
+        logging.info(f"Key pair '{key_name}' already exists")
+        return None
 
     try:
         response = ec2.create_key_pair(KeyName=key_name, KeyType="rsa", KeyFormat="pem")
@@ -174,3 +179,104 @@ def create_key_pair(
         f"Created key pair '{key_name}' | fingerprint={response['KeyFingerprint']} | saved to {pem_path}"
     )
     return pem_path
+
+
+def create_security_group(
+    group_name="scanner-minute-sg",
+    description="Security group for scanner-minute: SSH, HTTP, HTTPS",
+    region="us-east-1",
+    vpc_id=None,
+):
+    """
+    Create a security group that allows SSH (22), HTTP (80), and HTTPS (443) inbound
+    from anywhere, and all outbound traffic.
+
+    Parameters:
+        group_name: str — name for the security group
+        description: str — description
+        region: str — AWS region
+        vpc_id: str — VPC ID (if None, uses the default VPC)
+
+    Returns:
+        str — security group ID, or None if creation failed
+    """
+    ec2 = boto3.client("ec2", region_name=region)
+
+    # Use default VPC if none specified
+    if vpc_id is None:
+        vpcs = ec2.describe_vpcs(Filters=[{"Name": "is-default", "Values": ["true"]}])
+        if not vpcs["Vpcs"]:
+            logging.error("No default VPC found. Specify vpc_id explicitly.")
+            return None
+        vpc_id = vpcs["Vpcs"][0]["VpcId"]
+
+    # Check if group already exists in this VPC
+    try:
+        existing = ec2.describe_security_groups(
+            Filters=[
+                {"Name": "group-name", "Values": [group_name]},
+                {"Name": "vpc-id", "Values": [vpc_id]},
+            ]
+        )
+        if existing["SecurityGroups"]:
+            sg_id = existing["SecurityGroups"][0]["GroupId"]
+            logging.info(f"Security group '{group_name}' already exists: {sg_id}")
+            return sg_id
+    except ClientError as e:
+        logging.error(f"Error checking existing security groups: {e}")
+        return None
+
+    # Create the security group
+    try:
+        response = ec2.create_security_group(
+            GroupName=group_name,
+            Description=description,
+            VpcId=vpc_id,
+        )
+        sg_id = response["GroupId"]
+    except ClientError as e:
+        logging.error(f"Failed to create security group '{group_name}': {e}")
+        return None
+
+    # Add inbound rules: SSH, HTTP, HTTPS
+    try:
+        ec2.authorize_security_group_ingress(
+            GroupId=sg_id,
+            IpPermissions=[
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "SSH"}],
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "HTTP"}],
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 443,
+                    "ToPort": 443,
+                    "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "HTTPS"}],
+                },
+            ],
+        )
+    except ClientError as e:
+        logging.error(f"Failed to set ingress rules for {sg_id}: {e}")
+
+    # Tag it
+    try:
+        ec2.create_tags(
+            Resources=[sg_id],
+            Tags=[{"Key": "Name", "Value": group_name}],
+        )
+    except ClientError as e:
+        logging.warning(f"Failed to tag security group {sg_id}: {e}")
+
+    logging.info(
+        f"Created security group '{group_name}' ({sg_id}) in VPC {vpc_id} | "
+        f"Inbound: SSH(22), HTTP(80), HTTPS(443)"
+    )
+    return sg_id
