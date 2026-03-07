@@ -6,6 +6,7 @@ from ScannerMinute.src.aws_utils import (
     launch_instance,
     create_key_pair,
     create_security_group,
+    list_instance_types,
 )
 
 
@@ -60,7 +61,10 @@ def tst_list_images(region="us-east-1"):
 
 
 def tst_launch_instance(
-    image_id, instance_type="t2.micro", key_name=None, region="us-east-1"
+    image_id="ami-02dfbd4ff395f2a1b",
+    instance_type="t2.micro",
+    key_name="scanner-minute-key",
+    region="us-east-1",
 ):
     logging_utils.setup_logging(log_level="INFO", include_time=True)
 
@@ -100,8 +104,24 @@ def tst_create_security_group():
     return sg_id
 
 
+def tst_list_instance_types(region="us-east-1"):
+    logging_utils.setup_logging(log_level="INFO", include_time=True)
+
+    # List only t2 and t3 families to keep output short
+    logging.info(f"Listing t2/t3 instance types in {region}...")
+    types = list_instance_types(
+        region=region,
+        filters=[{"Name": "instance-type", "Values": ["t2.*", "t3.*"]}],
+    )
+    logging.info(f"Found {len(types)} instance types.")
+    return types
+
+
 if __name__ == "__main__":
     # tst_aws_connection()
     # tst_list_images()
     # tst_create_key_pair()
-    tst_create_security_group()
+    # tst_create_security_group()
+    # tst_list_instance_types()
+    tst_launch_instance()
+    pass

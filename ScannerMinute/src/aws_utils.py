@@ -85,7 +85,7 @@ def launch_instance(
     image_id,
     instance_type="t2.micro",
     key_name=None,
-    security_group_ids=None,
+    security_group_ids=["scanner-minute-sg"],
     region="us-east-1",
     min_count=1,
     max_count=1,
@@ -105,7 +105,7 @@ def launch_instance(
         tag_name: str — Name tag for the instance
 
     Returns:
-        list of instance IDs launched
+        list of dicts with keys: instance_id, public_ip
     """
     ec2 = boto3.client("ec2", region_name=region)
 
@@ -132,7 +132,31 @@ def launch_instance(
     logging.info(
         f"Launched {len(instance_ids)} instance(s) from {image_id}: {instance_ids}"
     )
-    return instance_ids
+
+    # Wait for instances to be running and get public IPs
+    logging.info("Waiting for instances to enter running state...")
+    waiter = ec2.get_waiter("instance_running")
+    waiter.wait(InstanceIds=instance_ids)
+
+    desc = ec2.describe_instances(InstanceIds=instance_ids)
+    results = []
+    for reservation in desc["Reservations"]:
+        for inst in reservation["Instances"]:
+            info = {
+                "instance_id": inst["InstanceId"],
+                "public_ip": inst.get("PublicIpAddress"),
+            }
+            results.append(info)
+            logging.info(
+                f"  {info['instance_id']} | public_ip={info['public_ip']}"
+            )
+            if info["public_ip"] and key_name:
+                pem_path = f"api_keys/{key_name}.pem"
+                logging.info(
+                    f"  SSH: ssh -i {pem_path} ec2-user@{info['public_ip']}"
+                )
+
+    return results
 
 
 def create_key_pair(
@@ -280,3 +304,123 @@ def create_security_group(
         f"Inbound: SSH(22), HTTP(80), HTTPS(443)"
     )
     return sg_id
+
+
+def list_instance_types(region="us-east-1", filters=None):
+    """
+    List available EC2 instance types with specs and on-demand pricing.
+
+    Parameters:
+        region: str — AWS region
+        filters: list[dict] — optional filters for describe_instance_types, e.g.
+                [{"Name": "instance-type", "Values": ["t2.*", "t3.*"]}]
+
+    Returns:
+        list of dicts sorted by vcpus then memory, with keys:
+            instance_type, vcpus, memory_mib, memory_gib, storage,
+            network, architecture, price_per_hour
+    """
+    import json
+
+    ec2 = boto3.client("ec2", region_name=region)
+    pricing = boto3.client(
+        "pricing", region_name="us-east-1"
+    )  # pricing API only in us-east-1
+
+    # Collect instance type info with pagination
+    kwargs = {}
+    if filters:
+        kwargs["Filters"] = filters
+
+    instance_types = []
+    paginator = ec2.get_paginator("describe_instance_types")
+    for page in paginator.paginate(**kwargs):
+        for it in page["InstanceTypes"]:
+            instance_types.append(
+                {
+                    "instance_type": it["InstanceType"],
+                    "vcpus": it["VCpuInfo"]["DefaultVCpus"],
+                    "memory_mib": it["MemoryInfo"]["SizeInMiB"],
+                    "memory_gib": round(it["MemoryInfo"]["SizeInMiB"] / 1024, 1),
+                    "storage": it.get("InstanceStorageInfo", {}).get(
+                        "TotalSizeInGB", "EBS-only"
+                    ),
+                    "network": it.get("NetworkInfo", {}).get("NetworkPerformance", ""),
+                    "architecture": it.get("ProcessorInfo", {}).get(
+                        "SupportedArchitectures", []
+                    ),
+                    "price_per_hour": None,
+                }
+            )
+
+    # Map AWS region to pricing API location name
+    region_names = {
+        "us-east-1": "US East (N. Virginia)",
+        "us-east-2": "US East (Ohio)",
+        "us-west-1": "US West (N. California)",
+        "us-west-2": "US West (Oregon)",
+        "eu-west-1": "EU (Ireland)",
+        "eu-west-2": "EU (London)",
+        "eu-central-1": "EU (Frankfurt)",
+        "ap-southeast-1": "Asia Pacific (Singapore)",
+        "ap-northeast-1": "Asia Pacific (Tokyo)",
+    }
+    location = region_names.get(region)
+
+    if location:
+        for it in instance_types:
+            try:
+                price_response = pricing.get_products(
+                    ServiceCode="AmazonEC2",
+                    Filters=[
+                        {
+                            "Type": "TERM_MATCH",
+                            "Field": "instanceType",
+                            "Value": it["instance_type"],
+                        },
+                        {"Type": "TERM_MATCH", "Field": "location", "Value": location},
+                        {
+                            "Type": "TERM_MATCH",
+                            "Field": "operatingSystem",
+                            "Value": "Linux",
+                        },
+                        {"Type": "TERM_MATCH", "Field": "tenancy", "Value": "Shared"},
+                        {
+                            "Type": "TERM_MATCH",
+                            "Field": "preInstalledSw",
+                            "Value": "NA",
+                        },
+                        {
+                            "Type": "TERM_MATCH",
+                            "Field": "capacitystatus",
+                            "Value": "Used",
+                        },
+                    ],
+                    MaxResults=1,
+                )
+                if price_response["PriceList"]:
+                    price_data = json.loads(price_response["PriceList"][0])
+                    on_demand = price_data["terms"]["OnDemand"]
+                    for term in on_demand.values():
+                        for dim in term["priceDimensions"].values():
+                            it["price_per_hour"] = float(dim["pricePerUnit"]["USD"])
+                            break
+                        break
+            except Exception:
+                pass  # pricing not available for this type
+
+    instance_types.sort(key=lambda x: (x["vcpus"], x["memory_mib"]))
+
+    logging.info(f"Found {len(instance_types)} instance types in {region}")
+    for it in instance_types:
+        price_str = (
+            f"${it['price_per_hour']:.4f}/hr"
+            if it["price_per_hour"] is not None
+            else "N/A"
+        )
+        logging.info(
+            f"  {it['instance_type']:20s} | {it['vcpus']:3d} vCPUs | "
+            f"{it['memory_gib']:8.1f} GiB | {str(it['storage']):>12s} | "
+            f"{it['network']:25s} | {price_str}"
+        )
+    return instance_types
