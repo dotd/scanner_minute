@@ -25,16 +25,16 @@ def check_aws_connection():
             "user_id": identity["UserId"],
         }
         logging.info(
-            f"AWS connection OK | account={info['account_id']} | arn={info['arn']}"
+            f"[check_aws_connection] AWS connection OK | account={info['account_id']} | arn={info['arn']}"
         )
         return info
     except NoCredentialsError:
         logging.error(
-            "AWS credentials not found. Configure via aws configure, env vars, or IAM role."
+            "[check_aws_connection] AWS credentials not found. Configure via aws configure, env vars, or IAM role."
         )
         return None
     except (BotoCoreError, ClientError) as e:
-        logging.error(f"AWS connection failed: {e}")
+        logging.error(f"[check_aws_connection] AWS connection failed: {e}")
         return None
 
 
@@ -73,10 +73,10 @@ def list_images(region="us-east-1", owners=None, filters=None):
         )
 
     images.sort(key=lambda x: x["creation_date"], reverse=True)
-    logging.info(f"Found {len(images)} AMIs in {region}")
+    logging.info(f"[list_images] Found {len(images)} AMIs in {region}")
     for img in images:
         logging.info(
-            f"  {img['image_id']} | {img['name']} | {img['state']} | {img['creation_date']}"
+            f"[list_images]   {img['image_id']} | {img['name']} | {img['state']} | {img['creation_date']}"
         )
     return images
 
@@ -156,11 +156,11 @@ def launch_instance(
 
     instance_ids = [inst["InstanceId"] for inst in response["Instances"]]
     logging.info(
-        f"Launched {len(instance_ids)} instance(s) from {image_id}: {instance_ids} | name={tag_name}"
+        f"[launch_instance] Launched {len(instance_ids)} instance(s) from {image_id}: {instance_ids} | name={tag_name}"
     )
 
     # Wait for instances to be running and get public IPs
-    logging.info("Waiting for instances to enter running state...")
+    logging.info("[launch_instance] Waiting for instances to enter running state...")
     waiter = ec2.get_waiter("instance_running")
     waiter.wait(InstanceIds=instance_ids)
 
@@ -175,12 +175,12 @@ def launch_instance(
             }
             results.append(info)
             logging.info(
-                f"  {info['instance_id']} | {info['name']} | public_ip={info['public_ip']}"
+                f"[launch_instance]   {info['instance_id']} | {info['name']} | public_ip={info['public_ip']}"
             )
             if info["public_ip"] and key_name:
                 pem_path = f"api_keys/{key_name}.pem"
                 logging.info(
-                    f"  SSH: ssh -i {pem_path} ec2-user@{info['public_ip']}"
+                    f"[launch_instance]   SSH: ssh -i {pem_path} ec2-user@{info['public_ip']}"
                 )
 
     return results
@@ -209,13 +209,13 @@ def create_key_pair(
     # If key exists, say it exists, and you need to delete it first, and just return without creating it again.
     response = ec2.describe_key_pairs(KeyNames=[key_name])
     if response["KeyPairs"]:
-        logging.info(f"Key pair '{key_name}' already exists")
+        logging.info(f"[create_key_pair] Key pair '{key_name}' already exists")
         return None
 
     try:
         response = ec2.create_key_pair(KeyName=key_name, KeyType="rsa", KeyFormat="pem")
     except ClientError as e:
-        logging.error(f"Failed to create key pair '{key_name}': {e}")
+        logging.error(f"[create_key_pair] Failed to create key pair '{key_name}': {e}")
         return None
 
     os.makedirs(save_dir, exist_ok=True)
@@ -227,7 +227,7 @@ def create_key_pair(
     os.chmod(pem_path, stat.S_IRUSR)
 
     logging.info(
-        f"Created key pair '{key_name}' | fingerprint={response['KeyFingerprint']} | saved to {pem_path}"
+        f"[create_key_pair] Created key pair '{key_name}' | fingerprint={response['KeyFingerprint']} | saved to {pem_path}"
     )
     return pem_path
 
@@ -257,7 +257,7 @@ def create_security_group(
     if vpc_id is None:
         vpcs = ec2.describe_vpcs(Filters=[{"Name": "is-default", "Values": ["true"]}])
         if not vpcs["Vpcs"]:
-            logging.error("No default VPC found. Specify vpc_id explicitly.")
+            logging.error("[create_security_group] No default VPC found. Specify vpc_id explicitly.")
             return None
         vpc_id = vpcs["Vpcs"][0]["VpcId"]
 
@@ -271,10 +271,10 @@ def create_security_group(
         )
         if existing["SecurityGroups"]:
             sg_id = existing["SecurityGroups"][0]["GroupId"]
-            logging.info(f"Security group '{group_name}' already exists: {sg_id}")
+            logging.info(f"[create_security_group] Security group '{group_name}' already exists: {sg_id}")
             return sg_id
     except ClientError as e:
-        logging.error(f"Error checking existing security groups: {e}")
+        logging.error(f"[create_security_group] Error checking existing security groups: {e}")
         return None
 
     # Create the security group
@@ -286,7 +286,7 @@ def create_security_group(
         )
         sg_id = response["GroupId"]
     except ClientError as e:
-        logging.error(f"Failed to create security group '{group_name}': {e}")
+        logging.error(f"[create_security_group] Failed to create security group '{group_name}': {e}")
         return None
 
     # Add inbound rules: SSH, HTTP, HTTPS
@@ -315,7 +315,7 @@ def create_security_group(
             ],
         )
     except ClientError as e:
-        logging.error(f"Failed to set ingress rules for {sg_id}: {e}")
+        logging.error(f"[create_security_group] Failed to set ingress rules for {sg_id}: {e}")
 
     # Tag it
     try:
@@ -324,10 +324,10 @@ def create_security_group(
             Tags=[{"Key": "Name", "Value": group_name}],
         )
     except ClientError as e:
-        logging.warning(f"Failed to tag security group {sg_id}: {e}")
+        logging.warning(f"[create_security_group] Failed to tag security group {sg_id}: {e}")
 
     logging.info(
-        f"Created security group '{group_name}' ({sg_id}) in VPC {vpc_id} | "
+        f"[create_security_group] Created security group '{group_name}' ({sg_id}) in VPC {vpc_id} | "
         f"Inbound: SSH(22), HTTP(80), HTTPS(443)"
     )
     return sg_id
@@ -438,7 +438,7 @@ def list_instance_types(region="us-east-1", filters=None):
 
     instance_types.sort(key=lambda x: (x["vcpus"], x["memory_mib"]))
 
-    logging.info(f"Found {len(instance_types)} instance types in {region}")
+    logging.info(f"[list_instance_types] Found {len(instance_types)} instance types in {region}")
     for it in instance_types:
         price_str = (
             f"${it['price_per_hour']:.4f}/hr"
@@ -446,7 +446,7 @@ def list_instance_types(region="us-east-1", filters=None):
             else "N/A"
         )
         logging.info(
-            f"  {it['instance_type']:20s} | {it['vcpus']:3d} vCPUs | "
+            f"[list_instance_types]   {it['instance_type']:20s} | {it['vcpus']:3d} vCPUs | "
             f"{it['memory_gib']:8.1f} GiB | {str(it['storage']):>12s} | "
             f"{it['network']:25s} | {price_str}"
         )
@@ -539,13 +539,13 @@ def list_running_instances(region="us-east-1"):
 
     instances.sort(key=lambda x: x["launch_time"])
 
-    logging.info(f"Found {len(instances)} instance(s) in {region}")
+    logging.info(f"[list_running_instances] Found {len(instances)} instance(s) in {region}")
     for inst in instances:
         vol_str = ", ".join(
             f"{v['device']}:{v['size_gb']}GB({v['volume_type']})" for v in inst["volumes"]
         ) or "none"
         logging.info(
-            f"  {inst['instance_id']} | {inst['state']:8s} | {inst['name']:20s} | {inst['instance_type']:12s} | "
+            f"[list_running_instances]   {inst['instance_id']} | {inst['state']:8s} | {inst['name']:20s} | {inst['instance_type']:12s} | "
             f"public_ip={inst['public_ip']} | private_ip={inst['private_ip']} | "
             f"volumes={vol_str} | "
             f"key={inst['key_name']} | sg={inst['security_groups']} | "
@@ -583,7 +583,7 @@ def manage_instances(region="us-east-1"):
         n = len(instances)
 
         if n == 0:
-            logging.info("No running or stopped instances to manage.")
+            logging.info("[manage_instances] No running or stopped instances to manage.")
             break
 
         # Build menu: 2 options per instance + 4 bulk options
@@ -632,15 +632,15 @@ def manage_instances(region="us-east-1"):
         try:
             choice = int(input("Enter your choice: "))
         except (ValueError, EOFError):
-            logging.info("Invalid input. Try again.")
+            logging.info("[manage_instances] Invalid input. Try again.")
             continue
 
         if choice == 0:
-            logging.info("Exiting instance manager.")
+            logging.info("[manage_instances] Exiting instance manager.")
             break
 
         if choice not in menu:
-            logging.info(f"Invalid choice: {choice}. Try again.")
+            logging.info(f"[manage_instances] Invalid choice: {choice}. Try again.")
             continue
 
         ec2 = boto3.client("ec2", region_name=region)
@@ -648,41 +648,41 @@ def manage_instances(region="us-east-1"):
 
         if action == "stop":
             ids = [target["instance_id"]]
-            logging.info(f"Stopping {ids[0]} ({target['name']})...")
+            logging.info(f"[manage_instances] Stopping {ids[0]} ({target['name']})...")
             ec2.stop_instances(InstanceIds=ids)
-            logging.info(f"Stop request sent for {ids[0]}")
+            logging.info(f"[manage_instances] Stop request sent for {ids[0]}")
             actions_taken.append({"action": "stop", "instance_ids": ids})
 
         elif action == "start":
             ids = [target["instance_id"]]
-            logging.info(f"Starting {ids[0]} ({target['name']})...")
+            logging.info(f"[manage_instances] Starting {ids[0]} ({target['name']})...")
             ec2.start_instances(InstanceIds=ids)
-            logging.info(f"Start request sent for {ids[0]}")
+            logging.info(f"[manage_instances] Start request sent for {ids[0]}")
             actions_taken.append({"action": "start", "instance_ids": ids})
 
         elif action == "terminate":
             ids = [target["instance_id"]]
-            logging.info(f"Terminating {ids[0]} ({target['name']})...")
+            logging.info(f"[manage_instances] Terminating {ids[0]} ({target['name']})...")
             ec2.terminate_instances(InstanceIds=ids)
-            logging.info(f"Terminate request sent for {ids[0]}")
+            logging.info(f"[manage_instances] Terminate request sent for {ids[0]}")
             actions_taken.append({"action": "terminate", "instance_ids": ids})
 
         elif action == "stop_all":
-            logging.info(f"Stopping ALL {len(target)} running instances...")
+            logging.info(f"[manage_instances] Stopping ALL {len(target)} running instances...")
             ec2.stop_instances(InstanceIds=target)
-            logging.info(f"Stop request sent for {target}")
+            logging.info(f"[manage_instances] Stop request sent for {target}")
             actions_taken.append({"action": "stop", "instance_ids": target})
 
         elif action == "start_all":
-            logging.info(f"Starting ALL {len(target)} stopped instances...")
+            logging.info(f"[manage_instances] Starting ALL {len(target)} stopped instances...")
             ec2.start_instances(InstanceIds=target)
-            logging.info(f"Start request sent for {target}")
+            logging.info(f"[manage_instances] Start request sent for {target}")
             actions_taken.append({"action": "start", "instance_ids": target})
 
         elif action == "terminate_all":
-            logging.info(f"Terminating ALL {len(target)} instances...")
+            logging.info(f"[manage_instances] Terminating ALL {len(target)} instances...")
             ec2.terminate_instances(InstanceIds=target)
-            logging.info(f"Terminate request sent for {target}")
+            logging.info(f"[manage_instances] Terminate request sent for {target}")
             actions_taken.append({"action": "terminate", "instance_ids": target})
 
     return actions_taken
