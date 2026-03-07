@@ -89,10 +89,15 @@ def launch_instance(
     region="us-east-1",
     min_count=1,
     max_count=1,
-    tag_name="scanner-minute",
+    suffix=None,
 ):
     """
     Launch an EC2 instance from a given AMI.
+
+    The instance Name tag is auto-generated as:
+        scanner-minute_YYYYMMDD_HHMMSS          (if suffix is None)
+        scanner-minute_YYYYMMDD_HHMMSS_<suffix>  (if suffix is provided)
+    using the local time at launch.
 
     Parameters:
         image_id: str — AMI ID to launch
@@ -102,12 +107,18 @@ def launch_instance(
         region: str — AWS region
         min_count: int — minimum number of instances
         max_count: int — maximum number of instances
-        tag_name: str — Name tag for the instance
+        suffix: str — optional user-defined string appended to the Name tag
 
     Returns:
-        list of dicts with keys: instance_id, public_ip
+        list of dicts with keys: instance_id, public_ip, name
     """
+    from datetime import datetime
+
     ec2 = boto3.client("ec2", region_name=region)
+
+    tag_name = f"scanner-minute_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    if suffix:
+        tag_name = f"{tag_name}_{suffix}"
 
     kwargs = {
         "ImageId": image_id,
@@ -130,7 +141,7 @@ def launch_instance(
 
     instance_ids = [inst["InstanceId"] for inst in response["Instances"]]
     logging.info(
-        f"Launched {len(instance_ids)} instance(s) from {image_id}: {instance_ids}"
+        f"Launched {len(instance_ids)} instance(s) from {image_id}: {instance_ids} | name={tag_name}"
     )
 
     # Wait for instances to be running and get public IPs
@@ -145,10 +156,11 @@ def launch_instance(
             info = {
                 "instance_id": inst["InstanceId"],
                 "public_ip": inst.get("PublicIpAddress"),
+                "name": tag_name,
             }
             results.append(info)
             logging.info(
-                f"  {info['instance_id']} | public_ip={info['public_ip']}"
+                f"  {info['instance_id']} | {info['name']} | public_ip={info['public_ip']}"
             )
             if info["public_ip"] and key_name:
                 pem_path = f"api_keys/{key_name}.pem"
@@ -428,7 +440,7 @@ def list_instance_types(region="us-east-1", filters=None):
 
 def list_running_instances(region="us-east-1"):
     """
-    List all running EC2 instances with key details.
+    List all running and stopped EC2 instances with key details.
 
     Parameters:
         region: str — AWS region
@@ -441,7 +453,7 @@ def list_running_instances(region="us-east-1"):
     ec2 = boto3.client("ec2", region_name=region)
 
     response = ec2.describe_instances(
-        Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
+        Filters=[{"Name": "instance-state-name", "Values": ["running", "stopped"]}]
     )
 
     instances = []
@@ -475,10 +487,10 @@ def list_running_instances(region="us-east-1"):
 
     instances.sort(key=lambda x: x["launch_time"])
 
-    logging.info(f"Found {len(instances)} running instance(s) in {region}")
+    logging.info(f"Found {len(instances)} instance(s) in {region}")
     for inst in instances:
         logging.info(
-            f"  {inst['instance_id']} | {inst['name']:20s} | {inst['instance_type']:12s} | "
+            f"  {inst['instance_id']} | {inst['state']:8s} | {inst['name']:20s} | {inst['instance_type']:12s} | "
             f"public_ip={inst['public_ip']} | private_ip={inst['private_ip']} | "
             f"key={inst['key_name']} | sg={inst['security_groups']} | "
             f"az={inst['availability_zone']} | ami={inst['ami_id']} | "
@@ -486,3 +498,132 @@ def list_running_instances(region="us-east-1"):
         )
 
     return instances
+
+
+def manage_instances(region="us-east-1"):
+    """
+    Interactive loop to manage running and stopped EC2 instances.
+
+    For each instance, the available actions depend on its state:
+      - running → STOP or TERMINATE
+      - stopped → START or TERMINATE
+
+    The menu is numbered sequentially per instance (2 options each),
+    followed by bulk actions and exit (0).
+
+    The loop continues after each action until the user chooses 0 or no instances remain.
+
+    Parameters:
+        region: str — AWS region
+
+    Returns:
+        list of dicts, each with keys: action ("stop"|"start"|"terminate"),
+              instance_ids (list of affected instance IDs)
+    """
+    actions_taken = []
+
+    while True:
+        instances = list_running_instances(region=region)
+        n = len(instances)
+
+        if n == 0:
+            logging.info("No running or stopped instances to manage.")
+            break
+
+        # Build menu: 2 options per instance + 4 bulk options
+        print("\n=== Manage Instances ===\n")
+        menu = {}
+        idx = 1
+        for inst in instances:
+            label = f"{inst['instance_id']} | {inst['name']} | {inst['instance_type']} | {inst['state']}"
+            if inst["state"] == "running":
+                print(f"  {idx:3d}. STOP       {label}")
+                menu[idx] = ("stop", inst)
+                idx += 1
+                print(f"  {idx:3d}. TERMINATE   {label}")
+                menu[idx] = ("terminate", inst)
+                idx += 1
+            elif inst["state"] == "stopped":
+                print(f"  {idx:3d}. START      {label}")
+                menu[idx] = ("start", inst)
+                idx += 1
+                print(f"  {idx:3d}. TERMINATE   {label}")
+                menu[idx] = ("terminate", inst)
+                idx += 1
+
+        running_ids = [inst["instance_id"] for inst in instances if inst["state"] == "running"]
+        stopped_ids = [inst["instance_id"] for inst in instances if inst["state"] == "stopped"]
+        all_ids = [inst["instance_id"] for inst in instances]
+
+        print()
+        bulk_start = idx
+        if running_ids:
+            print(f"  {idx:3d}. STOP ALL running ({len(running_ids)})")
+            menu[idx] = ("stop_all", running_ids)
+            idx += 1
+        if stopped_ids:
+            print(f"  {idx:3d}. START ALL stopped ({len(stopped_ids)})")
+            menu[idx] = ("start_all", stopped_ids)
+            idx += 1
+        print(f"  {idx:3d}. TERMINATE ALL ({len(all_ids)})")
+        menu[idx] = ("terminate_all", all_ids)
+        print(f"    0. Exit\n")
+
+        # Get user choice
+        try:
+            choice = int(input("Enter your choice: "))
+        except (ValueError, EOFError):
+            logging.info("Invalid input. Try again.")
+            continue
+
+        if choice == 0:
+            logging.info("Exiting instance manager.")
+            break
+
+        if choice not in menu:
+            logging.info(f"Invalid choice: {choice}. Try again.")
+            continue
+
+        ec2 = boto3.client("ec2", region_name=region)
+        action, target = menu[choice]
+
+        if action == "stop":
+            ids = [target["instance_id"]]
+            logging.info(f"Stopping {ids[0]} ({target['name']})...")
+            ec2.stop_instances(InstanceIds=ids)
+            logging.info(f"Stop request sent for {ids[0]}")
+            actions_taken.append({"action": "stop", "instance_ids": ids})
+
+        elif action == "start":
+            ids = [target["instance_id"]]
+            logging.info(f"Starting {ids[0]} ({target['name']})...")
+            ec2.start_instances(InstanceIds=ids)
+            logging.info(f"Start request sent for {ids[0]}")
+            actions_taken.append({"action": "start", "instance_ids": ids})
+
+        elif action == "terminate":
+            ids = [target["instance_id"]]
+            logging.info(f"Terminating {ids[0]} ({target['name']})...")
+            ec2.terminate_instances(InstanceIds=ids)
+            logging.info(f"Terminate request sent for {ids[0]}")
+            actions_taken.append({"action": "terminate", "instance_ids": ids})
+
+        elif action == "stop_all":
+            logging.info(f"Stopping ALL {len(target)} running instances...")
+            ec2.stop_instances(InstanceIds=target)
+            logging.info(f"Stop request sent for {target}")
+            actions_taken.append({"action": "stop", "instance_ids": target})
+
+        elif action == "start_all":
+            logging.info(f"Starting ALL {len(target)} stopped instances...")
+            ec2.start_instances(InstanceIds=target)
+            logging.info(f"Start request sent for {target}")
+            actions_taken.append({"action": "start", "instance_ids": target})
+
+        elif action == "terminate_all":
+            logging.info(f"Terminating ALL {len(target)} instances...")
+            ec2.terminate_instances(InstanceIds=target)
+            logging.info(f"Terminate request sent for {target}")
+            actions_taken.append({"action": "terminate", "instance_ids": target})
+
+    return actions_taken

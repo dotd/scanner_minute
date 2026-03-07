@@ -8,6 +8,7 @@ from ScannerMinute.src.aws_utils import (
     create_security_group,
     list_instance_types,
     list_running_instances,
+    manage_instances,
 )
 
 
@@ -131,6 +132,13 @@ def tst_list_running_instances(region="us-east-1"):
     return instances
 
 
+def tst_manage_instances(region="us-east-1"):
+    logging_utils.setup_logging(log_level="INFO", include_time=True)
+    result = manage_instances(region=region)
+    logging.info(f"Result: {result}")
+    return result
+
+
 if __name__ == "__main__":
     # tst_aws_connection()
     # tst_list_images()
@@ -138,4 +146,5 @@ if __name__ == "__main__":
     # tst_create_security_group()
     # tst_list_instance_types()
     # tst_launch_instance()
-    tst_list_running_instances()
+    # tst_list_running_instances()
+    tst_manage_instances()
