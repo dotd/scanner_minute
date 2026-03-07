@@ -11,3 +11,9 @@ The limit for a single download in 50000
 So we can download approximately two months 
 
 
+## Uncooked
+I want to add file imaging_utils.py to ScannerMinute/src. In this file, there will be the following functions:
+1) A python function that check whether node.js is installed. If not, ask whether to install. If the answer is yes, install node.js in node_server/ under the root directory.
+2) A python function that removes the installation of node.js
+3) A function that runs the server 
+
