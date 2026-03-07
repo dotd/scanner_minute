@@ -7,6 +7,7 @@ from ScannerMinute.src.aws_utils import (
     create_key_pair,
     create_security_group,
     list_instance_types,
+    list_running_instances,
 )
 
 
@@ -117,11 +118,24 @@ def tst_list_instance_types(region="us-east-1"):
     return types
 
 
+def tst_list_running_instances(region="us-east-1"):
+    import json
+
+    logging_utils.setup_logging(log_level="INFO", include_time=True)
+
+    logging.info(f"Listing running instances in {region}...")
+    instances = list_running_instances(region=region)
+    logging.info(f"Total running: {len(instances)}")
+    for inst in instances:
+        logging.info(f"\n{json.dumps(inst, indent=2)}")
+    return instances
+
+
 if __name__ == "__main__":
     # tst_aws_connection()
     # tst_list_images()
     # tst_create_key_pair()
     # tst_create_security_group()
     # tst_list_instance_types()
-    tst_launch_instance()
-    pass
+    # tst_launch_instance()
+    tst_list_running_instances()

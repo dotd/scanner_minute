@@ -424,3 +424,65 @@ def list_instance_types(region="us-east-1", filters=None):
             f"{it['network']:25s} | {price_str}"
         )
     return instance_types
+
+
+def list_running_instances(region="us-east-1"):
+    """
+    List all running EC2 instances with key details.
+
+    Parameters:
+        region: str — AWS region
+
+    Returns:
+        list of dicts with keys: instance_id, name, instance_type, state,
+            public_ip, private_ip, key_name, security_groups, launch_time,
+            availability_zone, ami_id
+    """
+    ec2 = boto3.client("ec2", region_name=region)
+
+    response = ec2.describe_instances(
+        Filters=[{"Name": "instance-state-name", "Values": ["running"]}]
+    )
+
+    instances = []
+    for reservation in response["Reservations"]:
+        for inst in reservation["Instances"]:
+            name = ""
+            for tag in inst.get("Tags", []):
+                if tag["Key"] == "Name":
+                    name = tag["Value"]
+                    break
+
+            sg_list = [
+                f"{sg['GroupName']}({sg['GroupId']})"
+                for sg in inst.get("SecurityGroups", [])
+            ]
+
+            info = {
+                "instance_id": inst["InstanceId"],
+                "name": name,
+                "instance_type": inst["InstanceType"],
+                "state": inst["State"]["Name"],
+                "public_ip": inst.get("PublicIpAddress"),
+                "private_ip": inst.get("PrivateIpAddress"),
+                "key_name": inst.get("KeyName"),
+                "security_groups": sg_list,
+                "launch_time": inst["LaunchTime"].isoformat(),
+                "availability_zone": inst["Placement"]["AvailabilityZone"],
+                "ami_id": inst["ImageId"],
+            }
+            instances.append(info)
+
+    instances.sort(key=lambda x: x["launch_time"])
+
+    logging.info(f"Found {len(instances)} running instance(s) in {region}")
+    for inst in instances:
+        logging.info(
+            f"  {inst['instance_id']} | {inst['name']:20s} | {inst['instance_type']:12s} | "
+            f"public_ip={inst['public_ip']} | private_ip={inst['private_ip']} | "
+            f"key={inst['key_name']} | sg={inst['security_groups']} | "
+            f"az={inst['availability_zone']} | ami={inst['ami_id']} | "
+            f"launched={inst['launch_time']}"
+        )
+
+    return instances
