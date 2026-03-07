@@ -90,6 +90,8 @@ def launch_instance(
     min_count=1,
     max_count=1,
     suffix=None,
+    disk_size_gb=None,
+    volume_type="gp3",
 ):
     """
     Launch an EC2 instance from a given AMI.
@@ -108,6 +110,8 @@ def launch_instance(
         min_count: int — minimum number of instances
         max_count: int — maximum number of instances
         suffix: str — optional user-defined string appended to the Name tag
+        disk_size_gb: int — root volume size in GiB (None = AMI default, typically 8 GiB)
+        volume_type: str — EBS volume type, e.g. "gp3", "gp2", "io1" (default "gp3")
 
     Returns:
         list of dicts with keys: instance_id, public_ip, name
@@ -136,6 +140,17 @@ def launch_instance(
         kwargs["KeyName"] = key_name
     if security_group_ids:
         kwargs["SecurityGroupIds"] = security_group_ids
+    if disk_size_gb is not None:
+        kwargs["BlockDeviceMappings"] = [
+            {
+                "DeviceName": "/dev/xvda",
+                "Ebs": {
+                    "VolumeSize": disk_size_gb,
+                    "VolumeType": volume_type,
+                    "DeleteOnTermination": True,
+                },
+            }
+        ]
 
     response = ec2.run_instances(**kwargs)
 
@@ -448,7 +463,7 @@ def list_running_instances(region="us-east-1"):
     Returns:
         list of dicts with keys: instance_id, name, instance_type, state,
             public_ip, private_ip, key_name, security_groups, launch_time,
-            availability_zone, ami_id
+            availability_zone, ami_id, volumes
     """
     ec2 = boto3.client("ec2", region_name=region)
 
@@ -456,42 +471,83 @@ def list_running_instances(region="us-east-1"):
         Filters=[{"Name": "instance-state-name", "Values": ["running", "stopped"]}]
     )
 
-    instances = []
+    # Collect all volume IDs to describe in one call
+    all_volume_ids = []
+    raw_instances = []
     for reservation in response["Reservations"]:
         for inst in reservation["Instances"]:
-            name = ""
-            for tag in inst.get("Tags", []):
-                if tag["Key"] == "Name":
-                    name = tag["Value"]
-                    break
-
-            sg_list = [
-                f"{sg['GroupName']}({sg['GroupId']})"
-                for sg in inst.get("SecurityGroups", [])
+            vol_ids = [
+                bdm["Ebs"]["VolumeId"]
+                for bdm in inst.get("BlockDeviceMappings", [])
+                if "Ebs" in bdm
             ]
+            all_volume_ids.extend(vol_ids)
+            raw_instances.append(inst)
 
-            info = {
-                "instance_id": inst["InstanceId"],
-                "name": name,
-                "instance_type": inst["InstanceType"],
-                "state": inst["State"]["Name"],
-                "public_ip": inst.get("PublicIpAddress"),
-                "private_ip": inst.get("PrivateIpAddress"),
-                "key_name": inst.get("KeyName"),
-                "security_groups": sg_list,
-                "launch_time": inst["LaunchTime"].isoformat(),
-                "availability_zone": inst["Placement"]["AvailabilityZone"],
-                "ami_id": inst["ImageId"],
+    # Fetch volume details in bulk
+    volume_map = {}
+    if all_volume_ids:
+        vol_response = ec2.describe_volumes(VolumeIds=all_volume_ids)
+        for vol in vol_response["Volumes"]:
+            volume_map[vol["VolumeId"]] = {
+                "volume_id": vol["VolumeId"],
+                "size_gb": vol["Size"],
+                "volume_type": vol["VolumeType"],
+                "state": vol["State"],
             }
-            instances.append(info)
+
+    instances = []
+    for inst in raw_instances:
+        name = ""
+        for tag in inst.get("Tags", []):
+            if tag["Key"] == "Name":
+                name = tag["Value"]
+                break
+
+        sg_list = [
+            f"{sg['GroupName']}({sg['GroupId']})"
+            for sg in inst.get("SecurityGroups", [])
+        ]
+
+        volumes = []
+        for bdm in inst.get("BlockDeviceMappings", []):
+            if "Ebs" in bdm:
+                vol_id = bdm["Ebs"]["VolumeId"]
+                vol_info = volume_map.get(vol_id, {})
+                volumes.append({
+                    "device": bdm["DeviceName"],
+                    "volume_id": vol_id,
+                    "size_gb": vol_info.get("size_gb"),
+                    "volume_type": vol_info.get("volume_type"),
+                })
+
+        info = {
+            "instance_id": inst["InstanceId"],
+            "name": name,
+            "instance_type": inst["InstanceType"],
+            "state": inst["State"]["Name"],
+            "public_ip": inst.get("PublicIpAddress"),
+            "private_ip": inst.get("PrivateIpAddress"),
+            "key_name": inst.get("KeyName"),
+            "security_groups": sg_list,
+            "launch_time": inst["LaunchTime"].isoformat(),
+            "availability_zone": inst["Placement"]["AvailabilityZone"],
+            "ami_id": inst["ImageId"],
+            "volumes": volumes,
+        }
+        instances.append(info)
 
     instances.sort(key=lambda x: x["launch_time"])
 
     logging.info(f"Found {len(instances)} instance(s) in {region}")
     for inst in instances:
+        vol_str = ", ".join(
+            f"{v['device']}:{v['size_gb']}GB({v['volume_type']})" for v in inst["volumes"]
+        ) or "none"
         logging.info(
             f"  {inst['instance_id']} | {inst['state']:8s} | {inst['name']:20s} | {inst['instance_type']:12s} | "
             f"public_ip={inst['public_ip']} | private_ip={inst['private_ip']} | "
+            f"volumes={vol_str} | "
             f"key={inst['key_name']} | sg={inst['security_groups']} | "
             f"az={inst['availability_zone']} | ami={inst['ami_id']} | "
             f"launched={inst['launch_time']}"
@@ -535,7 +591,10 @@ def manage_instances(region="us-east-1"):
         menu = {}
         idx = 1
         for inst in instances:
-            label = f"{inst['instance_id']} | {inst['name']} | {inst['instance_type']} | {inst['state']}"
+            vol_str = ", ".join(
+                f"{v['size_gb']}GB({v['volume_type']})" for v in inst["volumes"]
+            ) or "no disk"
+            label = f"{inst['instance_id']} | {inst['name']} | {inst['instance_type']} | {inst['state']} | {vol_str}"
             if inst["state"] == "running":
                 print(f"  {idx:3d}. STOP       {label}")
                 menu[idx] = ("stop", inst)

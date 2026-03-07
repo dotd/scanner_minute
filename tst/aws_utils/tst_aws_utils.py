@@ -76,6 +76,7 @@ def tst_launch_instance(
         instance_type=instance_type,
         key_name=key_name,
         region=region,
+        disk_size_gb=50,  # gb size of the disk
     )
     logging.info(f"Launched: {instance_ids}")
     return instance_ids
@@ -145,6 +146,6 @@ if __name__ == "__main__":
     # tst_create_key_pair()
     # tst_create_security_group()
     # tst_list_instance_types()
-    # tst_launch_instance()
+    tst_launch_instance()
     # tst_list_running_instances()
     tst_manage_instances()
