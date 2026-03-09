@@ -17,3 +17,4 @@ I want to add file imaging_utils.py to ScannerMinute/src. In this file, there wi
 2) A python function that removes the installation of node.js
 3) A function that runs the server 
 
+Under tst/tst_node.js create a script that operates cheking whether node.js is installed and install it if not. Then, run the server with some default parameters that shows a static webpage with node so we know it works.

@@ -67,6 +67,7 @@ def tst_launch_instance(
     instance_type="t2.micro",
     key_name="scanner-minute-key",
     region="us-east-1",
+    disk_size_gb=None,
 ):
     logging_utils.setup_logging(log_level="INFO", include_time=True)
 
@@ -76,7 +77,7 @@ def tst_launch_instance(
         instance_type=instance_type,
         key_name=key_name,
         region=region,
-        disk_size_gb=50,  # gb size of the disk
+        disk_size_gb=disk_size_gb,
     )
     logging.info(f"Launched: {instance_ids}")
     return instance_ids
@@ -146,6 +147,6 @@ if __name__ == "__main__":
     # tst_create_key_pair()
     # tst_create_security_group()
     # tst_list_instance_types()
-    tst_launch_instance()
+    tst_launch_instance(disk_size_gb=None)
     # tst_list_running_instances()
     tst_manage_instances()

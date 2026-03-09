@@ -146,7 +146,7 @@ def run_realtime(
 
     for i in range(3):
         key_time_now_utc = datetime.now(timezone.utc).strftime(
-            "%Y-%m-%dT%H:%M:%SZ"
+            "%Y-%m-%dT%H:%M:%S"
         )  #  ISO 8601 format: YYYY-MM-DDTHH:MM:SS.SSSSSS
         # snapshots is a list of TickerSnapshot objects where each object is the info for a single ticker
         items = client.get_snapshot_all("stocks", tickers=tickers)
