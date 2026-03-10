@@ -101,7 +101,7 @@ const server = http.createServer((req, res) => {
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
     });
-    res.write(':\\n\\n'); // SSE comment to establish connection
+    res.write(':\n\n'); // SSE comment to establish connection
     clients.push(res);
     req.on('close', () => {
       const idx = clients.indexOf(res);
@@ -117,7 +117,7 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       // Broadcast to all SSE clients
       clients.forEach(client => {
-        client.write('event: breakouts\\ndata: ' + body + '\\n\\n');
+        client.write('event: breakouts\ndata: ' + body + '\n\n');
       });
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end('{"ok":true}');
@@ -131,7 +131,7 @@ const server = http.createServer((req, res) => {
     req.on('data', chunk => { body += chunk; });
     req.on('end', () => {
       clients.forEach(client => {
-        client.write('event: scan\\ndata: ' + body + '\\n\\n');
+        client.write('event: scan\ndata: ' + body + '\n\n');
       });
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end('{"ok":true}');
