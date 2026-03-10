@@ -11,8 +11,10 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 
 DEFAULT_LOOKBACK_MINUTES = [1, 5, 15, 30, 60]
-DEFAULT_BREAKOUT_THRESHOLD = 1.1
+DEFAULT_BREAKOUT_THRESHOLD = 1.05
 DEFAULT_ROCKSDICT_PATH = f"{PROJECT_ROOT_DIR}/data_rocksdict_snapshots"
+DEFAULT_MIN_PRICE = 2.0
+DEFAULT_MAX_PRICE = 20.0
 
 
 def get_args_realtime():
@@ -48,6 +50,18 @@ def get_args_realtime():
         type=str,
         default=DEFAULT_ROCKSDICT_PATH,
         help="path to rocksdict database",
+    )
+    parser.add_argument(
+        "--min_price",
+        type=float,
+        default=DEFAULT_MIN_PRICE,
+        help="minimum prev_day.vwap price for breakout detection",
+    )
+    parser.add_argument(
+        "--max_price",
+        type=float,
+        default=DEFAULT_MAX_PRICE,
+        help="maximum prev_day.vwap price for breakout detection",
     )
     parser.add_argument(
         "--include_time", type=bool, default=True, help="include time in logs"
@@ -100,6 +114,8 @@ def scan_breakouts(
     current_snapshots: dict,
     lookback_minutes: list[int],
     threshold: float,
+    min_price: float = DEFAULT_MIN_PRICE,
+    max_price: float = DEFAULT_MAX_PRICE,
 ):
     """
     Compare current snapshot prices against past snapshots at each lookback period.
@@ -128,6 +144,11 @@ def scan_breakouts(
             continue
 
         for ticker, current_snap in current_snapshots.items():
+            # Filter by prev_day.vwap price range
+            vwap = current_snap.get("prev_day.vwap")
+            if vwap is None or vwap < min_price or vwap > max_price:
+                continue
+
             current_close = current_snap.get("min.close")
             if not current_close or current_close == 0:
                 continue
@@ -184,6 +205,8 @@ def run_realtime(
     lookback_minutes=None,
     breakout_threshold=DEFAULT_BREAKOUT_THRESHOLD,
     rocksdict_path=DEFAULT_ROCKSDICT_PATH,
+    min_price=DEFAULT_MIN_PRICE,
+    max_price=DEFAULT_MAX_PRICE,
     include_time=True,
 ):
     if lookback_minutes is None:
@@ -223,7 +246,13 @@ def run_realtime(
 
             # Run breakout detection
             breakouts = scan_breakouts(
-                db, key_time_utc, snapshots, lookback_minutes, breakout_threshold
+                db,
+                key_time_utc,
+                snapshots,
+                lookback_minutes,
+                breakout_threshold,
+                min_price,
+                max_price,
             )
             log_breakouts(breakouts)
 
