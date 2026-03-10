@@ -1,8 +1,12 @@
 import os
 import logging
 import argparse
+import subprocess
 import time
 import pickle
+import webbrowser
+
+import requests
 from rocksdict import Rdict
 from datetime import datetime, timezone, timedelta
 from ScannerMinute.src import logging_utils, snapshot_utils
@@ -198,6 +202,34 @@ def process_items(items):
     return {snap["ticker"]: snap for snap in snapshots}
 
 
+SERVER_URL = "http://127.0.0.1:3000"
+
+
+def start_server():
+    """Start the Node.js dashboard server and open the browser."""
+    server_js = os.path.join(PROJECT_ROOT_DIR, "node_server", "server.js")
+    proc = subprocess.Popen(
+        ["node", server_js],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    time.sleep(1)
+    if proc.poll() is not None:
+        stderr = proc.stderr.read().decode()
+        raise RuntimeError(f"Node server failed to start: {stderr}")
+    logging.info(f"Node dashboard started at {SERVER_URL}")
+    webbrowser.open(SERVER_URL)
+    return proc
+
+
+def post_to_server(endpoint: str, data: dict):
+    """Post JSON data to the Node server. Silently logs on failure."""
+    try:
+        requests.post(f"{SERVER_URL}/{endpoint}", json=data, timeout=2)
+    except Exception as e:
+        logging.warning(f"[post_to_server] Failed to post to /{endpoint}: {e}")
+
+
 def run_realtime(
     tickers=None,
     scanning_period_secs=10,
@@ -227,6 +259,8 @@ def run_realtime(
         f"lookbacks={lookback_minutes}min, threshold={breakout_threshold}"
     )
 
+    server_proc = start_server()
+
     scan_count = 0
     try:
         while num_scans is None or scan_count < num_scans:
@@ -243,6 +277,7 @@ def run_realtime(
             logging.info(
                 f"[scan #{scan_count}] Stored {len(snapshots)} tickers at {key_time_utc}"
             )
+            post_to_server("scan", {"time": key_time_utc, "ticker_count": len(snapshots)})
 
             # Run breakout detection
             breakouts = scan_breakouts(
@@ -255,6 +290,8 @@ def run_realtime(
                 max_price,
             )
             log_breakouts(breakouts)
+            if breakouts:
+                post_to_server("breakouts", {"time": key_time_utc, "breakouts": breakouts})
 
             # Sleep remaining time
             elapsed = time.time() - t0
@@ -266,7 +303,8 @@ def run_realtime(
         logging.info("Scanner stopped by user")
     finally:
         db.close()
-        logging.info(f"Database closed. Total scans: {scan_count}")
+        server_proc.terminate()
+        logging.info(f"Database closed, server stopped. Total scans: {scan_count}")
 
 
 if __name__ == "__main__":
