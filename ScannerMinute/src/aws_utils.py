@@ -3,7 +3,40 @@ import logging
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError, NoCredentialsError
 
+
 from ScannerMinute.definitions import PROJECT_ROOT_DIR
+
+INSTANCE_TYPE_VALUES = ["t2.*", "t3.*", "p3*", "p4*", "g4*", "g5*"]
+
+
+INSTALL_SCRIPT = """
+# Update packages
+sudo apt update
+
+# Install Node.js 20.x (LTS)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verify
+
+########################################################
+# Download the latest Miniconda installer
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# Run installer with all defaults accepted automatically
+bash Miniconda3-latest-Linux-x86_64.sh -b
+
+# Initialize conda for your shell
+~/miniconda3/bin/conda init bash
+
+# Reload shell config
+source ~/.bashrc
+
+# Verify
+conda --version
+node --version
+npm --version
+"""
 
 
 def check_aws_connection():
@@ -186,6 +219,67 @@ def launch_instance(
     return results
 
 
+def run_command_on_instance(
+    instance_id, command, region="us-east-1", timeout_seconds=60
+):
+    """
+    Run a shell command on an EC2 instance via SSM Run Command and return the output.
+
+    Requires the SSM Agent to be running on the instance and the instance to have
+    an IAM role with AmazonSSMManagedInstanceCore policy attached.
+
+    Parameters:
+        instance_id: str — EC2 instance ID
+        command: str — shell command to execute
+        region: str — AWS region
+        timeout_seconds: int — max seconds to wait for the command to finish
+
+    Returns:
+        dict with keys: status, stdout, stderr
+    """
+    import time
+
+    ssm = boto3.client("ssm", region_name=region)
+
+    response = ssm.send_command(
+        InstanceIds=[instance_id],
+        DocumentName="AWS-RunShellCommand",
+        Parameters={"commands": [command]},
+        TimeoutSeconds=timeout_seconds,
+    )
+    command_id = response["Command"]["CommandId"]
+    logging.info(
+        f"[run_command] Sent command '{command}' to {instance_id} | command_id={command_id}"
+    )
+
+    # Poll for completion
+    for _ in range(timeout_seconds):
+        time.sleep(1)
+        try:
+            result = ssm.get_command_invocation(
+                CommandId=command_id,
+                InstanceId=instance_id,
+            )
+        except ssm.exceptions.InvocationDoesNotExist:
+            continue
+
+        if result["Status"] in ("Success", "Failed", "Cancelled", "TimedOut"):
+            output = {
+                "status": result["Status"],
+                "stdout": result.get("StandardOutputContent", ""),
+                "stderr": result.get("StandardErrorContent", ""),
+            }
+            logging.info(f"[run_command] Status={output['status']}")
+            if output["stdout"]:
+                logging.info(f"[run_command] stdout:\n{output['stdout']}")
+            if output["stderr"]:
+                logging.info(f"[run_command] stderr:\n{output['stderr']}")
+            return output
+
+    logging.error(f"[run_command] Timed out waiting for command {command_id}")
+    return {"status": "TimedOut", "stdout": "", "stderr": ""}
+
+
 def create_key_pair(
     key_name="scanner-minute-key",
     region="us-east-1",
@@ -257,7 +351,9 @@ def create_security_group(
     if vpc_id is None:
         vpcs = ec2.describe_vpcs(Filters=[{"Name": "is-default", "Values": ["true"]}])
         if not vpcs["Vpcs"]:
-            logging.error("[create_security_group] No default VPC found. Specify vpc_id explicitly.")
+            logging.error(
+                "[create_security_group] No default VPC found. Specify vpc_id explicitly."
+            )
             return None
         vpc_id = vpcs["Vpcs"][0]["VpcId"]
 
@@ -271,10 +367,14 @@ def create_security_group(
         )
         if existing["SecurityGroups"]:
             sg_id = existing["SecurityGroups"][0]["GroupId"]
-            logging.info(f"[create_security_group] Security group '{group_name}' already exists: {sg_id}")
+            logging.info(
+                f"[create_security_group] Security group '{group_name}' already exists: {sg_id}"
+            )
             return sg_id
     except ClientError as e:
-        logging.error(f"[create_security_group] Error checking existing security groups: {e}")
+        logging.error(
+            f"[create_security_group] Error checking existing security groups: {e}"
+        )
         return None
 
     # Create the security group
@@ -286,7 +386,9 @@ def create_security_group(
         )
         sg_id = response["GroupId"]
     except ClientError as e:
-        logging.error(f"[create_security_group] Failed to create security group '{group_name}': {e}")
+        logging.error(
+            f"[create_security_group] Failed to create security group '{group_name}': {e}"
+        )
         return None
 
     # Add inbound rules: SSH, HTTP, HTTPS
@@ -315,7 +417,9 @@ def create_security_group(
             ],
         )
     except ClientError as e:
-        logging.error(f"[create_security_group] Failed to set ingress rules for {sg_id}: {e}")
+        logging.error(
+            f"[create_security_group] Failed to set ingress rules for {sg_id}: {e}"
+        )
 
     # Tag it
     try:
@@ -324,7 +428,9 @@ def create_security_group(
             Tags=[{"Key": "Name", "Value": group_name}],
         )
     except ClientError as e:
-        logging.warning(f"[create_security_group] Failed to tag security group {sg_id}: {e}")
+        logging.warning(
+            f"[create_security_group] Failed to tag security group {sg_id}: {e}"
+        )
 
     logging.info(
         f"[create_security_group] Created security group '{group_name}' ({sg_id}) in VPC {vpc_id} | "
@@ -438,7 +544,9 @@ def list_instance_types(region="us-east-1", filters=None):
 
     instance_types.sort(key=lambda x: (x["vcpus"], x["memory_mib"]))
 
-    logging.info(f"[list_instance_types] Found {len(instance_types)} instance types in {region}")
+    logging.info(
+        f"[list_instance_types] Found {len(instance_types)} instance types in {region}"
+    )
     for it in instance_types:
         price_str = (
             f"${it['price_per_hour']:.4f}/hr"
@@ -514,12 +622,14 @@ def list_running_instances(region="us-east-1"):
             if "Ebs" in bdm:
                 vol_id = bdm["Ebs"]["VolumeId"]
                 vol_info = volume_map.get(vol_id, {})
-                volumes.append({
-                    "device": bdm["DeviceName"],
-                    "volume_id": vol_id,
-                    "size_gb": vol_info.get("size_gb"),
-                    "volume_type": vol_info.get("volume_type"),
-                })
+                volumes.append(
+                    {
+                        "device": bdm["DeviceName"],
+                        "volume_id": vol_id,
+                        "size_gb": vol_info.get("size_gb"),
+                        "volume_type": vol_info.get("volume_type"),
+                    }
+                )
 
         info = {
             "instance_id": inst["InstanceId"],
@@ -539,11 +649,17 @@ def list_running_instances(region="us-east-1"):
 
     instances.sort(key=lambda x: x["launch_time"])
 
-    logging.info(f"[list_running_instances] Found {len(instances)} instance(s) in {region}")
+    logging.info(
+        f"[list_running_instances] Found {len(instances)} instance(s) in {region}"
+    )
     for inst in instances:
-        vol_str = ", ".join(
-            f"{v['device']}:{v['size_gb']}GB({v['volume_type']})" for v in inst["volumes"]
-        ) or "none"
+        vol_str = (
+            ", ".join(
+                f"{v['device']}:{v['size_gb']}GB({v['volume_type']})"
+                for v in inst["volumes"]
+            )
+            or "none"
+        )
         logging.info(
             f"[list_running_instances]   {inst['instance_id']} | {inst['state']:8s} | {inst['name']:20s} | {inst['instance_type']:12s} | "
             f"public_ip={inst['public_ip']} | private_ip={inst['private_ip']} | "
@@ -556,7 +672,10 @@ def list_running_instances(region="us-east-1"):
     return instances
 
 
-def manage_instances(region="us-east-1"):
+def manage_instances(
+    region="us-east-1",
+    instance_type_values=["t2.micro", "t2.small", "t3.micro", "t3.small", "g5.2xlarge"],
+):
     """
     Interactive loop to manage running and stopped EC2 instances.
 
@@ -577,55 +696,91 @@ def manage_instances(region="us-east-1"):
               instance_ids (list of affected instance IDs)
     """
     actions_taken = []
+    instance_types = list_instance_types(
+        region=region,
+        filters=[{"Name": "instance-type", "Values": instance_type_values}],
+    )
 
     while True:
         instances = list_running_instances(region=region)
         n = len(instances)
 
-        if n == 0:
-            logging.info("[manage_instances] No running or stopped instances to manage.")
-            break
-
-        # Build menu: 2 options per instance + 4 bulk options
+        # Build menu: 2 options per instance + bulk options + launch
         print("\n=== Manage Instances ===\n")
         menu = {}
         idx = 1
+
+        if n == 0:
+            print("  No running or stopped instances found.\n")
+
+        # Fetch AMI names in bulk for all instances
+        ami_ids = list({inst["ami_id"] for inst in instances if inst.get("ami_id")})
+        ami_name_map = {}
+        if ami_ids:
+            ec2_client = boto3.client("ec2", region_name=region)
+            try:
+                ami_resp = ec2_client.describe_images(ImageIds=ami_ids)
+                for img in ami_resp["Images"]:
+                    ami_name_map[img["ImageId"]] = img.get("Name", img["ImageId"])
+            except ClientError:
+                pass
+
         for inst in instances:
-            vol_str = ", ".join(
-                f"{v['size_gb']}GB({v['volume_type']})" for v in inst["volumes"]
-            ) or "no disk"
-            label = f"{inst['instance_id']} | {inst['name']} | {inst['instance_type']} | {inst['state']} | {vol_str}"
+            vol_str = (
+                ", ".join(
+                    f"{v['size_gb']}GB({v['volume_type']})" for v in inst["volumes"]
+                )
+                or "no disk"
+            )
+            ami_name = ami_name_map.get(
+                inst.get("ami_id", ""), inst.get("ami_id", "unknown")
+            )
+            label = f"{inst['instance_id']} | {inst['name']} | {ami_name} | {inst['instance_type']} | {inst['state']} | {vol_str}"
             if inst["state"] == "running":
-                print(f"  {idx:3d}. STOP       {label}")
+                if inst["public_ip"]:
+                    print(
+                        f"        SSH: ssh -o StrictHostKeyChecking=no -i api_keys/scanner-minute-key.pem ubuntu@{inst['public_ip']}"
+                    )
+                print(f"  {idx:3d}. STOP        {label}")
                 menu[idx] = ("stop", inst)
                 idx += 1
-                print(f"  {idx:3d}. TERMINATE   {label}")
+                print(f"  {idx:3d}. TERMINATE    {label}")
                 menu[idx] = ("terminate", inst)
+                idx += 1
+                print(f"  {idx:3d}. RUN COMMAND  {label}")
+                menu[idx] = ("run_command", inst)
                 idx += 1
             elif inst["state"] == "stopped":
-                print(f"  {idx:3d}. START      {label}")
+                print(f"  {idx:3d}. START        {label}")
                 menu[idx] = ("start", inst)
                 idx += 1
-                print(f"  {idx:3d}. TERMINATE   {label}")
+                print(f"  {idx:3d}. TERMINATE    {label}")
                 menu[idx] = ("terminate", inst)
                 idx += 1
 
-        running_ids = [inst["instance_id"] for inst in instances if inst["state"] == "running"]
-        stopped_ids = [inst["instance_id"] for inst in instances if inst["state"] == "stopped"]
-        all_ids = [inst["instance_id"] for inst in instances]
+        if n > 0:
+            running_ids = [
+                inst["instance_id"] for inst in instances if inst["state"] == "running"
+            ]
+            stopped_ids = [
+                inst["instance_id"] for inst in instances if inst["state"] == "stopped"
+            ]
+            all_ids = [inst["instance_id"] for inst in instances]
 
-        print()
-        bulk_start = idx
-        if running_ids:
-            print(f"  {idx:3d}. STOP ALL running ({len(running_ids)})")
-            menu[idx] = ("stop_all", running_ids)
+            print()
+            if running_ids:
+                print(f"  {idx:3d}. STOP ALL running ({len(running_ids)})")
+                menu[idx] = ("stop_all", running_ids)
+                idx += 1
+            if stopped_ids:
+                print(f"  {idx:3d}. START ALL stopped ({len(stopped_ids)})")
+                menu[idx] = ("start_all", stopped_ids)
+                idx += 1
+            print(f"  {idx:3d}. TERMINATE ALL ({len(all_ids)})")
+            menu[idx] = ("terminate_all", all_ids)
             idx += 1
-        if stopped_ids:
-            print(f"  {idx:3d}. START ALL stopped ({len(stopped_ids)})")
-            menu[idx] = ("start_all", stopped_ids)
-            idx += 1
-        print(f"  {idx:3d}. TERMINATE ALL ({len(all_ids)})")
-        menu[idx] = ("terminate_all", all_ids)
+        print(f"  {idx:3d}. LAUNCH NEW INSTANCE")
+        menu[idx] = ("launch", None)
         print(f"    0. Exit\n")
 
         # Get user choice
@@ -662,27 +817,148 @@ def manage_instances(region="us-east-1"):
 
         elif action == "terminate":
             ids = [target["instance_id"]]
-            logging.info(f"[manage_instances] Terminating {ids[0]} ({target['name']})...")
+            logging.info(
+                f"[manage_instances] Terminating {ids[0]} ({target['name']})..."
+            )
             ec2.terminate_instances(InstanceIds=ids)
             logging.info(f"[manage_instances] Terminate request sent for {ids[0]}")
             actions_taken.append({"action": "terminate", "instance_ids": ids})
 
         elif action == "stop_all":
-            logging.info(f"[manage_instances] Stopping ALL {len(target)} running instances...")
+            logging.info(
+                f"[manage_instances] Stopping ALL {len(target)} running instances..."
+            )
             ec2.stop_instances(InstanceIds=target)
             logging.info(f"[manage_instances] Stop request sent for {target}")
             actions_taken.append({"action": "stop", "instance_ids": target})
 
         elif action == "start_all":
-            logging.info(f"[manage_instances] Starting ALL {len(target)} stopped instances...")
+            logging.info(
+                f"[manage_instances] Starting ALL {len(target)} stopped instances..."
+            )
             ec2.start_instances(InstanceIds=target)
             logging.info(f"[manage_instances] Start request sent for {target}")
             actions_taken.append({"action": "start", "instance_ids": target})
 
         elif action == "terminate_all":
-            logging.info(f"[manage_instances] Terminating ALL {len(target)} instances...")
+            logging.info(
+                f"[manage_instances] Terminating ALL {len(target)} instances..."
+            )
             ec2.terminate_instances(InstanceIds=target)
             logging.info(f"[manage_instances] Terminate request sent for {target}")
             actions_taken.append({"action": "terminate", "instance_ids": target})
+
+        elif action == "run_command":
+            try:
+                cmd = input(
+                    f"  Command to run on {target['instance_id']} ({target['name']}): "
+                ).strip()
+            except EOFError:
+                continue
+            if not cmd:
+                logging.info("[manage_instances] No command entered. Skipping.")
+                continue
+            result = run_command_on_instance(
+                instance_id=target["instance_id"],
+                command=cmd,
+                region=region,
+            )
+            print(f"\n  Status: {result['status']}")
+            if result["stdout"]:
+                print(f"  --- stdout ---\n{result['stdout']}")
+            if result["stderr"]:
+                print(f"  --- stderr ---\n{result['stderr']}")
+            actions_taken.append(
+                {
+                    "action": "run_command",
+                    "instance_ids": [target["instance_id"]],
+                    "command": cmd,
+                    "result": result,
+                }
+            )
+
+        elif action == "launch":
+            AMI_CHOICES = {
+                "1": ("ami-02dfbd4ff395f2a1b", "AWS Linux"),
+                "2": ("ami-0b6c6ebed2801a5cb", "Ubuntu"),
+            }
+            print("\n  Select AMI:")
+            print("    1. AWS Linux  (ami-02dfbd4ff395f2a1b)")
+            print("    2. Ubuntu     (ami-0b6c6ebed2801a5cb)")
+            try:
+                ami_choice = input("  AMI choice (1/2): ").strip()
+            except EOFError:
+                continue
+            if ami_choice not in AMI_CHOICES:
+                logging.info("[manage_instances] Invalid AMI choice. Skipping launch.")
+                continue
+
+            ami_id, ami_label = AMI_CHOICES[ami_choice]
+            suffix = (
+                input(f"  Name suffix (optional, press Enter to skip): ").strip()
+                or None
+            )
+            print("\n  Select instance type:")
+            for i, it in enumerate(instance_types, 1):
+                price_str = (
+                    f"${it['price_per_hour']:.4f}/hr"
+                    if it["price_per_hour"] is not None
+                    else "N/A"
+                )
+                print(
+                    f"    {i:3d}. {it['instance_type']:20s} | {it['vcpus']:3d} vCPUs | "
+                    f"{it['memory_gib']:8.1f} GiB | {price_str}"
+                )
+            it_input = input(
+                "  Instance type [1 or type name, default=t2.micro]: "
+            ).strip()
+            if not it_input:
+                instance_type = "t2.micro"
+            elif it_input.isdigit() and 1 <= int(it_input) <= len(instance_types):
+                instance_type = instance_types[int(it_input) - 1]["instance_type"]
+            else:
+                instance_type = it_input
+            print(f"  → Using instance type: {instance_type}")
+            disk_input = input(
+                "  Disk size in GB (optional, press Enter for default): "
+            ).strip()
+            disk_size_gb = int(disk_input) if disk_input else None
+
+            logging.info(
+                f"[manage_instances] Launching {ami_label} ({ami_id}) as {instance_type}..."
+            )
+            results = launch_instance(
+                image_id=ami_id,
+                instance_type=instance_type,
+                key_name="scanner-minute-key",
+                region=region,
+                suffix=suffix,
+                disk_size_gb=disk_size_gb,
+            )
+            launched_ids = [r["instance_id"] for r in results]
+            actions_taken.append(
+                {
+                    "action": "launch",
+                    "instance_ids": launched_ids,
+                }
+            )
+
+            # Run install script on Ubuntu instances after launch
+            if ami_label == "Ubuntu":
+                logging.info(
+                    "[manage_instances] Running INSTALL_SCRIPT on launched Ubuntu instance(s)..."
+                )
+                for r in results:
+                    install_result = run_command_on_instance(
+                        instance_id=r["instance_id"],
+                        command=INSTALL_SCRIPT,
+                        region=region,
+                        timeout_seconds=300,
+                    )
+                    print(f"\n  Install on {r['instance_id']}: {install_result['status']}")
+                    if install_result["stdout"]:
+                        print(f"  --- stdout ---\n{install_result['stdout']}")
+                    if install_result["stderr"]:
+                        print(f"  --- stderr ---\n{install_result['stderr']}")
 
     return actions_taken

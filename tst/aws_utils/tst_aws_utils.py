@@ -11,6 +11,8 @@ from ScannerMinute.src.aws_utils import (
     manage_instances,
 )
 
+INSTANCE_TYPE_VALUES = ["t2.*", "t3.*", "p3*", "p4*", "g4*", "g5*"]
+
 
 def tst_aws_connection():
     logging_utils.setup_logging(log_level="INFO", include_time=True)
@@ -108,14 +110,19 @@ def tst_create_security_group():
     return sg_id
 
 
-def tst_list_instance_types(region="us-east-1"):
+def tst_list_instance_types(region="us-east-1", values=INSTANCE_TYPE_VALUES):
     logging_utils.setup_logging(log_level="INFO", include_time=True)
 
     # List only t2 and t3 families to keep output short
-    logging.info(f"Listing t2/t3 instance types in {region}...")
+    logging.info(f"Listing {';'.join(values)} instance types in {region}...")
     types = list_instance_types(
         region=region,
-        filters=[{"Name": "instance-type", "Values": ["t2.*", "t3.*"]}],
+        filters=[
+            {
+                "Name": "instance-type",
+                "Values": values,
+            }
+        ],
     )
     logging.info(f"Found {len(types)} instance types.")
     return types
@@ -134,19 +141,12 @@ def tst_list_running_instances(region="us-east-1"):
     return instances
 
 
-def tst_manage_instances(region="us-east-1"):
-    logging_utils.setup_logging(log_level="INFO", include_time=True)
-    result = manage_instances(region=region)
-    logging.info(f"Result: {result}")
-    return result
-
-
 if __name__ == "__main__":
     # tst_aws_connection()
     # tst_list_images()
     # tst_create_key_pair()
     # tst_create_security_group()
-    # tst_list_instance_types()
-    tst_launch_instance(disk_size_gb=None)
+    tst_list_instance_types()
+    # tst_launch_instance(disk_size_gb=None)
     # tst_list_running_instances()
-    tst_manage_instances()
+    # tst_manage_instances()
