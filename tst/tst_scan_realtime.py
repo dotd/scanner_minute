@@ -14,8 +14,8 @@ from ScannerMinute.src import polygon_utils
 from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 
-DEFAULT_LOOKBACK_MINUTES = [1, 5, 15, 30, 60]
-DEFAULT_BREAKOUT_THRESHOLD = 1.05
+DEFAULT_LOOKBACK_MINUTES = [1, 5, 10]
+DEFAULT_BREAKOUT_THRESHOLD = 1.10
 DEFAULT_ROCKSDICT_PATH = f"{PROJECT_ROOT_DIR}/data_rocksdict_snapshots"
 DEFAULT_MIN_PRICE = 2.0
 DEFAULT_MAX_PRICE = 20.0
@@ -192,7 +192,8 @@ def log_breakouts(breakouts: list[dict]):
             f"  {b['ticker']:6s} | {b['lookback_min']:3d}m ago | "
             f"ratio={b['ratio']:.4f} | "
             f"${b['past_close']:.2f} -> ${b['current_close']:.2f} | "
-            f"past={b['past_time']}"
+            f"past={b['past_time']} | "
+            f"https://www.tradingview.com/chart/?symbol={b['ticker']}"
         )
 
 
@@ -277,7 +278,9 @@ def run_realtime(
             logging.info(
                 f"[scan #{scan_count}] Stored {len(snapshots)} tickers at {key_time_utc}"
             )
-            post_to_server("scan", {"time": key_time_utc, "ticker_count": len(snapshots)})
+            post_to_server(
+                "scan", {"time": key_time_utc, "ticker_count": len(snapshots)}
+            )
 
             # Run breakout detection
             breakouts = scan_breakouts(
@@ -291,7 +294,9 @@ def run_realtime(
             )
             log_breakouts(breakouts)
             if breakouts:
-                post_to_server("breakouts", {"time": key_time_utc, "breakouts": breakouts})
+                post_to_server(
+                    "breakouts", {"time": key_time_utc, "breakouts": breakouts}
+                )
 
             # Sleep remaining time
             elapsed = time.time() - t0

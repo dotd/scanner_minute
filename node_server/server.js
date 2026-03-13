@@ -20,6 +20,7 @@ const dashboardHtml = `
     #breakouts td { padding: 6px 8px; border-bottom: 1px solid #0f3460; }
     .scan-header { background: #16213e; color: #4caf50; font-weight: bold; }
     .breakout-row { background: #1a1a2e; }
+    .breakout-row { cursor: pointer; }
     .breakout-row:hover { background: #16213e; }
     .ratio-high { color: #ff6b6b; font-weight: bold; }
     .ratio-med { color: #ffa726; }
@@ -78,6 +79,9 @@ const dashboardHtml = `
           '<td class="' + ratioClass + '">' + b.ratio.toFixed(4) + '</td>' +
           '<td>$' + b.past_close.toFixed(2) + ' → $' + b.current_close.toFixed(2) + '</td>' +
           '<td>' + b.past_time + '</td>';
+        row.addEventListener('click', () => {
+          window.open('https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(b.ticker), '_blank');
+        });
         tbody.insertBefore(row, headerRow.nextSibling);
       });
     });
