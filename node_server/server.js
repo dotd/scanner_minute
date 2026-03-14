@@ -80,7 +80,7 @@ const dashboardHtml = `
           '<td>$' + b.past_close.toFixed(2) + ' → $' + b.current_close.toFixed(2) + '</td>' +
           '<td>' + b.past_time + '</td>';
         row.addEventListener('click', () => {
-          window.open('https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(b.ticker), '_blank');
+          window.open('https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(b.ticker) + '&interval=1', '_blank');
         });
         tbody.insertBefore(row, headerRow.nextSibling);
       });

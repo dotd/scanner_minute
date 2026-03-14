@@ -21,7 +21,6 @@ def download_and_store(
     db.close()
 
     # 2. Download 50 tickers, monthly chunks, 10 threads
-    today = datetime.now().strftime("%Y-%m-%d")
     tasks = polygon_utils.generate_tasks(tickers, date_start, date_end)
 
     t0 = time.time()
@@ -55,7 +54,9 @@ def read_bars(
     return results
 
 
-def tst_rocksdict_utils(limit_tickers=100000, prior_days=365, date_start=None):
+def tst_rocksdict_utils(
+    limit_tickers=100000, prior_days=365, date_start=None, tickers=TICKERS
+):
     t0 = time.time()
     logging_utils.setup_logging(
         log_level="INFO",
@@ -69,7 +70,7 @@ def tst_rocksdict_utils(limit_tickers=100000, prior_days=365, date_start=None):
         else date_start
     )
     today = datetime.now().strftime("%Y-%m-%d")
-    tickers = TICKERS[0:limit_tickers]
+    tickers = tickers[0:limit_tickers]
     num_threads = max(
         1, min(10, len(tickers) // 2)
     )  # number of threads is at least 1 and at most 10, and at most half the number of tickers
@@ -84,4 +85,11 @@ def tst_rocksdict_utils(limit_tickers=100000, prior_days=365, date_start=None):
 
 
 if __name__ == "__main__":
-    tst_rocksdict_utils(limit_tickers=50, prior_days=365, date_start="2026-01-01")
+    all_tickers = polygon_utils.get_all_tickers_from_snapshot(
+        polygon_utils.get_polygon_client()
+    )
+    tst_rocksdict_utils(
+        limit_tickers=None,
+        prior_days=10,
+        tickers=all_tickers,
+    )

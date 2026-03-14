@@ -15,7 +15,7 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 
 DEFAULT_LOOKBACK_MINUTES = [1, 5, 10]
-DEFAULT_BREAKOUT_THRESHOLD = 1.10
+DEFAULT_BREAKOUT_THRESHOLD = 1.05
 DEFAULT_ROCKSDICT_PATH = f"{PROJECT_ROOT_DIR}/data_rocksdict_snapshots"
 DEFAULT_MIN_PRICE = 2.0
 DEFAULT_MAX_PRICE = 20.0
@@ -189,11 +189,11 @@ def log_breakouts(breakouts: list[dict]):
     logging.info(f"=== {len(breakouts)} BREAKOUTS DETECTED ===")
     for b in breakouts:
         logging.info(
-            f"  {b['ticker']:6s} | {b['lookback_min']:3d}m ago | "
-            f"ratio={b['ratio']:.4f} | "
-            f"${b['past_close']:.2f} -> ${b['current_close']:.2f} | "
-            f"past={b['past_time']} | "
-            f"https://www.tradingview.com/chart/?symbol={b['ticker']}"
+            f"{b['ticker']:6s}|{b['lookback_min']:3d}m| "
+            f"r={b['ratio']:.3f}|"
+            f"${b['past_close']:.2f}->${b['current_close']:.2f}|"
+            f"{b['past_time']} | "
+            f"https://www.tradingview.com/chart/?symbol={b['ticker']}&interval=1"
         )
 
 
