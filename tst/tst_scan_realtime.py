@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import time
 import pickle
+import random
 import webbrowser
 
 import requests
@@ -11,6 +12,7 @@ from rocksdict import Rdict
 from datetime import datetime, timezone, timedelta
 from ScannerMinute.src import logging_utils, snapshot_utils
 from ScannerMinute.src import polygon_utils
+from ScannerMinute.src.ticker_utils import ALL_TICKERS
 from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 
@@ -69,6 +71,18 @@ def get_args_realtime():
     )
     parser.add_argument(
         "--include_time", type=bool, default=True, help="include time in logs"
+    )
+    parser.add_argument(
+        "--random_inject",
+        action="store_true",
+        default=False,
+        help="inject a random fake breakout when none are detected",
+    )
+    parser.add_argument(
+        "--random_inject_prob",
+        type=float,
+        default=0.5,
+        help="probability of injecting a random breakout per cycle (default 0.5)",
     )
     args, _ = parser.parse_known_args()
     return args
@@ -241,6 +255,8 @@ def run_realtime(
     min_price=DEFAULT_MIN_PRICE,
     max_price=DEFAULT_MAX_PRICE,
     include_time=True,
+    random_inject=True,
+    random_inject_prob=0.5,
 ):
     if lookback_minutes is None:
         lookback_minutes = DEFAULT_LOOKBACK_MINUTES
@@ -292,6 +308,23 @@ def run_realtime(
                 min_price,
                 max_price,
             )
+            # Inject a random fake breakout if none detected
+            if random_inject and not breakouts and random.random() < random_inject_prob:
+                ticker = random.choice(ALL_TICKERS)
+                fake_breakout = {
+                    "ticker": ticker,
+                    "lookback_min": random.choice(lookback_minutes),
+                    "ratio": round(
+                        random.uniform(breakout_threshold, breakout_threshold + 0.1), 4
+                    ),
+                    "current_close": 0.0,
+                    "past_close": 0.0,
+                    "current_time": key_time_utc,
+                    "past_time": key_time_utc,
+                }
+                breakouts.append(fake_breakout)
+                logging.info(f"[random_inject] Injected fake breakout for {ticker}")
+
             log_breakouts(breakouts)
             if breakouts:
                 post_to_server(

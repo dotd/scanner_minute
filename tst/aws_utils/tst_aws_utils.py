@@ -11,8 +11,6 @@ from ScannerMinute.src.aws_utils import (
     manage_instances,
 )
 
-INSTANCE_TYPE_VALUES = ["t2.*", "t3.*", "p3*", "p4*", "g4*", "g5*"]
-
 
 def tst_aws_connection():
     logging_utils.setup_logging(log_level="INFO", include_time=True)

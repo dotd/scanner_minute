@@ -74,8 +74,8 @@ def _writer_worker(db_path, result_queue):
             continue
         wb = WriteBatch()
         for bar in data:
-            datetime_utc = bar[1]  # index 1 is datetime_utc per COLUMNS
-            iso_dt = _datetime_utc_to_iso8601(datetime_utc)
+            timestamp_ms = bar[8]  # index 8 is epoch ms (timestamp since 1970)
+            iso_dt = datetime.utcfromtimestamp(timestamp_ms / 1000).strftime("%Y-%m-%dT%H:%M:%S")
             key = f"{timespan}{SEPARATOR}{ticker}{SEPARATOR}{iso_dt}"
             wb[key] = pickle.dumps(bar)
         db.write(wb)

@@ -22,6 +22,7 @@ def download_and_store(
 
     # 2. Download 50 tickers, monthly chunks, 10 threads
     tasks = polygon_utils.generate_tasks(tickers, date_start, date_end)
+    logging.info(f"Generated {len(tasks)} tasks")
 
     t0 = time.time()
     rocksdict_utils.download_and_store(db_path, num_threads=num_threads, tasks=tasks)
@@ -72,24 +73,29 @@ def tst_rocksdict_utils(
     today = datetime.now().strftime("%Y-%m-%d")
     tickers = tickers[0:limit_tickers]
     num_threads = max(
-        1, min(10, len(tickers) // 2)
+        1, min(20, len(tickers) // 2)
     )  # number of threads is at least 1 and at most 10, and at most half the number of tickers
     logging.info(
         f"Using {num_threads} threads, {len(tickers)} tickers, date range: {date_start} to {today}"
     )
     download_and_store(tickers, date_start, today, num_threads)
-    read_bars(tickers, date_start, today)
+    # read_bars(tickers, date_start, today)
 
     t1 = time.time()
     logging.info(f"Total script time: {t1 - t0:.1f}s")
 
 
 if __name__ == "__main__":
+    logging_utils.setup_logging(
+        log_level="INFO",
+        log_folder=f"{os.path.dirname(os.path.abspath(__file__))}/logs/",
+        include_time=True,
+    )
     all_tickers = polygon_utils.get_all_tickers_from_snapshot(
         polygon_utils.get_polygon_client()
     )
     tst_rocksdict_utils(
         limit_tickers=None,
         prior_days=10,
-        tickers=all_tickers,
+        tickers=TICKERS,
     )
