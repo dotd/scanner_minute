@@ -4,7 +4,6 @@ import os
 PACKAGE_ROOT_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )  # This is your Project Root
-logging.info(f"PACKAGE_ROOT_DIR: {PACKAGE_ROOT_DIR}")
 PROJECT_ROOT_DIR = os.path.dirname(PACKAGE_ROOT_DIR)
 CACHE_FOLDER = f"{PROJECT_ROOT_DIR}/cache/"
 SEPARATOR = "\u0001"

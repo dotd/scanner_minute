@@ -103,14 +103,15 @@ def query_bars(
     ticker_globs = ", ".join([f"'{data_dir}/ticker={t}/**.parquet'" for t in tickers])
 
     conn = get_conn()
-    df = conn.execute(
-        f"""
+
+    s = f"""
         SELECT *
         FROM read_parquet([{ticker_globs}], hive_partitioning=true)
         WHERE datetime_utc BETWEEN '{date_from}' AND '{date_to}'
         ORDER BY ticker, timestamp
     """
-    ).df()
+    logging.info(f"Query: {s}")
+    df = conn.execute(s).df()
     conn.close()
     return df
 

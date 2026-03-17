@@ -5,12 +5,14 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 def main():
     client = polygon_utils.get_polygon_client()
+    # The number of samples in a day is 16*60 = 960
+    # The number of samples in a month is 960*30 = 28800
     data = polygon_utils.get_ticker_data_from_polygon(
-        client, "AAPL", "minute", "2025-01-01", "2025-02-01"
+        client, "AAPL", "minute", "2024-01-01", "2025-02-01"
     )
     # print(data)
     duckdb_utils.save_bars("AAPL", data)
-    df = duckdb_utils.query_bars(["AAPL"], "2025-01-01", "2025-02-01")
+    df = duckdb_utils.query_bars(["AAPL"], "20240110_210000", "20240120_210000")
     print(df)
 
 
