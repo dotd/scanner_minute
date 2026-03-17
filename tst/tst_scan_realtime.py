@@ -219,6 +219,41 @@ def process_items(items):
 
 SERVER_URL = "http://127.0.0.1:3000"
 
+# Track tickers we've already sent candle data for this session
+_sent_candle_tickers = set()
+
+
+def fetch_and_post_candles(client, tickers):
+    """Fetch today's 1-minute candles for new breakout tickers and POST to server."""
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    for ticker in tickers:
+        if ticker in _sent_candle_tickers:
+            continue
+        try:
+            data = polygon_utils.get_ticker_data_from_polygon(
+                client, ticker, "minute", today, today
+            )
+            if not data:
+                continue
+            # Convert to chart-friendly format: {time (unix), open, high, low, close, volume}
+            candles = []
+            for row in data:
+                # row: [ticker, datetime_utc, open, high, low, close, volume, vwap, timestamp, transactions, otc]
+                ts_ms = row[8]  # timestamp in milliseconds
+                candles.append({
+                    "time": int(ts_ms / 1000),
+                    "open": row[2],
+                    "high": row[3],
+                    "low": row[4],
+                    "close": row[5],
+                    "volume": row[6],
+                })
+            post_to_server("candles", {"ticker": ticker, "candles": candles})
+            _sent_candle_tickers.add(ticker)
+            logging.info(f"[candles] Sent {len(candles)} candles for {ticker}")
+        except Exception as e:
+            logging.warning(f"[candles] Failed to fetch candles for {ticker}: {e}")
+
 
 def start_server():
     """Start the Node.js dashboard server and open the browser."""
@@ -255,7 +290,7 @@ def run_realtime(
     min_price=DEFAULT_MIN_PRICE,
     max_price=DEFAULT_MAX_PRICE,
     include_time=True,
-    random_inject=True,
+    random_inject=False,
     random_inject_prob=0.5,
 ):
     if lookback_minutes is None:
@@ -325,11 +360,22 @@ def run_realtime(
                 breakouts.append(fake_breakout)
                 logging.info(f"[random_inject] Injected fake breakout for {ticker}")
 
+            # Deduplicate: keep only the highest-ratio breakout per ticker
+            best = {}
+            for b in breakouts:
+                t = b["ticker"]
+                if t not in best or b["ratio"] > best[t]["ratio"]:
+                    best[t] = b
+            breakouts = list(best.values())
+
             log_breakouts(breakouts)
             if breakouts:
                 post_to_server(
                     "breakouts", {"time": key_time_utc, "breakouts": breakouts}
                 )
+                # Fetch and send today's minute candles for breakout tickers
+                breakout_tickers = list({b["ticker"] for b in breakouts})
+                fetch_and_post_candles(client, breakout_tickers)
 
             # Sleep remaining time
             elapsed = time.time() - t0

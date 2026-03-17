@@ -6,6 +6,12 @@ const port = 3000;
 // Connected SSE clients
 const clients = [];
 
+// Store latest breakouts
+let latestBreakouts = { breakouts: [], time: '' };
+
+// Store candle data per ticker
+const tickerCandles = {};
+
 const dashboardHtml = `
 <!DOCTYPE html>
 <html>
@@ -25,7 +31,14 @@ const dashboardHtml = `
     .ratio-high { color: #ff6b6b; font-weight: bold; }
     .ratio-med { color: #ffa726; }
     .ratio-low { color: #4caf50; }
+    .chart-row td { padding: 0; }
+    .chart-row { display: none; }
+    .chart-row.open { display: table-row; }
+    .chart-container { width: 100%; height: 300px; background: #131722; }
+    .tv-link { color: #00d4ff; text-decoration: none; }
+    .tv-link:hover { text-decoration: underline; }
   </style>
+  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
   <h1>Breakout Dashboard</h1>
@@ -39,6 +52,7 @@ const dashboardHtml = `
         <th>Ratio</th>
         <th>Price Change</th>
         <th>Past Time</th>
+        <th></th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -46,45 +60,140 @@ const dashboardHtml = `
   <script>
     const tbody = document.getElementById('tbody');
     const status = document.getElementById('status');
-    const evtSource = new EventSource('/events');
+    const charts = {};  // ticker -> { chart, candleSeries, volumeSeries }
 
-    evtSource.onopen = () => { status.textContent = 'Connected - waiting for breakouts...'; };
-    evtSource.onerror = () => { status.textContent = 'Disconnected - reconnecting...'; status.style.color = '#ff6b6b'; };
+    function createChart(container, ticker, candles) {
+      const pct = (candles ? candles.length : 1) / 100;
+      const chartWidth = Math.max(Math.floor(container.clientWidth / 100), Math.floor(container.clientWidth * pct));
+      const chart = LightweightCharts.createChart(container, {
+        width: chartWidth,
+        height: 300,
+        layout: { background: { color: '#131722' }, textColor: '#d1d4dc' },
+        grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
+        timeScale: { timeVisible: true, secondsVisible: false },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      });
+      const candleSeries = chart.addCandlestickSeries({
+        upColor: '#26a69a', downColor: '#ef5350',
+        borderUpColor: '#26a69a', borderDownColor: '#ef5350',
+        wickUpColor: '#26a69a', wickDownColor: '#ef5350',
+      });
+      const volumeSeries = chart.addHistogramSeries({
+        color: '#26a69a', priceFormat: { type: 'volume' },
+        priceScaleId: '', scaleMargins: { top: 0.8, bottom: 0 },
+      });
+      if (candles && candles.length) {
+        candleSeries.setData(candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close })));
+        volumeSeries.setData(candles.map(c => ({ time: c.time, value: c.volume, color: c.close >= c.open ? '#26a69a80' : '#ef535080' })));
+      }
+      chart.timeScale().fitContent();
+      charts[ticker] = { chart, candleSeries, volumeSeries, container };
+      new ResizeObserver(() => chart.applyOptions({ width: Math.max(Math.floor(container.clientWidth / 100), Math.floor(container.clientWidth * pct)) })).observe(container);
+    }
 
-    evtSource.addEventListener('scan', (e) => {
-      const data = JSON.parse(e.data);
-      status.textContent = 'Last scan: ' + data.time + ' (' + data.ticker_count + ' tickers)';
+    function updateChart(ticker, candles) {
+      if (!charts[ticker] || !candles || !candles.length) return;
+      const { candleSeries, volumeSeries, chart } = charts[ticker];
+      candleSeries.setData(candles.map(c => ({ time: c.time, open: c.open, high: c.high, low: c.low, close: c.close })));
+      volumeSeries.setData(candles.map(c => ({ time: c.time, value: c.volume, color: c.close >= c.open ? '#26a69a80' : '#ef535080' })));
+      chart.timeScale().fitContent();
+    }
+
+    // Track which tickers have their chart open
+    const openCharts = new Set();
+
+    function renderBreakouts(data) {
+      const currentTickers = new Set();
+      if (!data.breakouts || data.breakouts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="color:#888;text-align:center;padding:20px;">No breakouts yet</td></tr>';
+        Object.keys(charts).forEach(t => { charts[t].chart.remove(); delete charts[t]; });
+        return;
+      }
+      status.textContent = 'Last update: ' + data.time + ' (' + data.breakouts.length + ' breakouts)';
       status.style.color = '#4caf50';
-    });
 
-    evtSource.addEventListener('breakouts', (e) => {
-      const data = JSON.parse(e.data);
-      if (data.breakouts.length === 0) return;
+      data.breakouts.forEach(b => currentTickers.add(b.ticker));
 
-      // Add header row for this batch
-      const headerRow = document.createElement('tr');
-      headerRow.className = 'scan-header';
-      headerRow.innerHTML = '<td colspan="6">=== ' + data.breakouts.length + ' breakouts at ' + data.time + ' ===</td>';
-      tbody.insertBefore(headerRow, tbody.firstChild);
+      // Remove charts for tickers no longer in breakouts
+      Object.keys(charts).forEach(t => {
+        if (!currentTickers.has(t)) { charts[t].chart.remove(); delete charts[t]; openCharts.delete(t); }
+      });
 
-      // Add breakout rows (reversed so strongest appears first)
+      tbody.innerHTML = '';
+      const candleData = data.candles || {};
+
       data.breakouts.forEach(b => {
         const row = document.createElement('tr');
         row.className = 'breakout-row';
         const ratioClass = b.ratio >= 1.2 ? 'ratio-high' : b.ratio >= 1.1 ? 'ratio-med' : 'ratio-low';
+        const tvUrl = 'https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(b.ticker) + '&interval=1';
         row.innerHTML =
           '<td>' + b.current_time + '</td>' +
           '<td><strong>' + b.ticker + '</strong></td>' +
           '<td>' + b.lookback_min + 'm</td>' +
           '<td class="' + ratioClass + '">' + b.ratio.toFixed(4) + '</td>' +
-          '<td>$' + b.past_close.toFixed(2) + ' → $' + b.current_close.toFixed(2) + '</td>' +
-          '<td>' + b.past_time + '</td>';
-        row.addEventListener('click', () => {
-          window.open('https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(b.ticker) + '&interval=1', '_blank');
+          '<td>$' + b.past_close.toFixed(2) + ' &rarr; $' + b.current_close.toFixed(2) + '</td>' +
+          '<td>' + b.past_time + '</td>' +
+          '<td><a class="tv-link" href="' + tvUrl + '" target="_blank">TradingView</a></td>';
+        tbody.appendChild(row);
+
+        // Chart row (hidden by default, toggled on click)
+        const chartRow = document.createElement('tr');
+        chartRow.className = 'chart-row' + (openCharts.has(b.ticker) ? ' open' : '');
+        const chartCell = document.createElement('td');
+        chartCell.colSpan = 7;
+        const chartDiv = document.createElement('div');
+        chartDiv.className = 'chart-container';
+        chartDiv.id = 'chart-' + b.ticker;
+        chartCell.appendChild(chartDiv);
+        chartRow.appendChild(chartCell);
+        tbody.appendChild(chartRow);
+
+        // Click row to toggle chart (but not when clicking the TradingView link)
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('a')) return;
+          if (chartRow.classList.contains('open')) {
+            chartRow.classList.remove('open');
+            openCharts.delete(b.ticker);
+          } else {
+            chartRow.classList.add('open');
+            openCharts.add(b.ticker);
+            // Create chart if not yet created and we have data
+            const container = document.getElementById('chart-' + b.ticker);
+            const candles = candleData[b.ticker];
+            if (container && candles && candles.length && !charts[b.ticker]) {
+              createChart(container, b.ticker, candles);
+            } else if (container && (!candles || !candles.length) && !charts[b.ticker]) {
+              container.innerHTML = '<div style="color:#666;padding:10px;text-align:center;">No candle data yet</div>';
+            }
+          }
         });
-        tbody.insertBefore(row, headerRow.nextSibling);
+
+        // If chart was already open, recreate it in the new DOM
+        if (openCharts.has(b.ticker)) {
+          const container = document.getElementById('chart-' + b.ticker);
+          const candles = candleData[b.ticker];
+          if (charts[b.ticker]) { charts[b.ticker].chart.remove(); delete charts[b.ticker]; }
+          if (container && candles && candles.length) {
+            createChart(container, b.ticker, candles);
+          }
+        }
       });
-    });
+    }
+
+    async function fetchLatest() {
+      try {
+        const res = await fetch('/latest');
+        const data = await res.json();
+        renderBreakouts(data);
+      } catch (e) {
+        status.textContent = 'Error fetching breakouts';
+        status.style.color = '#ff6b6b';
+      }
+    }
+
+    fetchLatest();
+    setInterval(fetchLatest, 10000);
   </script>
 </body>
 </html>
@@ -119,6 +228,7 @@ const server = http.createServer((req, res) => {
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', () => {
+      latestBreakouts = JSON.parse(body);
       // Broadcast to all SSE clients
       clients.forEach(client => {
         client.write('event: breakouts\ndata: ' + body + '\n\n');
@@ -140,6 +250,40 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end('{"ok":true}');
     });
+    return;
+  }
+
+  // POST candle data from Python
+  if (req.method === 'POST' && req.url === '/candles') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      const payload = JSON.parse(body);
+      if (payload.ticker && payload.candles) {
+        tickerCandles[payload.ticker] = payload.candles;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end('{"ok":true}');
+    });
+    return;
+  }
+
+  // GET candles for a specific ticker
+  if (req.method === 'GET' && req.url.startsWith('/candles?')) {
+    const params = new URL(req.url, 'http://localhost').searchParams;
+    const ticker = params.get('ticker');
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ticker, candles: tickerCandles[ticker] || [] }));
+    return;
+  }
+
+  // GET latest breakouts for polling (includes candle data for breakout tickers)
+  if (req.method === 'GET' && req.url === '/latest') {
+    const breakoutTickers = (latestBreakouts.breakouts || []).map(b => b.ticker);
+    const candles = {};
+    breakoutTickers.forEach(t => { if (tickerCandles[t]) candles[t] = tickerCandles[t]; });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ...latestBreakouts, candles }));
     return;
   }
 
