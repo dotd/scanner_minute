@@ -114,6 +114,68 @@ def list_images(region="us-east-1", owners=None, filters=None):
     return images
 
 
+SSM_ROLE_NAME = "scanner-minute-ssm-role"
+SSM_INSTANCE_PROFILE_NAME = "scanner-minute-ssm-profile"
+
+
+def ensure_ssm_instance_profile(region="us-east-1"):
+    """
+    Ensure an IAM role and instance profile exist with the
+    AmazonSSMManagedInstanceCore policy attached, so SSM agent
+    can communicate with AWS Systems Manager.
+
+    Returns the instance profile name.
+    """
+    import time as _time
+
+    iam = boto3.client("iam", region_name=region)
+
+    # Create role if it doesn't exist
+    try:
+        iam.get_role(RoleName=SSM_ROLE_NAME)
+        logging.info(f"[ensure_ssm_instance_profile] Role {SSM_ROLE_NAME} already exists")
+    except iam.exceptions.NoSuchEntityException:
+        import json
+
+        trust_policy = json.dumps({
+            "Version": "2012-10-17",
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": {"Service": "ec2.amazonaws.com"},
+                "Action": "sts:AssumeRole",
+            }],
+        })
+        iam.create_role(
+            RoleName=SSM_ROLE_NAME,
+            AssumeRolePolicyDocument=trust_policy,
+            Description="Role for scanner-minute instances to use SSM",
+        )
+        logging.info(f"[ensure_ssm_instance_profile] Created role {SSM_ROLE_NAME}")
+
+    # Attach SSM policy
+    ssm_policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    try:
+        iam.attach_role_policy(RoleName=SSM_ROLE_NAME, PolicyArn=ssm_policy_arn)
+    except Exception:
+        pass  # already attached
+
+    # Create instance profile if it doesn't exist
+    try:
+        iam.get_instance_profile(InstanceProfileName=SSM_INSTANCE_PROFILE_NAME)
+        logging.info(f"[ensure_ssm_instance_profile] Instance profile {SSM_INSTANCE_PROFILE_NAME} already exists")
+    except iam.exceptions.NoSuchEntityException:
+        iam.create_instance_profile(InstanceProfileName=SSM_INSTANCE_PROFILE_NAME)
+        iam.add_role_to_instance_profile(
+            InstanceProfileName=SSM_INSTANCE_PROFILE_NAME,
+            RoleName=SSM_ROLE_NAME,
+        )
+        logging.info(f"[ensure_ssm_instance_profile] Created instance profile {SSM_INSTANCE_PROFILE_NAME}")
+        # Wait for profile to propagate
+        _time.sleep(10)
+
+    return SSM_INSTANCE_PROFILE_NAME
+
+
 def launch_instance(
     image_id,
     instance_type="t2.micro",
@@ -157,11 +219,31 @@ def launch_instance(
     if suffix:
         tag_name = f"{tag_name}_{suffix}"
 
+    # Ensure SSM instance profile exists
+    profile_name = ensure_ssm_instance_profile(region=region)
+
+    # UserData script to install and start SSM agent on Ubuntu/Amazon Linux
+    import base64
+
+    user_data_script = """#!/bin/bash
+# Install SSM agent (Ubuntu)
+if command -v snap &> /dev/null; then
+    sudo snap install amazon-ssm-agent --classic 2>/dev/null || true
+    sudo systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent 2>/dev/null || true
+    sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent 2>/dev/null || true
+fi
+# Start SSM agent (Amazon Linux — pre-installed)
+sudo systemctl enable amazon-ssm-agent 2>/dev/null || true
+sudo systemctl start amazon-ssm-agent 2>/dev/null || true
+"""
+
     kwargs = {
         "ImageId": image_id,
         "InstanceType": instance_type,
         "MinCount": min_count,
         "MaxCount": max_count,
+        "IamInstanceProfile": {"Name": profile_name},
+        "UserData": base64.b64encode(user_data_script.encode()).decode(),
         "TagSpecifications": [
             {
                 "ResourceType": "instance",
@@ -243,7 +325,7 @@ def run_command_on_instance(
 
     response = ssm.send_command(
         InstanceIds=[instance_id],
-        DocumentName="AWS-RunShellCommand",
+        DocumentName="AWS-RunShellScript",
         Parameters={"commands": [command]},
         TimeoutSeconds=timeout_seconds,
     )
