@@ -196,8 +196,8 @@ def scan_breakouts(
     return breakouts
 
 
-def log_breakouts(breakouts: list[dict]):
-    """Log detected breakouts sorted by ratio descending."""
+def log_breakouts(breakouts: list[dict], ticker_news: dict = None):
+    """Log detected breakouts sorted by ratio descending, with news per ticker."""
     if not breakouts:
         return
     breakouts.sort(key=lambda b: b["ratio"], reverse=True)
@@ -210,6 +210,15 @@ def log_breakouts(breakouts: list[dict]):
             f"{b['past_time']} | "
             f"https://www.tradingview.com/chart/?symbol={b['ticker']}&interval=1"
         )
+        if ticker_news and b["ticker"] in ticker_news:
+            for a in ticker_news[b["ticker"]]:
+                sentiment_str = f" [{a['sentiment']}]" if a["sentiment"] else ""
+                pub_time = (
+                    a["published"][:19].replace("T", " ") if a["published"] else ""
+                )
+                logging.info(
+                    f"  news: {pub_time}{sentiment_str} {a['source']}: {a['title']}"
+                )
 
 
 def process_items(items):
@@ -258,53 +267,49 @@ def fetch_and_post_candles(client, tickers):
             logging.warning(f"[candles] Failed to fetch candles for {ticker}: {e}")
 
 
-DEFAULT_NEWS_HOURS_BACK = 24
-DEFAULT_NEWS_LIMIT = 5
-
-# Track tickers we've already sent news for this session
-_sent_news_tickers = set()
+DEFAULT_NEWS_LIMIT = 3
 
 
-def fetch_and_post_news(client, tickers, hours_back=DEFAULT_NEWS_HOURS_BACK, limit=DEFAULT_NEWS_LIMIT):
-    """Fetch recent news for breakout tickers from Polygon (Benzinga) and POST to server."""
-    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours_back)).strftime(
-        "%Y-%m-%dT%H:%M:%SZ"
-    )
+def fetch_and_post_news(client, tickers, limit=DEFAULT_NEWS_LIMIT):
+    """Fetch latest news for breakout tickers from Polygon (Benzinga) and POST to server.
+    Fetches every time a ticker is in the breakout list (no caching).
+    Returns dict: ticker -> list of article dicts."""
+    all_news = {}
     for ticker in tickers:
-        if ticker in _sent_news_tickers:
-            continue
         try:
             news_iter = client.list_ticker_news(
                 ticker=ticker,
-                published_utc_gte=cutoff,
                 limit=limit,
                 sort="published_utc",
                 order="desc",
             )
             articles = []
             for article in news_iter:
+                if len(articles) >= limit:
+                    break
                 # Extract sentiment for this ticker if available
                 sentiment = ""
-                for insight in (getattr(article, "insights", None) or []):
+                for insight in getattr(article, "insights", None) or []:
                     if getattr(insight, "ticker", "") == ticker:
                         sentiment = getattr(insight, "sentiment", "")
                         break
-                articles.append({
-                    "title": getattr(article, "title", ""),
-                    "url": getattr(article, "article_url", ""),
-                    "published": getattr(article, "published_utc", ""),
-                    "source": getattr(getattr(article, "publisher", None), "name", ""),
-                    "sentiment": sentiment,
-                })
+                articles.append(
+                    {
+                        "title": getattr(article, "title", ""),
+                        "url": getattr(article, "article_url", ""),
+                        "published": getattr(article, "published_utc", ""),
+                        "source": getattr(
+                            getattr(article, "publisher", None), "name", ""
+                        ),
+                        "sentiment": sentiment,
+                    }
+                )
             if articles:
                 post_to_server("news", {"ticker": ticker, "articles": articles})
-                _sent_news_tickers.add(ticker)
-                logging.info(f"[news] Sent {len(articles)} articles for {ticker}")
-                for a in articles:
-                    sentiment_str = f" [{a['sentiment']}]" if a['sentiment'] else ""
-                    logging.info(f"[news]   {ticker}{sentiment_str} {a['source']}: {a['title']}")
+                all_news[ticker] = articles
         except Exception as e:
             logging.warning(f"[news] Failed to fetch news for {ticker}: {e}")
+    return all_news
 
 
 DEFAULT_VOLUME_LOOKBACK_DAYS = 10
@@ -576,17 +581,18 @@ def run_realtime(
                     best[t] = b
             breakouts = list(best.values())
 
-            log_breakouts(breakouts)
             if breakouts:
+                breakout_tickers = list({b["ticker"] for b in breakouts})
+
+                # Fetch news first so we can log it alongside breakouts
+                ticker_news = fetch_and_post_news(client, breakout_tickers)
+                log_breakouts(breakouts, ticker_news)
+
                 post_to_server(
                     "breakouts", {"time": key_time_utc, "breakouts": breakouts}
                 )
                 # Fetch and send today's minute candles for breakout tickers
-                breakout_tickers = list({b["ticker"] for b in breakouts})
                 fetch_and_post_candles(client, breakout_tickers)
-
-                # Fetch and send recent news for breakout tickers
-                fetch_and_post_news(client, breakout_tickers)
 
                 # Volume analysis: compare today's volume to historical average
                 volume_pcts = compute_volume_analysis(breakout_tickers)
