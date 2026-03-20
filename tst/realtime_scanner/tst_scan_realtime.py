@@ -300,6 +300,9 @@ def fetch_and_post_news(client, tickers, hours_back=DEFAULT_NEWS_HOURS_BACK, lim
                 post_to_server("news", {"ticker": ticker, "articles": articles})
                 _sent_news_tickers.add(ticker)
                 logging.info(f"[news] Sent {len(articles)} articles for {ticker}")
+                for a in articles:
+                    sentiment_str = f" [{a['sentiment']}]" if a['sentiment'] else ""
+                    logging.info(f"[news]   {ticker}{sentiment_str} {a['source']}: {a['title']}")
         except Exception as e:
             logging.warning(f"[news] Failed to fetch news for {ticker}: {e}")
 
