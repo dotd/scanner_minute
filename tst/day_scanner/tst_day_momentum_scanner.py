@@ -1,107 +1,16 @@
 import logging
-import threading
 import time
-from queue import Queue
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 
-from ScannerMinute.src import logging_utils, polygon_utils
+from ScannerMinute.src import logging_utils
 from ScannerMinute.src.ticker_utils import ALL_TICKERS
+from ScannerMinute.src.quick_download_utils import (
+    download_all_daily_bars,
+    fetch_ticker_industries,
+)
 
 
-NUM_THREADS = 30
 YEARS_BACK = 5
-
-
-def _download_worker(worker_id, task_queue, result_dict, lock, progress, tickers_set):
-    """Worker thread: download grouped daily bars for each date task."""
-    tag = f"[W{worker_id}]"
-    client = polygon_utils.get_polygon_client()
-    while True:
-        task = task_queue.get()
-        if task is None:
-            break
-        date_str = task
-        try:
-            aggs = client.get_grouped_daily_aggs(date=date_str)
-            with lock:
-                for agg in aggs:
-                    ticker = agg.ticker
-                    if tickers_set and ticker not in tickers_set:
-                        continue
-                    if ticker not in result_dict:
-                        result_dict[ticker] = []
-                    result_dict[ticker].append({
-                        "date": date_str,
-                        "open": agg.open,
-                        "high": agg.high,
-                        "low": agg.low,
-                        "close": agg.close,
-                        "volume": agg.volume,
-                        "timestamp": agg.timestamp,
-                    })
-                progress["done"] += 1
-                done = progress["done"]
-                total = progress["total"]
-                elapsed = time.time() - progress["t0"]
-                rate = done / elapsed if elapsed > 0 else 0
-                remaining = (total - done) / rate if rate > 0 else 0
-                n_tickers = len([t for t in aggs if not tickers_set or t.ticker in tickers_set])
-                logging.info(
-                    f"{tag} {date_str}: {n_tickers} tickers | "
-                    f"{done}/{total} ({done*100/total:.1f}%) | "
-                    f"elapsed={elapsed:.1f}s | ETA={remaining:.1f}s"
-                )
-        except Exception as e:
-            with lock:
-                progress["done"] += 1
-            logging.error(f"{tag} Error downloading {date_str}: {e}")
-
-
-def get_trading_days(years_back=YEARS_BACK):
-    """Get list of trading days using Polygon, from years_back ago to today."""
-    client = polygon_utils.get_polygon_client()
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    date_start = (
-        datetime.now(timezone.utc) - timedelta(days=years_back * 365)
-    ).strftime("%Y-%m-%d")
-    trading_days = polygon_utils.get_trading_days(client, from_=date_start, to=today)
-    logging.info(f"Found {len(trading_days)} trading days from {date_start} to {today}")
-    return trading_days
-
-
-def download_all_daily_bars(tickers, num_threads=NUM_THREADS):
-    """
-    Multi-threaded download of grouped daily bars for all trading days.
-    Uses get_grouped_daily_aggs (regular session only) — one API call per day.
-    Returns dict: ticker -> list of bar dicts.
-    """
-    trading_days = get_trading_days()
-    tickers_set = set(tickers)
-
-    task_queue = Queue()
-    result_dict = {}
-    lock = threading.Lock()
-    progress = {"done": 0, "total": len(trading_days), "t0": time.time()}
-
-    for day in trading_days:
-        task_queue.put(day)
-
-    for _ in range(num_threads):
-        task_queue.put(None)
-
-    threads = []
-    for i in range(num_threads):
-        t = threading.Thread(
-            target=_download_worker,
-            args=(i, task_queue, result_dict, lock, progress, tickers_set),
-        )
-        t.start()
-        threads.append(t)
-
-    for t in threads:
-        t.join()
-
-    return result_dict
 
 
 def count_consecutive_green_days(bars):
@@ -142,7 +51,7 @@ def run_day_momentum_scanner():
     )
 
     t0 = time.time()
-    all_bars = download_all_daily_bars(tickers)
+    all_bars = download_all_daily_bars(tickers, years_back=YEARS_BACK)
     elapsed = time.time() - t0
     logging.info(
         f"Download complete in {elapsed:.1f}s. Got data for {len(all_bars)} tickers."
@@ -159,19 +68,32 @@ def run_day_momentum_scanner():
     scores = [(t, g, c) for t, g, c in scores if g > 0]
     scores.sort(key=lambda x: x[1], reverse=True)
 
+    # Fetch industry info for tickers with green days
+    score_tickers = [t for t, _, _ in scores]
+    logging.info(f"Fetching industry info for {len(score_tickers)} tickers...")
+    t1 = time.time()
+    industries = fetch_ticker_industries(score_tickers)
+    logging.info(f"Industry fetch complete in {time.time() - t1:.1f}s")
+
     # Print ticker scores with daily change percentages
     header = (
-        f"{'Rank':>5}  {'Ticker':<8}  {'Days':>5}  Daily Changes (latest -> earliest)"
+        f"{'Rank':>5}  {'Ticker':<8}  {'Days':>5}  {'Industry':<35}  Daily Changes (latest -> earliest)"
     )
-    sep = "-" * 80
+    sep = "-" * 120
     print("\n=== Day Momentum Scanner: Consecutive Green Days (0 excluded) ===")
-    print("Percentages are close-to-close: (today's close / prev day's close - 1) * 100")
+    print(
+        "Percentages are close-to-close: (today's close / prev day's close - 1) * 100"
+    )
     print(header)
     print(sep)
     for rank, (ticker, green_days, daily_changes) in enumerate(scores, 1):
+        avg = sum(daily_changes) / len(daily_changes) if daily_changes else 0
         changes_str = ", ".join(f"{c:.2f}%" for c in daily_changes)
+        industry = industries.get(ticker, "")
         tv_link = f"https://www.tradingview.com/chart/?symbol={ticker}&interval=D"
-        print(f"{rank:>5}  {ticker:<8}  {green_days:>5}  {changes_str}  {tv_link}")
+        print(
+            f"{rank:>5}  {ticker:<8}  {green_days:>5}  {industry:<35}  [{avg:.2f}%] {changes_str} {tv_link}"
+        )
 
     # Save to file
     output_path = "day_momentum_scores.txt"
@@ -180,13 +102,19 @@ def run_day_momentum_scanner():
             f"Day Momentum Scanner - {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n\n"
         )
         f.write("=== Consecutive Green Days (0 excluded) ===\n")
-        f.write("Percentages are close-to-close: (today's close / prev day's close - 1) * 100\n")
+        f.write(
+            "Percentages are close-to-close: (today's close / prev day's close - 1) * 100\n"
+        )
         f.write(header + "\n")
         f.write(sep + "\n")
         for rank, (ticker, green_days, daily_changes) in enumerate(scores, 1):
+            avg = sum(daily_changes) / len(daily_changes) if daily_changes else 0
             changes_str = ", ".join(f"{c:.2f}%" for c in daily_changes)
+            industry = industries.get(ticker, "")
             tv_link = f"https://www.tradingview.com/chart/?symbol={ticker}&interval=D"
-            f.write(f"{rank:>5}  {ticker:<8}  {green_days:>5}  {changes_str}  {tv_link}\n")
+            f.write(
+                f"{rank:>5}  {ticker:<8}  {green_days:>5}  {industry:<35}  [{avg:.2f}%] {changes_str}  {tv_link}\n"
+            )
 
     logging.info(f"Scores saved to {output_path}")
 
