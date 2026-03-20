@@ -14,6 +14,19 @@ from ScannerMinute.src import polygon_utils
 time_template = "%Y-%m-%d %H:%M:%S"
 
 
+def _ts_to_seconds(ts):
+    """Convert a timestamp to seconds, auto-detecting if it's in ms, us, or ns."""
+    if ts is None:
+        return None
+    if ts > 1e18:       # nanoseconds
+        return ts / 1e9
+    elif ts > 1e15:     # microseconds
+        return ts / 1e6
+    elif ts > 1e12:     # milliseconds
+        return ts / 1e3
+    return ts           # already seconds
+
+
 class Snapshot(OrderedDict):
 
     def __init__(self, item=None, time_rounded=None):
@@ -38,7 +51,7 @@ class Snapshot(OrderedDict):
             else None
         )
         self["updated_human_utc"] = (
-            datetime.fromtimestamp(item.updated / 1000000000, tz=pytz.UTC).strftime(
+            datetime.fromtimestamp(_ts_to_seconds(item.updated), tz=pytz.UTC).strftime(
                 time_template
             )
             if hasattr(item, "updated") and item.updated is not None
@@ -72,7 +85,7 @@ class Snapshot(OrderedDict):
             else None
         )
         self["prev_day.timestamp_human_utc"] = (
-            datetime.fromtimestamp(pd.timestamp / 1000000000, tz=pytz.UTC).strftime(
+            datetime.fromtimestamp(_ts_to_seconds(pd.timestamp), tz=pytz.UTC).strftime(
                 time_template
             )
             if pd and hasattr(pd, "timestamp") and pd.timestamp is not None
@@ -125,7 +138,7 @@ class Snapshot(OrderedDict):
             else None
         )
         self["min.timestamp_human_utc"] = (
-            datetime.fromtimestamp(mn.timestamp / 1000, tz=pytz.UTC).strftime(
+            datetime.fromtimestamp(_ts_to_seconds(mn.timestamp), tz=pytz.UTC).strftime(
                 time_template
             )
             if mn and hasattr(mn, "timestamp") and mn.timestamp is not None
