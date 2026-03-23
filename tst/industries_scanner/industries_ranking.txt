@@ -1,0 +1,1075 @@
+Industry Rankings - 2026-03-22 21:22 UTC
+Tickers: 520 | Industries: 180
+
+========================================================================================================================
+Period: 5-Day Performance
+========================================================================================================================
+
+Rank  Industry                                       Avg      Std  Count  Top 5 Stocks
+------------------------------------------------------------------------------------------------------------------------
+   1  OIL & GAS FIELD MACHINERY & EQUIPMENT      +11.22%   0.00%      1  BKR +11.22%
+   2  SPECIAL INDUSTRY MACHINERY, NEC             +7.62%   0.00%      1  LRCX +7.62%
+   3  OIL & GAS FIELD SERVICES, NEC               +6.35%   2.08%      2  HAL +8.43%, SLB +4.27%
+   4  COMPUTER STORAGE DEVICES                    +5.77%   2.33%      3  WDC +7.64%, STX +7.17%, NTAP +2.48%
+   5  OPTICAL INSTRUMENTS & LENSES                +5.64%   0.00%      1  KLAC +5.64%
+   6  CRUDE PETROLEUM & NATURAL GAS               +5.59%   3.62%      7  APA +13.46%, CTRA +5.66%, FANG +5.58%, DVN +5.21%, OXY +4.89%
+   7  NATURAL GAS TRANSMISSION & DISTRIBUTION     +4.51%   0.00%      1  OKE +4.51%
+   8  SERVICES-HELP SUPPLY SERVICES               +4.11%   0.00%      1  RHI +4.11%
+   9  AIR TRANSPORTATION, SCHEDULED               +3.69%   2.64%      4  DAL +7.93%, UAL +3.87%, LUV +1.70%, AAL +1.26%
+  10  APPAREL & OTHER FINISHD PRODS OF FABRICS & SIMILAR MATL    +3.19%   0.00%      1  LULU +3.19%
+  11  PETROLEUM REFINING                          +2.88%   0.92%      6  COP +4.13%, VLO +4.02%, MPC +2.81%, CVX +2.49%, XOM +2.27%
+  12  CONSTRUCTION, MINING & MATERIALS HANDLING MACHINERY & EQUIP    +2.67%   0.00%      1  DOV +2.67%
+  13  TRANSPORTATION SERVICES                     +2.47%   0.52%      2  EXPE +2.98%, BKNG +1.95%
+  14  LABORATORY ANALYTICAL INSTRUMENTS           +2.39%   1.90%      5  ILMN +4.53%, WAT +4.33%, MTD +2.62%, BIO +0.64%, A -0.19%
+  15  AIR COURIER SERVICES                        +2.04%   0.00%      1  FDX +2.04%
+  16  AIR-COND & WARM AIR HEATG EQUIP & COMM & INDL REFRIG EQUIP    +2.00%   2.35%      2  CARR +4.35%, JCI -0.35%
+  17  NEWSPAPERS: PUBLISHING OR PUBLISHING & PRINTING    +1.92%   0.44%      2  NWS +2.35%, NWSA +1.48%
+  18  ELECTRONIC COMPONENTS & ACCESSORIES         +1.79%   0.00%      1  HUBB +1.79%
+  19  NATIONAL COMMERCIAL BANKS                   +1.50%   1.46%     12  WFC +4.72%, C +3.62%, KEY +2.70%, ZION +1.79%, RF +1.44%
+  20  SECURITY BROKERS, DEALERS & FLOTATION COMPANIES    +1.46%   2.93%      6  MS +4.26%, GS +4.00%, BLK +3.66%, SCHW +1.72%, RJF -1.48%
+  21  RETAIL-CATALOG & MAIL-ORDER HOUSES          +1.22%   2.32%      2  CDW +3.54%, AMZN -1.11%
+  22  PRINTED CIRCUIT BOARDS                      +1.19%   0.00%      1  JBL +1.19%
+  23  ARRANGEMENT OF TRANSPORTATION OF FREIGHT & CARGO    +1.18%   1.48%      2  EXPD +2.67%, CHRW -0.30%
+  24  FINANCE SERVICES                            +1.15%   2.63%      2  SYF +3.78%, AXP -1.49%
+  25  RETAIL-FAMILY CLOTHING STORES               +1.05%   1.33%      2  ROST +2.38%, TJX -0.29%
+  26  ORTHOPEDIC, PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES    +0.87%   3.67%      5  ALGN +5.45%, STE +2.54%, ISRG +1.23%, EW +0.84%, ZBH -5.72%
+  27  INSURANCE AGENTS, BROKERS & SERVICE         +0.86%   1.82%      4  AJG +3.31%, AON +1.31%, WTW +0.59%, BRO -1.77%
+  28  SERVICES-COMPUTER PROCESSING & DATA PREPARATION    +0.83%   0.94%      3  WDAY +2.16%, VRSK +0.26%, ADP +0.08%
+  29  TRUCKING (NO LOCAL)                         +0.80%   0.96%      2  ODFL +1.75%, JBHT -0.16%
+  30  STATE COMMERCIAL BANKS                      +0.64%   1.29%      6  CFG +2.48%, FITB +1.82%, MTB +0.96%, STT +0.52%, NTRS -0.86%
+  31  SERVICES-COMPUTER PROGRAMMING SERVICES      +0.61%   1.54%      4  CTSH +2.82%, VRSN +0.91%, EPAM +0.21%, ZS -1.49%
+  32  IN VITRO & IN VIVO DIAGNOSTIC SUBSTANCES    +0.60%   0.00%      1  IDXX +0.60%
+  33  TELEVISION BROADCASTING STATIONS            +0.52%   0.23%      2  FOXA +0.75%, FOX +0.29%
+  34  MISCELLANEOUS FABRICATED METAL PRODUCTS     +0.51%   0.00%      1  PH +0.51%
+  35  MISC INDUSTRIAL & COMMERCIAL MACHINERY & EQUIPMENT    +0.39%   0.00%      1  ETN +0.39%
+  36  RETAIL-RADIO, TV & CONSUMER ELECTRONICS STORES    +0.34%   0.00%      1  BBY +0.34%
+  37  HEAVY CONSTRUCTION OTHER THAN BLDG CONST - CONTRACTORS    +0.30%   0.00%      1  J +0.30%
+  38  LIFE INSURANCE                              +0.26%   1.04%      3  PRU +1.12%, MET +0.87%, GL -1.20%
+  39  SERVICES-MISCELLANEOUS AMUSEMENT & RECREATION    +0.22%   0.00%      1  DIS +0.22%
+  40  INDUSTRIAL INSTRUMENTS FOR MEASUREMENT, DISPLAY, AND CONTROL    +0.08%   1.49%      5  FTV +1.75%, DHR +1.08%, ROP +0.76%, KEYS -0.80%, AME -2.39%
+  41  OPHTHALMIC GOODS                            +0.06%   0.00%      1  COO +0.06%
+  42  MOTOR VEHICLE PARTS & ACCESSORIES           -0.05%   3.35%      2  BWA +3.30%, APTV -3.40%
+  43  SERVICES-ENGINEERING, ACCOUNTING, RESEARCH, MANAGEMENT    -0.06%   0.00%      1  PAYX -0.06%
+  44  INSTRUMENTS FOR MEAS & TESTING OF ELECTRICITY & ELEC SIGNALS    -0.10%   1.64%      2  TER +1.54%, VLTO -1.74%
+  45  SEMICONDUCTORS & RELATED DEVICES            -0.13%   2.43%     17  AMAT +4.55%, AMD +4.11%, MCHP +1.66%, MPWR +1.54%, ON +1.21%
+  46  MEASURING & CONTROLLING DEVICES, NEC        -0.20%   1.68%      3  TMO +2.16%, TRMB -1.14%, ROK -1.61%
+  47  RAILROAD EQUIPMENT                          -0.30%   0.00%      1  WAB -0.30%
+  48  TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE)    -0.30%   2.43%      2  T +2.13%, VZ -2.72%
+  49  INVESTMENT ADVICE                           -0.37%   2.34%      5  BX +3.42%, IVZ +0.91%, AMP -0.71%, TROW -2.71%, BEN -2.78%
+  50  ENGINES & TURBINES                          -0.41%   0.00%      1  CMI -0.41%
+  51  SERVICES-CONSUMER CREDIT REPORTING, COLLECTION AGENCIES    -0.58%   2.01%      3  MCO +1.19%, SPGI +0.46%, EFX -3.40%
+  52  X-RAY APPARATUS & TUBES & RELATED IRRADIATION APPARATUS    -0.60%   0.98%      2  HOLX +0.39%, GEHC -1.58%
+  53  MOTORS & GENERATORS                         -0.61%   0.00%      1  GNRC -0.61%
+  54  PLASTIC MATERIAL, SYNTH RESIN/RUBBER, CELLULOS (NO GLASS)    -0.62%   0.74%      2  SEE +0.12%, CE -1.37%
+  55  COGENERATION SERVICES & SMALL POWER PRODUCERS    -0.63%   0.00%      1  AES -0.63%
+  56  ELECTRICAL WORK                             -0.65%   0.00%      1  PWR -0.65%
+  57  SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN    -0.70%   3.84%      3  GDDY +4.52%, JKHY -2.01%, LDOS -4.60%
+  58  SECURITY & COMMODITY BROKERS, DEALERS, EXCHANGES & SERVICES    -0.72%   1.11%      4  NDAQ +0.95%, ICE -0.48%, CME -1.31%, CBOE -2.05%
+  59  SERVICES-COMMERCIAL PHYSICAL & BIOLOGICAL RESEARCH    -0.76%   1.15%      3  IQV +0.82%, CRL -1.20%, INCY -1.90%
+  60  WATER TRANSPORTATION                        -0.77%   1.77%      3  CCL +0.54%, NCLH +0.42%, RCL -3.26%
+  61  RETAIL-RETAIL STORES, NEC                   -0.77%   0.31%      2  BBWI -0.46%, ULTA -1.07%
+  62  SERVICES-TO DWELLINGS & OTHER BUILDINGS     -0.82%   2.57%      2  ABNB +1.76%, ROL -3.39%
+  63  PUMPS & PUMPING EQUIPMENT                   -0.85%   1.31%      2  XYL +0.47%, IEX -2.16%
+  64  LEATHER & LEATHER PRODUCTS                  -0.86%   0.00%      1  TPR -0.86%
+  65  SERVICES-MISC HEALTH & ALLIED SERVICES, NEC    -0.94%   0.00%      1  DVA -0.94%
+  66  SERVICES-PREPACKAGED SOFTWARE               -1.10%   2.54%     19  INTU +3.55%, SNPS +1.86%, GEN +1.40%, CRM +1.32%, EA +0.64%
+  67  SERVICES-BUSINESS SERVICES, NEC             -1.11%   2.60%     17  AKAM +2.61%, ACN +1.70%, MSCI +0.86%, UBER +0.76%, FISV +0.58%
+  68  ELECTROMEDICAL & ELECTROTHERAPEUTIC APPARATUS    -1.12%   0.00%      1  MDT -1.12%
+  69  RETAIL-EATING PLACES                        -1.23%   3.01%      4  CMG +2.61%, DRI +0.34%, YUM -2.49%, MCD -5.39%
+  70  SERVICES-MEDICAL LABORATORIES               -1.26%   0.96%      2  LH -0.30%, DGX -2.22%
+  71  GENERAL INDUSTRIAL MACHINERY & EQUIPMENT    -1.31%   1.63%      3  ZBRA +0.44%, IR -0.90%, ITW -3.49%
+  72  MEN'S & BOYS' FURNISHGS, WORK CLOTHG, & ALLIED GARMENTS    -1.34%   4.81%      3  PVH +3.94%, RL -0.26%, CTAS -7.69%
+  73  NATURAL GAS TRANSMISSION                    -1.34%   0.23%      3  TRGP -1.10%, WMB -1.27%, KMI -1.65%
+  74  REAL ESTATE                                 -1.35%   0.00%      1  CBRE -1.35%
+  75  TRUCKING & COURIER SERVICES (NO AIR)        -1.39%   0.00%      1  UPS -1.39%
+  76  INDUSTRIAL ORGANIC CHEMICALS                -1.44%   2.85%      2  LYB +1.41%, IFF -4.30%
+  77  COMPUTER COMMUNICATIONS EQUIPMENT           -1.46%   0.42%      3  CSCO -0.87%, FFIV -1.74%, ANET -1.76%
+  78  ELECTRONIC & OTHER ELECTRICAL EQUIPMENT (NO COMPUTER EQUIP)    -1.52%   4.21%      4  GEV +5.72%, EMR -3.09%, GE -4.30%, OTIS -4.39%
+  79  HOSPITAL & MEDICAL SERVICE PLANS            -1.59%   3.02%      5  HUM +2.70%, CNC -0.15%, CI -1.63%, UNH -2.30%, MOH -6.56%
+  80  ACCIDENT & HEALTH INSURANCE                 -1.59%   0.70%      2  PFG -0.89%, AFL -2.29%
+  81  COMPUTER & OFFICE EQUIPMENT                 -1.60%   1.64%      3  HPE +0.51%, IBM -1.83%, HPQ -3.49%
+  82  HOTELS & MOTELS                             -1.63%   2.31%      5  MAR +1.90%, WYNN -0.45%, LVS -1.40%, MGM -3.57%, CZR -4.63%
+  83  RUBBER & PLASTICS FOOTWEAR                  -1.66%   1.32%      2  DECK -0.35%, NKE -2.98%
+  84  CABLE & OTHER PAY TELEVISION SERVICES       -1.71%   2.02%      3  WBD +1.03%, CHTR -2.37%, CMCSA -3.78%
+  85  SURGICAL & MEDICAL INSTRUMENTS & APPARATUS    -1.72%   3.21%     10  DXCM +4.22%, WST +0.67%, BSX +0.51%, SYK -0.33%, SOLV -1.47%
+  86  SHIP & BOAT BUILDING & REPAIRING            -1.75%   0.11%      2  GD -1.63%, HII -1.86%
+  87  RETAIL-AUTO DEALERS & GASOLINE STATIONS     -1.78%   1.83%      2  KMX +0.05%, CPRT -3.61%
+  88  WHOLESALE-ELECTRONIC PARTS & EQUIPMENT, NEC    -1.79%   0.00%      1  TEL -1.79%
+  89  INDUSTRIAL INORGANIC CHEMICALS              -1.79%   0.63%      2  LIN -1.17%, APD -2.42%
+  90  GENERAL INDUSTRIAL MACHINERY & EQUIPMENT, NEC    -1.81%   0.00%      1  NDSN -1.81%
+  91  CONSTRUCTION MACHINERY & EQUIP              -1.89%   0.00%      1  CAT -1.89%
+  92  SERVICES-DETECTIVE, GUARD & ARMORED CAR SERVICES    -1.97%   0.00%      1  ALLE -1.97%
+  93  FIRE, MARINE & CASUALTY INSURANCE           -1.98%   1.34%     10  PGR +0.40%, ALL -0.27%, ACGL -1.25%, BRK.B -1.85%, CB -1.94%
+  94  SPECIAL INDUSTRY MACHINERY (NO METALWORKING MACHINERY)    -2.04%   0.00%      1  PNR -2.04%
+  95  RADIO & TV BROADCASTING & COMMUNICATIONS EQUIPMENT    -2.16%   2.23%      2  QCOM +0.06%, MSI -4.39%
+  96  MEAT PACKING PLANTS                         -2.21%   0.00%      1  HRL -2.21%
+  97  BIOLOGICAL PRODUCTS, (NO DIAGNOSTIC SUBSTANCES)    -2.29%   2.62%      5  TECH +1.24%, BIIB -0.05%, MRNA -2.25%, AMGN -5.03%, GILD -5.37%
+  98  ROLLING DRAWING & EXTRUDING OF NONFERROUS METALS    -2.34%   0.00%      1  HWM -2.34%
+  99  SEARCH, DETECTION, NAVIGATION, GUIDANCE, AERONAUTICAL SYS    -2.35%   1.32%      4  GRMN -0.50%, LHX -1.70%, TDY -3.56%, NOC -3.65%
+ 100  REAL ESTATE OPERATORS (NO DEVELOPERS) & LESSORS    -2.40%   0.00%      1  INVH -2.40%
+ 101  COMPUTER PERIPHERAL EQUIPMENT, NEC          -2.44%   0.01%      2  PANW -2.43%, FTNT -2.44%
+ 102  GAMES, TOYS & CHILDREN'S VEHICLES (NO DOLLS & BICYCLES)    -2.45%   0.00%      1  HAS -2.45%
+ 103  SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.    -2.47%   4.22%      7  FDS +1.76%, MTCH +0.88%, GOOGL -0.42%, GOOG -0.89%, META -3.27%
+ 104  AIRCRAFT & PARTS                            -2.50%   0.00%      1  TXT -2.50%
+ 105  MOTOR VEHICLES & PASSENGER CAR BODIES       -2.55%   2.44%      4  GM +0.58%, F -1.29%, PCAR -3.54%, TSLA -5.94%
+ 106  INSURANCE CARRIERS, NEC                     -2.62%   0.00%      1  AIZ -2.62%
+ 107  REFUSE SYSTEMS                              -2.64%   0.42%      2  RSG -2.22%, WM -3.06%
+ 108  PHARMACEUTICAL PREPARATIONS                 -2.66%   2.56%     11  PFE +1.47%, ZTS +0.04%, MRK -1.24%, REGN -1.73%, VTRS -2.29%
+ 109  Unknown                                     -2.67%  13.13%     26  ARM +14.34%, JNPR +9.27%, DFS +5.25%, FBHS +3.44%, RE +3.42%
+ 110  FOOD AND KINDRED PRODUCTS                   -2.72%   4.09%      3  MDLZ +2.40%, CPB -2.95%, CAG -7.62%
+ 111  WATER SUPPLY                                -2.79%   0.00%      1  AWK -2.79%
+ 112  AUTO CONTROLS FOR REGULATING RESIDENTIAL & COMML ENVIRONMENTS    -2.85%   0.00%      1  TT -2.85%
+ 113  GUIDED MISSILES & SPACE VEHICLES & PARTS    -2.87%   0.00%      1  LMT -2.87%
+ 114  CANNED, FROZEN & PRESERVD FRUIT, VEG & FOOD SPECIALTIES    -2.91%   1.56%      2  LW -1.36%, KHC -4.47%
+ 115  RAILROADS, LINE-HAUL OPERATING              -2.95%   0.11%      3  NSC -2.86%, CSX -2.88%, UNP -3.10%
+ 116  WHOLESALE-DURABLE GOODS                     -2.98%   0.00%      1  GWW -2.98%
+ 117  PLASTIC MATERIALS, SYNTH RESINS & NONVULCAN ELASTOMERS    -3.00%   2.59%      4  DOW +0.08%, ALB -0.96%, DD -5.48%, EMN -5.66%
+ 118  WHOLESALE-MISC DURABLE GOODS                -3.05%   0.00%      1  POOL -3.05%
+ 119  AIRCRAFT PARTS & AUXILIARY EQUIPMENT, NEC    -3.07%   0.00%      1  TDG -3.07%
+ 120  FARM MACHINERY & EQUIPMENT                  -3.08%   0.00%      1  DE -3.08%
+ 121  CONVERTED PAPER & PAPERBOARD PRODS (NO CONTANERS/BOXES)    -3.14%   2.49%      2  KMB -0.65%, AVY -5.63%
+ 122  BEVERAGES                                   -3.16%   1.84%      5  STZ -0.35%, BF.B -2.94%, KDP -2.99%, KO -3.35%, PEP -6.15%
+ 123  RETAIL-GROCERY STORES                       -3.17%   0.00%      1  KR -3.17%
+ 124  SERVICES-MANAGEMENT SERVICES                -3.20%   0.00%      1  IT -3.20%
+ 125  SUGAR & CONFECTIONERY PRODUCTS              -3.20%   0.00%      1  HSY -3.20%
+ 126  PERFUMES, COSMETICS & OTHER TOILET PREPARATIONS    -3.21%   0.98%      2  EL -2.23%, CL -4.19%
+ 127  MINING & QUARRYING OF NONMETALLIC MINERALS (NO FUELS)    -3.30%   0.65%      2  VMC -2.64%, MLM -3.95%
+ 128  SERVICES-AMUSEMENT & RECREATION SERVICES    -3.33%   0.00%      1  LYV -3.33%
+ 129  STEEL WORKS, BLAST FURNACES & ROLLING MILLS (COKE OVENS)    -3.45%   0.45%      2  NUE -3.00%, STLD -3.90%
+ 130  CUTLERY, HANDTOOLS & GENERAL HARDWARE       -3.49%   0.60%      2  SNA -2.89%, SWK -4.09%
+ 131  DRAWING & INSULATING OF NONFERROUS WIRE     -3.52%   0.00%      1  GLW -3.52%
+ 132  SERVICES-ADVERTISING AGENCIES               -3.52%   0.00%      1  OMC -3.52%
+ 133  OPERATIVE BUILDERS                          -3.55%   1.55%      3  NVR -1.50%, PHM -3.89%, DHI -5.25%
+ 134  POULTRY SLAUGHTERING AND PROCESSING         -3.55%   0.00%      1  TSN -3.55%
+ 135  GAS & OTHER SERVICES COMBINED               -3.56%   0.00%      1  SRE -3.56%
+ 136  SERVICES-EQUIPMENT RENTAL & LEASING, NEC    -3.63%   0.00%      1  URI -3.63%
+ 137  SERVICES-VIDEO TAPE RENTAL                  -3.66%   0.00%      1  NFLX -3.66%
+ 138  WHOLESALE-MOTOR VEHICLES & MOTOR VEHICLE PARTS & SUPPLIES    -3.68%   0.00%      1  LKQ -3.68%
+ 139  REAL ESTATE INVESTMENT TRUSTS               -3.95%   2.46%     27  HST +0.49%, BXP +0.13%, EQIX -1.11%, SPG -1.23%, FRT -1.28%
+ 140  RETAIL-BUILDING MATERIALS, HARDWARE, GARDEN SUPPLY    -3.98%   0.82%      3  TSCO -3.11%, FAST -3.74%, SHW -5.08%
+ 141  RETAIL-VARIETY STORES                       -3.99%   1.62%      5  DLTR -1.43%, TGT -3.48%, COST -3.58%, DG -5.55%, WMT -5.93%
+ 142  SPECIALTY CLEANING, POLISHING AND SANITATION PREPARATIONS    -4.09%   0.00%      1  CLX -4.09%
+ 143  RADIOTELEPHONE COMMUNICATIONS               -4.10%   0.00%      1  TMUS -4.10%
+ 144  NATURAL GAS DISTRIBUTION                    -4.29%   0.00%      1  ATO -4.29%
+ 145  AIRCRAFT ENGINES & ENGINE PARTS             -4.33%   1.22%      2  RTX -3.11%, HON -5.54%
+ 146  WHOLESALE-MEDICAL, DENTAL & HOSPITAL EQUIPMENT & SUPPLIES    -4.34%   0.00%      1  HSIC -4.34%
+ 147  HEATING EQUIP, EXCEPT ELEC & WARM AIR; & PLUMBING FIXTURES    -4.36%   0.00%      1  MAS -4.36%
+ 148  BOTTLED & CANNED SOFT DRINKS & CARBONATED WATERS    -4.44%   0.00%      1  MNST -4.44%
+ 149  PAINTS, VARNISHES, LACQUERS, ENAMELS & ALLIED PRODS    -4.58%   0.00%      1  PPG -4.58%
+ 150  SOAP, DETERGENTS, CLEANG PREPARATIONS, PERFUMES, COSMETICS    -4.60%   1.38%      3  CHD -3.13%, PG -4.23%, ECL -6.46%
+ 151  GENERAL BLDG CONTRACTORS - RESIDENTIAL BLDGS    -4.64%   0.00%      1  LEN -4.64%
+ 152  MALT BEVERAGES                              -5.07%   0.00%      1  TAP -5.07%
+ 153  DENTAL EQUIPMENT & SUPPLIES                 -5.11%   0.00%      1  XRAY -5.11%
+ 154  ELECTRIC & OTHER SERVICES COMBINED          -5.14%   0.72%     12  CMS -4.38%, WEC -4.41%, PCG -4.52%, ED -4.73%, EVRG -4.76%
+ 155  ELECTRONIC CONNECTORS                       -5.36%   0.00%      1  APH -5.36%
+ 156  SERVICES-GENERAL MEDICAL & SURGICAL HOSPITALS, NEC    -5.38%   1.95%      2  UHS -3.43%, HCA -7.33%
+ 157  ELECTRIC SERVICES                           -5.47%   1.49%     15  EIX -2.76%, NEE -3.54%, CNP -4.52%, NRG -4.62%, SO -4.71%
+ 158  PAPERBOARD CONTAINERS & BOXES               -5.49%   0.00%      1  PKG -5.49%
+ 159  WHOLESALE-DRUGS, PROPRIETARIES & DRUGGISTS' SUNDRIES    -5.57%   0.97%      3  CAH -4.26%, MCK -5.85%, COR -6.58%
+ 160  MISCELLANEOUS MANUFACTURING INDUSTRIES      -5.64%   0.00%      1  AMCR -5.64%
+ 161  CIGARETTES                                  -5.83%   0.79%      2  MO -5.04%, PM -6.61%
+ 162  WHOLESALE-GROCERIES & RELATED PRODUCTS      -5.95%   1.09%      2  SYY -4.87%, DPZ -7.04%
+ 163  GRAIN MILL PRODUCTS                         -6.02%   0.00%      1  GIS -6.02%
+ 164  RETAIL-DRUG STORES AND PROPRIETARY STORES    -6.11%   0.00%      1  CVS -6.11%
+ 165  CARPETS & RUGS                              -6.18%   0.00%      1  MHK -6.18%
+ 166  RETAIL-LUMBER & OTHER BUILDING MATERIALS DEALERS    -6.22%   1.12%      3  HD -5.39%, LOW -5.45%, BLDR -7.80%
+ 167  RETAIL-AUTO & HOME SUPPLY STORES            -6.24%   1.61%      2  ORLY -4.63%, AZO -7.86%
+ 168  CANNED, FRUITS, VEG, PRESERVES, JAMS & JELLIES    -6.33%   0.00%      1  SJM -6.33%
+ 169  HOUSEHOLD APPLIANCES                        -6.61%   2.49%      2  AOS -4.11%, WHR -9.10%
+ 170  RETAIL-EATING & DRINKING PLACES             -6.66%   0.00%      1  SBUX -6.66%
+ 171  FATS & OILS                                 -6.67%   1.40%      2  BG -5.28%, ADM -8.07%
+ 172  CHEMICALS & ALLIED PRODUCTS                 -6.77%   0.00%      1  FMC -6.77%
+ 173  AIRCRAFT                                    -7.04%   0.00%      1  BA -7.04%
+ 174  METAL MINING                                -7.61%   0.00%      1  FCX -7.61%
+ 175  MISCELLANEOUS FOOD PREPARATIONS & KINDRED PRODUCTS    -8.68%   0.00%      1  MKC -8.68%
+ 176  WHOLESALE-MOTOR VEHICLE SUPPLIES & NEW PARTS    -8.85%   0.00%      1  GPC -8.85%
+ 177  PAPER MILLS                                 -9.37%   0.00%      1  IP -9.37%
+ 178  AGRICULTURAL CHEMICALS                     -11.56%   7.96%      2  CF -3.60%, MOS -19.52%
+ 179  GOLD AND SILVER ORES                       -12.58%   0.00%      1  NEM -12.58%
+ 180  ELECTRONIC COMPUTERS                       -17.04%  16.19%      2  AAPL -0.85%, SMCI -33.24%
+
+
+========================================================================================================================
+Detailed Breakdown: 5-Day Performance by Industry
+========================================================================================================================
+
+1. OIL & GAS FIELD MACHINERY & EQUIPMENT (avg=+11.22%, std=0.00%, 1 stocks)
+    BKR        +11.22%
+
+2. SPECIAL INDUSTRY MACHINERY, NEC (avg=+7.62%, std=0.00%, 1 stocks)
+    LRCX        +7.62%
+
+3. OIL & GAS FIELD SERVICES, NEC (avg=+6.35%, std=2.08%, 2 stocks)
+    HAL         +8.43%
+    SLB         +4.27%
+
+4. COMPUTER STORAGE DEVICES (avg=+5.77%, std=2.33%, 3 stocks)
+    WDC         +7.64%
+    STX         +7.17%
+    NTAP        +2.48%
+
+5. OPTICAL INSTRUMENTS & LENSES (avg=+5.64%, std=0.00%, 1 stocks)
+    KLAC        +5.64%
+
+6. CRUDE PETROLEUM & NATURAL GAS (avg=+5.59%, std=3.62%, 7 stocks)
+    APA        +13.46%
+    CTRA        +5.66%
+    FANG        +5.58%
+    DVN         +5.21%
+    OXY         +4.89%
+    EOG         +3.84%
+    EQT         +0.47%
+
+7. NATURAL GAS TRANSMISSION & DISTRIBUTION (avg=+4.51%, std=0.00%, 1 stocks)
+    OKE         +4.51%
+
+8. SERVICES-HELP SUPPLY SERVICES (avg=+4.11%, std=0.00%, 1 stocks)
+    RHI         +4.11%
+
+9. AIR TRANSPORTATION, SCHEDULED (avg=+3.69%, std=2.64%, 4 stocks)
+    DAL         +7.93%
+    UAL         +3.87%
+    LUV         +1.70%
+    AAL         +1.26%
+
+10. APPAREL & OTHER FINISHD PRODS OF FABRICS & SIMILAR MATL (avg=+3.19%, std=0.00%, 1 stocks)
+    LULU        +3.19%
+
+11. PETROLEUM REFINING (avg=+2.88%, std=0.92%, 6 stocks)
+    COP         +4.13%
+    VLO         +4.02%
+    MPC         +2.81%
+    CVX         +2.49%
+    XOM         +2.27%
+    PSX         +1.58%
+
+12. CONSTRUCTION, MINING & MATERIALS HANDLING MACHINERY & EQUIP (avg=+2.67%, std=0.00%, 1 stocks)
+    DOV         +2.67%
+
+13. TRANSPORTATION SERVICES (avg=+2.47%, std=0.52%, 2 stocks)
+    EXPE        +2.98%
+    BKNG        +1.95%
+
+14. LABORATORY ANALYTICAL INSTRUMENTS (avg=+2.39%, std=1.90%, 5 stocks)
+    ILMN        +4.53%
+    WAT         +4.33%
+    MTD         +2.62%
+    BIO         +0.64%
+    A           -0.19%
+
+15. AIR COURIER SERVICES (avg=+2.04%, std=0.00%, 1 stocks)
+    FDX         +2.04%
+
+16. AIR-COND & WARM AIR HEATG EQUIP & COMM & INDL REFRIG EQUIP (avg=+2.00%, std=2.35%, 2 stocks)
+    CARR        +4.35%
+    JCI         -0.35%
+
+17. NEWSPAPERS: PUBLISHING OR PUBLISHING & PRINTING (avg=+1.92%, std=0.44%, 2 stocks)
+    NWS         +2.35%
+    NWSA        +1.48%
+
+18. ELECTRONIC COMPONENTS & ACCESSORIES (avg=+1.79%, std=0.00%, 1 stocks)
+    HUBB        +1.79%
+
+19. NATIONAL COMMERCIAL BANKS (avg=+1.50%, std=1.46%, 12 stocks)
+    WFC         +4.72%
+    C           +3.62%
+    KEY         +2.70%
+    ZION        +1.79%
+    RF          +1.44%
+    JPM         +1.10%
+    BAC         +0.94%
+    COF         +0.93%
+    TFC         +0.75%
+    USB         +0.49%
+    PNC         +0.29%
+    HBAN        -0.79%
+
+20. SECURITY BROKERS, DEALERS & FLOTATION COMPANIES (avg=+1.46%, std=2.93%, 6 stocks)
+    MS          +4.26%
+    GS          +4.00%
+    BLK         +3.66%
+    SCHW        +1.72%
+    RJF         -1.48%
+    MKTX        -3.39%
+
+21. RETAIL-CATALOG & MAIL-ORDER HOUSES (avg=+1.22%, std=2.32%, 2 stocks)
+    CDW         +3.54%
+    AMZN        -1.11%
+
+22. PRINTED CIRCUIT BOARDS (avg=+1.19%, std=0.00%, 1 stocks)
+    JBL         +1.19%
+
+23. ARRANGEMENT OF TRANSPORTATION OF FREIGHT & CARGO (avg=+1.18%, std=1.48%, 2 stocks)
+    EXPD        +2.67%
+    CHRW        -0.30%
+
+24. FINANCE SERVICES (avg=+1.15%, std=2.63%, 2 stocks)
+    SYF         +3.78%
+    AXP         -1.49%
+
+25. RETAIL-FAMILY CLOTHING STORES (avg=+1.05%, std=1.33%, 2 stocks)
+    ROST        +2.38%
+    TJX         -0.29%
+
+26. ORTHOPEDIC, PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES (avg=+0.87%, std=3.67%, 5 stocks)
+    ALGN        +5.45%
+    STE         +2.54%
+    ISRG        +1.23%
+    EW          +0.84%
+    ZBH         -5.72%
+
+27. INSURANCE AGENTS, BROKERS & SERVICE (avg=+0.86%, std=1.82%, 4 stocks)
+    AJG         +3.31%
+    AON         +1.31%
+    WTW         +0.59%
+    BRO         -1.77%
+
+28. SERVICES-COMPUTER PROCESSING & DATA PREPARATION (avg=+0.83%, std=0.94%, 3 stocks)
+    WDAY        +2.16%
+    VRSK        +0.26%
+    ADP         +0.08%
+
+29. TRUCKING (NO LOCAL) (avg=+0.80%, std=0.96%, 2 stocks)
+    ODFL        +1.75%
+    JBHT        -0.16%
+
+30. STATE COMMERCIAL BANKS (avg=+0.64%, std=1.29%, 6 stocks)
+    CFG         +2.48%
+    FITB        +1.82%
+    MTB         +0.96%
+    STT         +0.52%
+    NTRS        -0.86%
+    BK          -1.06%
+
+31. SERVICES-COMPUTER PROGRAMMING SERVICES (avg=+0.61%, std=1.54%, 4 stocks)
+    CTSH        +2.82%
+    VRSN        +0.91%
+    EPAM        +0.21%
+    ZS          -1.49%
+
+32. IN VITRO & IN VIVO DIAGNOSTIC SUBSTANCES (avg=+0.60%, std=0.00%, 1 stocks)
+    IDXX        +0.60%
+
+33. TELEVISION BROADCASTING STATIONS (avg=+0.52%, std=0.23%, 2 stocks)
+    FOXA        +0.75%
+    FOX         +0.29%
+
+34. MISCELLANEOUS FABRICATED METAL PRODUCTS (avg=+0.51%, std=0.00%, 1 stocks)
+    PH          +0.51%
+
+35. MISC INDUSTRIAL & COMMERCIAL MACHINERY & EQUIPMENT (avg=+0.39%, std=0.00%, 1 stocks)
+    ETN         +0.39%
+
+36. RETAIL-RADIO, TV & CONSUMER ELECTRONICS STORES (avg=+0.34%, std=0.00%, 1 stocks)
+    BBY         +0.34%
+
+37. HEAVY CONSTRUCTION OTHER THAN BLDG CONST - CONTRACTORS (avg=+0.30%, std=0.00%, 1 stocks)
+    J           +0.30%
+
+38. LIFE INSURANCE (avg=+0.26%, std=1.04%, 3 stocks)
+    PRU         +1.12%
+    MET         +0.87%
+    GL          -1.20%
+
+39. SERVICES-MISCELLANEOUS AMUSEMENT & RECREATION (avg=+0.22%, std=0.00%, 1 stocks)
+    DIS         +0.22%
+
+40. INDUSTRIAL INSTRUMENTS FOR MEASUREMENT, DISPLAY, AND CONTROL (avg=+0.08%, std=1.49%, 5 stocks)
+    FTV         +1.75%
+    DHR         +1.08%
+    ROP         +0.76%
+    KEYS        -0.80%
+    AME         -2.39%
+
+41. OPHTHALMIC GOODS (avg=+0.06%, std=0.00%, 1 stocks)
+    COO         +0.06%
+
+42. MOTOR VEHICLE PARTS & ACCESSORIES (avg=-0.05%, std=3.35%, 2 stocks)
+    BWA         +3.30%
+    APTV        -3.40%
+
+43. SERVICES-ENGINEERING, ACCOUNTING, RESEARCH, MANAGEMENT (avg=-0.06%, std=0.00%, 1 stocks)
+    PAYX        -0.06%
+
+44. INSTRUMENTS FOR MEAS & TESTING OF ELECTRICITY & ELEC SIGNALS (avg=-0.10%, std=1.64%, 2 stocks)
+    TER         +1.54%
+    VLTO        -1.74%
+
+45. SEMICONDUCTORS & RELATED DEVICES (avg=-0.13%, std=2.43%, 17 stocks)
+    AMAT        +4.55%
+    AMD         +4.11%
+    MCHP        +1.66%
+    MPWR        +1.54%
+    ON          +1.21%
+    ADI         +1.10%
+    NXPI        +0.27%
+    ENPH        +0.09%
+    MRVL        +0.06%
+    QRVO        +0.05%
+    SWKS        -0.55%
+    MU          -0.76%
+    FSLR        -1.66%
+    TXN         -1.88%
+    AVGO        -3.62%
+    INTC        -4.15%
+    NVDA        -4.19%
+
+46. MEASURING & CONTROLLING DEVICES, NEC (avg=-0.20%, std=1.68%, 3 stocks)
+    TMO         +2.16%
+    TRMB        -1.14%
+    ROK         -1.61%
+
+47. RAILROAD EQUIPMENT (avg=-0.30%, std=0.00%, 1 stocks)
+    WAB         -0.30%
+
+48. TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE) (avg=-0.30%, std=2.43%, 2 stocks)
+    T           +2.13%
+    VZ          -2.72%
+
+49. INVESTMENT ADVICE (avg=-0.37%, std=2.34%, 5 stocks)
+    BX          +3.42%
+    IVZ         +0.91%
+    AMP         -0.71%
+    TROW        -2.71%
+    BEN         -2.78%
+
+50. ENGINES & TURBINES (avg=-0.41%, std=0.00%, 1 stocks)
+    CMI         -0.41%
+
+51. SERVICES-CONSUMER CREDIT REPORTING, COLLECTION AGENCIES (avg=-0.58%, std=2.01%, 3 stocks)
+    MCO         +1.19%
+    SPGI        +0.46%
+    EFX         -3.40%
+
+52. X-RAY APPARATUS & TUBES & RELATED IRRADIATION APPARATUS (avg=-0.60%, std=0.98%, 2 stocks)
+    HOLX        +0.39%
+    GEHC        -1.58%
+
+53. MOTORS & GENERATORS (avg=-0.61%, std=0.00%, 1 stocks)
+    GNRC        -0.61%
+
+54. PLASTIC MATERIAL, SYNTH RESIN/RUBBER, CELLULOS (NO GLASS) (avg=-0.62%, std=0.74%, 2 stocks)
+    SEE         +0.12%
+    CE          -1.37%
+
+55. COGENERATION SERVICES & SMALL POWER PRODUCERS (avg=-0.63%, std=0.00%, 1 stocks)
+    AES         -0.63%
+
+56. ELECTRICAL WORK (avg=-0.65%, std=0.00%, 1 stocks)
+    PWR         -0.65%
+
+57. SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN (avg=-0.70%, std=3.84%, 3 stocks)
+    GDDY        +4.52%
+    JKHY        -2.01%
+    LDOS        -4.60%
+
+58. SECURITY & COMMODITY BROKERS, DEALERS, EXCHANGES & SERVICES (avg=-0.72%, std=1.11%, 4 stocks)
+    NDAQ        +0.95%
+    ICE         -0.48%
+    CME         -1.31%
+    CBOE        -2.05%
+
+59. SERVICES-COMMERCIAL PHYSICAL & BIOLOGICAL RESEARCH (avg=-0.76%, std=1.15%, 3 stocks)
+    IQV         +0.82%
+    CRL         -1.20%
+    INCY        -1.90%
+
+60. WATER TRANSPORTATION (avg=-0.77%, std=1.77%, 3 stocks)
+    CCL         +0.54%
+    NCLH        +0.42%
+    RCL         -3.26%
+
+61. RETAIL-RETAIL STORES, NEC (avg=-0.77%, std=0.31%, 2 stocks)
+    BBWI        -0.46%
+    ULTA        -1.07%
+
+62. SERVICES-TO DWELLINGS & OTHER BUILDINGS (avg=-0.82%, std=2.57%, 2 stocks)
+    ABNB        +1.76%
+    ROL         -3.39%
+
+63. PUMPS & PUMPING EQUIPMENT (avg=-0.85%, std=1.31%, 2 stocks)
+    XYL         +0.47%
+    IEX         -2.16%
+
+64. LEATHER & LEATHER PRODUCTS (avg=-0.86%, std=0.00%, 1 stocks)
+    TPR         -0.86%
+
+65. SERVICES-MISC HEALTH & ALLIED SERVICES, NEC (avg=-0.94%, std=0.00%, 1 stocks)
+    DVA         -0.94%
+
+66. SERVICES-PREPACKAGED SOFTWARE (avg=-1.10%, std=2.54%, 19 stocks)
+    INTU        +3.55%
+    SNPS        +1.86%
+    GEN         +1.40%
+    CRM         +1.32%
+    EA          +0.64%
+    DDOG        +0.45%
+    MDB         +0.25%
+    TYL         +0.12%
+    ADBE        -0.47%
+    PAYC        -0.71%
+    CDNS        -1.09%
+    ADSK        -1.27%
+    TEAM        -1.97%
+    NOW         -2.85%
+    MSFT        -3.46%
+    ORCL        -3.50%
+    TTWO        -3.81%
+    PTC         -3.90%
+    CRWD        -7.42%
+
+67. SERVICES-BUSINESS SERVICES, NEC (avg=-1.11%, std=2.60%, 17 stocks)
+    AKAM        +2.61%
+    ACN         +1.70%
+    MSCI        +0.86%
+    UBER        +0.76%
+    FISV        +0.58%
+    FIS         +0.18%
+    GPN         -0.25%
+    FICO        -0.32%
+    MA          -0.34%
+    CSGP        -1.67%
+    V           -1.80%
+    PYPL        -1.98%
+    MELI        -2.05%
+    BR          -2.22%
+    EBAY        -2.58%
+    DASH        -2.93%
+    CPAY        -9.47%
+
+68. ELECTROMEDICAL & ELECTROTHERAPEUTIC APPARATUS (avg=-1.12%, std=0.00%, 1 stocks)
+    MDT         -1.12%
+
+69. RETAIL-EATING PLACES (avg=-1.23%, std=3.01%, 4 stocks)
+    CMG         +2.61%
+    DRI         +0.34%
+    YUM         -2.49%
+    MCD         -5.39%
+
+70. SERVICES-MEDICAL LABORATORIES (avg=-1.26%, std=0.96%, 2 stocks)
+    LH          -0.30%
+    DGX         -2.22%
+
+71. GENERAL INDUSTRIAL MACHINERY & EQUIPMENT (avg=-1.31%, std=1.63%, 3 stocks)
+    ZBRA        +0.44%
+    IR          -0.90%
+    ITW         -3.49%
+
+72. MEN'S & BOYS' FURNISHGS, WORK CLOTHG, & ALLIED GARMENTS (avg=-1.34%, std=4.81%, 3 stocks)
+    PVH         +3.94%
+    RL          -0.26%
+    CTAS        -7.69%
+
+73. NATURAL GAS TRANSMISSION (avg=-1.34%, std=0.23%, 3 stocks)
+    TRGP        -1.10%
+    WMB         -1.27%
+    KMI         -1.65%
+
+74. REAL ESTATE (avg=-1.35%, std=0.00%, 1 stocks)
+    CBRE        -1.35%
+
+75. TRUCKING & COURIER SERVICES (NO AIR) (avg=-1.39%, std=0.00%, 1 stocks)
+    UPS         -1.39%
+
+76. INDUSTRIAL ORGANIC CHEMICALS (avg=-1.44%, std=2.85%, 2 stocks)
+    LYB         +1.41%
+    IFF         -4.30%
+
+77. COMPUTER COMMUNICATIONS EQUIPMENT (avg=-1.46%, std=0.42%, 3 stocks)
+    CSCO        -0.87%
+    FFIV        -1.74%
+    ANET        -1.76%
+
+78. ELECTRONIC & OTHER ELECTRICAL EQUIPMENT (NO COMPUTER EQUIP) (avg=-1.52%, std=4.21%, 4 stocks)
+    GEV         +5.72%
+    EMR         -3.09%
+    GE          -4.30%
+    OTIS        -4.39%
+
+79. HOSPITAL & MEDICAL SERVICE PLANS (avg=-1.59%, std=3.02%, 5 stocks)
+    HUM         +2.70%
+    CNC         -0.15%
+    CI          -1.63%
+    UNH         -2.30%
+    MOH         -6.56%
+
+80. ACCIDENT & HEALTH INSURANCE (avg=-1.59%, std=0.70%, 2 stocks)
+    PFG         -0.89%
+    AFL         -2.29%
+
+81. COMPUTER & OFFICE EQUIPMENT (avg=-1.60%, std=1.64%, 3 stocks)
+    HPE         +0.51%
+    IBM         -1.83%
+    HPQ         -3.49%
+
+82. HOTELS & MOTELS (avg=-1.63%, std=2.31%, 5 stocks)
+    MAR         +1.90%
+    WYNN        -0.45%
+    LVS         -1.40%
+    MGM         -3.57%
+    CZR         -4.63%
+
+83. RUBBER & PLASTICS FOOTWEAR (avg=-1.66%, std=1.32%, 2 stocks)
+    DECK        -0.35%
+    NKE         -2.98%
+
+84. CABLE & OTHER PAY TELEVISION SERVICES (avg=-1.71%, std=2.02%, 3 stocks)
+    WBD         +1.03%
+    CHTR        -2.37%
+    CMCSA       -3.78%
+
+85. SURGICAL & MEDICAL INSTRUMENTS & APPARATUS (avg=-1.72%, std=3.21%, 10 stocks)
+    DXCM        +4.22%
+    WST         +0.67%
+    BSX         +0.51%
+    SYK         -0.33%
+    SOLV        -1.47%
+    TFX         -1.78%
+    RMD         -2.10%
+    BDX         -3.28%
+    MMM         -6.47%
+    BAX         -7.18%
+
+86. SHIP & BOAT BUILDING & REPAIRING (avg=-1.75%, std=0.11%, 2 stocks)
+    GD          -1.63%
+    HII         -1.86%
+
+87. RETAIL-AUTO DEALERS & GASOLINE STATIONS (avg=-1.78%, std=1.83%, 2 stocks)
+    KMX         +0.05%
+    CPRT        -3.61%
+
+88. WHOLESALE-ELECTRONIC PARTS & EQUIPMENT, NEC (avg=-1.79%, std=0.00%, 1 stocks)
+    TEL         -1.79%
+
+89. INDUSTRIAL INORGANIC CHEMICALS (avg=-1.79%, std=0.63%, 2 stocks)
+    LIN         -1.17%
+    APD         -2.42%
+
+90. GENERAL INDUSTRIAL MACHINERY & EQUIPMENT, NEC (avg=-1.81%, std=0.00%, 1 stocks)
+    NDSN        -1.81%
+
+91. CONSTRUCTION MACHINERY & EQUIP (avg=-1.89%, std=0.00%, 1 stocks)
+    CAT         -1.89%
+
+92. SERVICES-DETECTIVE, GUARD & ARMORED CAR SERVICES (avg=-1.97%, std=0.00%, 1 stocks)
+    ALLE        -1.97%
+
+93. FIRE, MARINE & CASUALTY INSURANCE (avg=-1.98%, std=1.34%, 10 stocks)
+    PGR         +0.40%
+    ALL         -0.27%
+    ACGL        -1.25%
+    BRK.B       -1.85%
+    CB          -1.94%
+    TRV         -1.95%
+    L           -2.24%
+    AIG         -3.06%
+    CINF        -3.29%
+    WRB         -4.39%
+
+94. SPECIAL INDUSTRY MACHINERY (NO METALWORKING MACHINERY) (avg=-2.04%, std=0.00%, 1 stocks)
+    PNR         -2.04%
+
+95. RADIO & TV BROADCASTING & COMMUNICATIONS EQUIPMENT (avg=-2.16%, std=2.23%, 2 stocks)
+    QCOM        +0.06%
+    MSI         -4.39%
+
+96. MEAT PACKING PLANTS (avg=-2.21%, std=0.00%, 1 stocks)
+    HRL         -2.21%
+
+97. BIOLOGICAL PRODUCTS, (NO DIAGNOSTIC SUBSTANCES) (avg=-2.29%, std=2.62%, 5 stocks)
+    TECH        +1.24%
+    BIIB        -0.05%
+    MRNA        -2.25%
+    AMGN        -5.03%
+    GILD        -5.37%
+
+98. ROLLING DRAWING & EXTRUDING OF NONFERROUS METALS (avg=-2.34%, std=0.00%, 1 stocks)
+    HWM         -2.34%
+
+99. SEARCH, DETECTION, NAVIGATION, GUIDANCE, AERONAUTICAL SYS (avg=-2.35%, std=1.32%, 4 stocks)
+    GRMN        -0.50%
+    LHX         -1.70%
+    TDY         -3.56%
+    NOC         -3.65%
+
+100. REAL ESTATE OPERATORS (NO DEVELOPERS) & LESSORS (avg=-2.40%, std=0.00%, 1 stocks)
+    INVH        -2.40%
+
+101. COMPUTER PERIPHERAL EQUIPMENT, NEC (avg=-2.44%, std=0.01%, 2 stocks)
+    PANW        -2.43%
+    FTNT        -2.44%
+
+102. GAMES, TOYS & CHILDREN'S VEHICLES (NO DOLLS & BICYCLES) (avg=-2.45%, std=0.00%, 1 stocks)
+    HAS         -2.45%
+
+103. SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC. (avg=-2.47%, std=4.22%, 7 stocks)
+    FDS         +1.76%
+    MTCH        +0.88%
+    GOOGL       -0.42%
+    GOOG        -0.89%
+    META        -3.27%
+    APP         -3.55%
+    TTD        -11.81%
+
+104. AIRCRAFT & PARTS (avg=-2.50%, std=0.00%, 1 stocks)
+    TXT         -2.50%
+
+105. MOTOR VEHICLES & PASSENGER CAR BODIES (avg=-2.55%, std=2.44%, 4 stocks)
+    GM          +0.58%
+    F           -1.29%
+    PCAR        -3.54%
+    TSLA        -5.94%
+
+106. INSURANCE CARRIERS, NEC (avg=-2.62%, std=0.00%, 1 stocks)
+    AIZ         -2.62%
+
+107. REFUSE SYSTEMS (avg=-2.64%, std=0.42%, 2 stocks)
+    RSG         -2.22%
+    WM          -3.06%
+
+108. PHARMACEUTICAL PREPARATIONS (avg=-2.66%, std=2.56%, 11 stocks)
+    PFE         +1.47%
+    ZTS         +0.04%
+    MRK         -1.24%
+    REGN        -1.73%
+    VTRS        -2.29%
+    ABT         -2.38%
+    JNJ         -2.55%
+    BMY         -2.71%
+    VRTX        -3.27%
+    ABBV        -6.65%
+    LLY         -7.96%
+
+109. Unknown (avg=-2.67%, std=13.13%, 26 stocks)
+    ARM        +14.34%
+    JNPR        +9.27%
+    DFS         +5.25%
+    FBHS        +3.44%
+    RE          +3.42%
+    GFS         +2.91%
+    PEAK        +2.83%
+    FLT         +2.58%
+    ANSS        +2.03%
+    DAY         +0.76%
+    K           +0.36%
+    SPLK        +0.29%
+    IPG         -0.49%
+    MRO         -1.04%
+    MMC         -1.53%
+    WBA         -1.80%
+    PXD         -2.01%
+    FI          -2.06%
+    ASML        -2.11%
+    CTVA        -2.37%
+    AZN         -3.32%
+    PDD         -6.29%
+    CMA         -6.33%
+    CCEP        -8.80%
+    PARA       -16.99%
+    SIVB       -61.74%
+
+110. FOOD AND KINDRED PRODUCTS (avg=-2.72%, std=4.09%, 3 stocks)
+    MDLZ        +2.40%
+    CPB         -2.95%
+    CAG         -7.62%
+
+111. WATER SUPPLY (avg=-2.79%, std=0.00%, 1 stocks)
+    AWK         -2.79%
+
+112. AUTO CONTROLS FOR REGULATING RESIDENTIAL & COMML ENVIRONMENTS (avg=-2.85%, std=0.00%, 1 stocks)
+    TT          -2.85%
+
+113. GUIDED MISSILES & SPACE VEHICLES & PARTS (avg=-2.87%, std=0.00%, 1 stocks)
+    LMT         -2.87%
+
+114. CANNED, FROZEN & PRESERVD FRUIT, VEG & FOOD SPECIALTIES (avg=-2.91%, std=1.56%, 2 stocks)
+    LW          -1.36%
+    KHC         -4.47%
+
+115. RAILROADS, LINE-HAUL OPERATING (avg=-2.95%, std=0.11%, 3 stocks)
+    NSC         -2.86%
+    CSX         -2.88%
+    UNP         -3.10%
+
+116. WHOLESALE-DURABLE GOODS (avg=-2.98%, std=0.00%, 1 stocks)
+    GWW         -2.98%
+
+117. PLASTIC MATERIALS, SYNTH RESINS & NONVULCAN ELASTOMERS (avg=-3.00%, std=2.59%, 4 stocks)
+    DOW         +0.08%
+    ALB         -0.96%
+    DD          -5.48%
+    EMN         -5.66%
+
+118. WHOLESALE-MISC DURABLE GOODS (avg=-3.05%, std=0.00%, 1 stocks)
+    POOL        -3.05%
+
+119. AIRCRAFT PARTS & AUXILIARY EQUIPMENT, NEC (avg=-3.07%, std=0.00%, 1 stocks)
+    TDG         -3.07%
+
+120. FARM MACHINERY & EQUIPMENT (avg=-3.08%, std=0.00%, 1 stocks)
+    DE          -3.08%
+
+121. CONVERTED PAPER & PAPERBOARD PRODS (NO CONTANERS/BOXES) (avg=-3.14%, std=2.49%, 2 stocks)
+    KMB         -0.65%
+    AVY         -5.63%
+
+122. BEVERAGES (avg=-3.16%, std=1.84%, 5 stocks)
+    STZ         -0.35%
+    BF.B        -2.94%
+    KDP         -2.99%
+    KO          -3.35%
+    PEP         -6.15%
+
+123. RETAIL-GROCERY STORES (avg=-3.17%, std=0.00%, 1 stocks)
+    KR          -3.17%
+
+124. SERVICES-MANAGEMENT SERVICES (avg=-3.20%, std=0.00%, 1 stocks)
+    IT          -3.20%
+
+125. SUGAR & CONFECTIONERY PRODUCTS (avg=-3.20%, std=0.00%, 1 stocks)
+    HSY         -3.20%
+
+126. PERFUMES, COSMETICS & OTHER TOILET PREPARATIONS (avg=-3.21%, std=0.98%, 2 stocks)
+    EL          -2.23%
+    CL          -4.19%
+
+127. MINING & QUARRYING OF NONMETALLIC MINERALS (NO FUELS) (avg=-3.30%, std=0.65%, 2 stocks)
+    VMC         -2.64%
+    MLM         -3.95%
+
+128. SERVICES-AMUSEMENT & RECREATION SERVICES (avg=-3.33%, std=0.00%, 1 stocks)
+    LYV         -3.33%
+
+129. STEEL WORKS, BLAST FURNACES & ROLLING MILLS (COKE OVENS) (avg=-3.45%, std=0.45%, 2 stocks)
+    NUE         -3.00%
+    STLD        -3.90%
+
+130. CUTLERY, HANDTOOLS & GENERAL HARDWARE (avg=-3.49%, std=0.60%, 2 stocks)
+    SNA         -2.89%
+    SWK         -4.09%
+
+131. DRAWING & INSULATING OF NONFERROUS WIRE (avg=-3.52%, std=0.00%, 1 stocks)
+    GLW         -3.52%
+
+132. SERVICES-ADVERTISING AGENCIES (avg=-3.52%, std=0.00%, 1 stocks)
+    OMC         -3.52%
+
+133. OPERATIVE BUILDERS (avg=-3.55%, std=1.55%, 3 stocks)
+    NVR         -1.50%
+    PHM         -3.89%
+    DHI         -5.25%
+
+134. POULTRY SLAUGHTERING AND PROCESSING (avg=-3.55%, std=0.00%, 1 stocks)
+    TSN         -3.55%
+
+135. GAS & OTHER SERVICES COMBINED (avg=-3.56%, std=0.00%, 1 stocks)
+    SRE         -3.56%
+
+136. SERVICES-EQUIPMENT RENTAL & LEASING, NEC (avg=-3.63%, std=0.00%, 1 stocks)
+    URI         -3.63%
+
+137. SERVICES-VIDEO TAPE RENTAL (avg=-3.66%, std=0.00%, 1 stocks)
+    NFLX        -3.66%
+
+138. WHOLESALE-MOTOR VEHICLES & MOTOR VEHICLE PARTS & SUPPLIES (avg=-3.68%, std=0.00%, 1 stocks)
+    LKQ         -3.68%
+
+139. REAL ESTATE INVESTMENT TRUSTS (avg=-3.95%, std=2.46%, 27 stocks)
+    HST         +0.49%
+    BXP         +0.13%
+    EQIX        -1.11%
+    SPG         -1.23%
+    FRT         -1.28%
+    ARE         -2.11%
+    REG         -2.23%
+    KIM         -2.49%
+    PLD         -2.84%
+    CPT         -3.23%
+    EQR         -3.35%
+    DLR         -3.51%
+    MAA         -3.59%
+    UDR         -3.67%
+    ESS         -3.90%
+    AMT         -4.13%
+    WY          -4.22%
+    AVB         -4.49%
+    VTR         -4.69%
+    O           -5.42%
+    VICI        -5.59%
+    WELL        -5.72%
+    CCI         -5.84%
+    IRM         -6.77%
+    SBAC        -7.39%
+    EXR         -7.86%
+    PSA        -10.73%
+
+140. RETAIL-BUILDING MATERIALS, HARDWARE, GARDEN SUPPLY (avg=-3.98%, std=0.82%, 3 stocks)
+    TSCO        -3.11%
+    FAST        -3.74%
+    SHW         -5.08%
+
+141. RETAIL-VARIETY STORES (avg=-3.99%, std=1.62%, 5 stocks)
+    DLTR        -1.43%
+    TGT         -3.48%
+    COST        -3.58%
+    DG          -5.55%
+    WMT         -5.93%
+
+142. SPECIALTY CLEANING, POLISHING AND SANITATION PREPARATIONS (avg=-4.09%, std=0.00%, 1 stocks)
+    CLX         -4.09%
+
+143. RADIOTELEPHONE COMMUNICATIONS (avg=-4.10%, std=0.00%, 1 stocks)
+    TMUS        -4.10%
+
+144. NATURAL GAS DISTRIBUTION (avg=-4.29%, std=0.00%, 1 stocks)
+    ATO         -4.29%
+
+145. AIRCRAFT ENGINES & ENGINE PARTS (avg=-4.33%, std=1.22%, 2 stocks)
+    RTX         -3.11%
+    HON         -5.54%
+
+146. WHOLESALE-MEDICAL, DENTAL & HOSPITAL EQUIPMENT & SUPPLIES (avg=-4.34%, std=0.00%, 1 stocks)
+    HSIC        -4.34%
+
+147. HEATING EQUIP, EXCEPT ELEC & WARM AIR; & PLUMBING FIXTURES (avg=-4.36%, std=0.00%, 1 stocks)
+    MAS         -4.36%
+
+148. BOTTLED & CANNED SOFT DRINKS & CARBONATED WATERS (avg=-4.44%, std=0.00%, 1 stocks)
+    MNST        -4.44%
+
+149. PAINTS, VARNISHES, LACQUERS, ENAMELS & ALLIED PRODS (avg=-4.58%, std=0.00%, 1 stocks)
+    PPG         -4.58%
+
+150. SOAP, DETERGENTS, CLEANG PREPARATIONS, PERFUMES, COSMETICS (avg=-4.60%, std=1.38%, 3 stocks)
+    CHD         -3.13%
+    PG          -4.23%
+    ECL         -6.46%
+
+151. GENERAL BLDG CONTRACTORS - RESIDENTIAL BLDGS (avg=-4.64%, std=0.00%, 1 stocks)
+    LEN         -4.64%
+
+152. MALT BEVERAGES (avg=-5.07%, std=0.00%, 1 stocks)
+    TAP         -5.07%
+
+153. DENTAL EQUIPMENT & SUPPLIES (avg=-5.11%, std=0.00%, 1 stocks)
+    XRAY        -5.11%
+
+154. ELECTRIC & OTHER SERVICES COMBINED (avg=-5.14%, std=0.72%, 12 stocks)
+    CMS         -4.38%
+    WEC         -4.41%
+    PCG         -4.52%
+    ED          -4.73%
+    EVRG        -4.76%
+    DUK         -4.76%
+    NI          -5.00%
+    PEG         -5.12%
+    AEE         -5.34%
+    LNT         -5.61%
+    XEL         -6.28%
+    EXC         -6.78%
+
+155. ELECTRONIC CONNECTORS (avg=-5.36%, std=0.00%, 1 stocks)
+    APH         -5.36%
+
+156. SERVICES-GENERAL MEDICAL & SURGICAL HOSPITALS, NEC (avg=-5.38%, std=1.95%, 2 stocks)
+    UHS         -3.43%
+    HCA         -7.33%
+
+157. ELECTRIC SERVICES (avg=-5.47%, std=1.49%, 15 stocks)
+    EIX         -2.76%
+    NEE         -3.54%
+    CNP         -4.52%
+    NRG         -4.62%
+    SO          -4.71%
+    PPL         -5.09%
+    FE          -5.12%
+    DTE         -5.35%
+    ETR         -5.38%
+    PNW         -5.48%
+    AEP         -5.95%
+    D           -6.06%
+    CEG         -6.55%
+    VST         -8.13%
+    ES          -8.80%
+
+158. PAPERBOARD CONTAINERS & BOXES (avg=-5.49%, std=0.00%, 1 stocks)
+    PKG         -5.49%
+
+159. WHOLESALE-DRUGS, PROPRIETARIES & DRUGGISTS' SUNDRIES (avg=-5.57%, std=0.97%, 3 stocks)
+    CAH         -4.26%
+    MCK         -5.85%
+    COR         -6.58%
+
+160. MISCELLANEOUS MANUFACTURING INDUSTRIES (avg=-5.64%, std=0.00%, 1 stocks)
+    AMCR        -5.64%
+
+161. CIGARETTES (avg=-5.83%, std=0.79%, 2 stocks)
+    MO          -5.04%
+    PM          -6.61%
+
+162. WHOLESALE-GROCERIES & RELATED PRODUCTS (avg=-5.95%, std=1.09%, 2 stocks)
+    SYY         -4.87%
+    DPZ         -7.04%
+
+163. GRAIN MILL PRODUCTS (avg=-6.02%, std=0.00%, 1 stocks)
+    GIS         -6.02%
+
+164. RETAIL-DRUG STORES AND PROPRIETARY STORES (avg=-6.11%, std=0.00%, 1 stocks)
+    CVS         -6.11%
+
+165. CARPETS & RUGS (avg=-6.18%, std=0.00%, 1 stocks)
+    MHK         -6.18%
+
+166. RETAIL-LUMBER & OTHER BUILDING MATERIALS DEALERS (avg=-6.22%, std=1.12%, 3 stocks)
+    HD          -5.39%
+    LOW         -5.45%
+    BLDR        -7.80%
+
+167. RETAIL-AUTO & HOME SUPPLY STORES (avg=-6.24%, std=1.61%, 2 stocks)
+    ORLY        -4.63%
+    AZO         -7.86%
+
+168. CANNED, FRUITS, VEG, PRESERVES, JAMS & JELLIES (avg=-6.33%, std=0.00%, 1 stocks)
+    SJM         -6.33%
+
+169. HOUSEHOLD APPLIANCES (avg=-6.61%, std=2.49%, 2 stocks)
+    AOS         -4.11%
+    WHR         -9.10%
+
+170. RETAIL-EATING & DRINKING PLACES (avg=-6.66%, std=0.00%, 1 stocks)
+    SBUX        -6.66%
+
+171. FATS & OILS (avg=-6.67%, std=1.40%, 2 stocks)
+    BG          -5.28%
+    ADM         -8.07%
+
+172. CHEMICALS & ALLIED PRODUCTS (avg=-6.77%, std=0.00%, 1 stocks)
+    FMC         -6.77%
+
+173. AIRCRAFT (avg=-7.04%, std=0.00%, 1 stocks)
+    BA          -7.04%
+
+174. METAL MINING (avg=-7.61%, std=0.00%, 1 stocks)
+    FCX         -7.61%
+
+175. MISCELLANEOUS FOOD PREPARATIONS & KINDRED PRODUCTS (avg=-8.68%, std=0.00%, 1 stocks)
+    MKC         -8.68%
+
+176. WHOLESALE-MOTOR VEHICLE SUPPLIES & NEW PARTS (avg=-8.85%, std=0.00%, 1 stocks)
+    GPC         -8.85%
+
+177. PAPER MILLS (avg=-9.37%, std=0.00%, 1 stocks)
+    IP          -9.37%
+
+178. AGRICULTURAL CHEMICALS (avg=-11.56%, std=7.96%, 2 stocks)
+    CF          -3.60%
+    MOS        -19.52%
+
+179. GOLD AND SILVER ORES (avg=-12.58%, std=0.00%, 1 stocks)
+    NEM        -12.58%
+
+180. ELECTRONIC COMPUTERS (avg=-17.04%, std=16.19%, 2 stocks)
+    AAPL        -0.85%
+    SMCI       -33.24%
+
