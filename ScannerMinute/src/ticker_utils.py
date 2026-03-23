@@ -253,3 +253,29 @@ SP500_AND_NASDAQ100_TICKERS = sorted(set(SP500_TICKERS + NASDAQ100_TICKERS))
 # Combined S&P 500 + NASDAQ-100 + ETFs, deduplicated and sorted
 ALL_TICKERS = sorted(set(SP500_TICKERS + NASDAQ100_TICKERS + ETF_TICKERS))
 # fmt: on
+
+
+def get_nasdaq_composite_tickers():
+    """
+    Fetch all active NASDAQ-listed common stocks from Polygon API.
+    Uses exchange MIC 'XNAS' (NASDAQ) and type 'CS' (Common Stock).
+    Returns a sorted list of ticker symbols.
+    """
+    import logging
+    from ScannerMinute.src.polygon_utils import get_polygon_client
+
+    client = get_polygon_client()
+    tickers = []
+    for t in client.list_tickers(
+        market="stocks",
+        exchange="XNAS",
+        type="CS",
+        active=True,
+        limit=1000,
+        sort="ticker",
+        order="asc",
+    ):
+        if t.ticker:
+            tickers.append(t.ticker)
+    logging.info(f"[get_nasdaq_composite_tickers] Found {len(tickers)} NASDAQ composite tickers")
+    return sorted(tickers)

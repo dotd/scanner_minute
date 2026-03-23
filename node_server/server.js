@@ -9,8 +9,14 @@ const clients = [];
 // Store latest breakouts
 let latestBreakouts = { breakouts: [], time: '' };
 
+// Store latest snapshot time
+let latestSnapshotTime = '';
+
 // Store candle data per ticker
 const tickerCandles = {};
+
+// Store news per ticker
+const tickerNews = {};
 
 const dashboardHtml = `
 <!DOCTYPE html>
@@ -37,6 +43,18 @@ const dashboardHtml = `
     .chart-container { width: 100%; height: 300px; background: #131722; }
     .tv-link { color: #00d4ff; text-decoration: none; }
     .tv-link:hover { text-decoration: underline; }
+    .news-row td { padding: 4px 8px; }
+    .news-row { display: none; }
+    .news-row.open { display: table-row; }
+    .news-list { list-style: none; padding: 0; margin: 4px 0; }
+    .news-list li { padding: 3px 0; border-bottom: 1px solid #1e222d; }
+    .news-list a { color: #4caf50; text-decoration: none; }
+    .news-list a:hover { text-decoration: underline; }
+    .sentiment-positive { color: #26a69a; }
+    .sentiment-negative { color: #ef5350; }
+    .sentiment-neutral { color: #888; }
+    .news-source { color: #666; font-size: 0.85em; }
+    .news-time { color: #666; font-size: 0.85em; }
   </style>
   <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -52,6 +70,7 @@ const dashboardHtml = `
         <th>Ratio</th>
         <th>Price Change</th>
         <th>Past Time</th>
+        <th>Vol %</th>
         <th></th>
       </tr>
     </thead>
@@ -105,11 +124,12 @@ const dashboardHtml = `
     function renderBreakouts(data) {
       const currentTickers = new Set();
       if (!data.breakouts || data.breakouts.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="color:#888;text-align:center;padding:20px;">No breakouts yet</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="color:#888;text-align:center;padding:20px;">No breakouts yet</td></tr>';
         Object.keys(charts).forEach(t => { charts[t].chart.remove(); delete charts[t]; });
         return;
       }
-      status.textContent = 'Last update: ' + data.time + ' (' + data.breakouts.length + ' breakouts)';
+      const snapshotInfo = data.snapshot_time ? ' | snapshot: ' + data.snapshot_time : '';
+      status.textContent = 'Last update: ' + data.time + ' (' + data.breakouts.length + ' breakouts)' + snapshotInfo;
       status.style.color = '#4caf50';
 
       data.breakouts.forEach(b => currentTickers.add(b.ticker));
@@ -121,6 +141,7 @@ const dashboardHtml = `
 
       tbody.innerHTML = '';
       const candleData = data.candles || {};
+      const newsData = data.news || {};
 
       data.breakouts.forEach(b => {
         const row = document.createElement('tr');
@@ -134,6 +155,7 @@ const dashboardHtml = `
           '<td class="' + ratioClass + '">' + b.ratio.toFixed(4) + '</td>' +
           '<td>$' + b.past_close.toFixed(2) + ' &rarr; $' + b.current_close.toFixed(2) + '</td>' +
           '<td>' + b.past_time + '</td>' +
+          '<td>' + (b.volume_pct != null ? b.volume_pct + '%' : '') + '</td>' +
           '<td><a class="tv-link" href="' + tvUrl + '" target="_blank">TradingView</a></td>';
         tbody.appendChild(row);
 
@@ -141,7 +163,7 @@ const dashboardHtml = `
         const chartRow = document.createElement('tr');
         chartRow.className = 'chart-row' + (openCharts.has(b.ticker) ? ' open' : '');
         const chartCell = document.createElement('td');
-        chartCell.colSpan = 7;
+        chartCell.colSpan = 8;
         const chartDiv = document.createElement('div');
         chartDiv.className = 'chart-container';
         chartDiv.id = 'chart-' + b.ticker;
@@ -149,16 +171,43 @@ const dashboardHtml = `
         chartRow.appendChild(chartCell);
         tbody.appendChild(chartRow);
 
-        // Click row to toggle chart (but not when clicking the TradingView link)
+        // News row (shown together with chart)
+        const newsRow = document.createElement('tr');
+        newsRow.className = 'news-row' + (openCharts.has(b.ticker) ? ' open' : '');
+        const newsCell = document.createElement('td');
+        newsCell.colSpan = 8;
+        const articles = newsData[b.ticker];
+        if (articles && articles.length) {
+          let html = '<ul class="news-list">';
+          articles.forEach(a => {
+            const sentClass = a.sentiment === 'positive' ? 'sentiment-positive' : a.sentiment === 'negative' ? 'sentiment-negative' : 'sentiment-neutral';
+            const timeStr = a.published ? new Date(a.published).toLocaleTimeString() : '';
+            html += '<li>' +
+              '<a href="' + a.url + '" target="_blank">' + a.title + '</a> ' +
+              (a.sentiment ? '<span class="' + sentClass + '">[' + a.sentiment + ']</span> ' : '') +
+              '<span class="news-source">' + a.source + '</span> ' +
+              '<span class="news-time">' + timeStr + '</span>' +
+              '</li>';
+          });
+          html += '</ul>';
+          newsCell.innerHTML = html;
+        } else {
+          newsCell.innerHTML = '<div style="color:#666;padding:6px;text-align:center;">No recent news</div>';
+        }
+        newsRow.appendChild(newsCell);
+        tbody.appendChild(newsRow);
+
+        // Toggle chart + news rows together
         row.addEventListener('click', (e) => {
           if (e.target.closest('a')) return;
           if (chartRow.classList.contains('open')) {
             chartRow.classList.remove('open');
+            newsRow.classList.remove('open');
             openCharts.delete(b.ticker);
           } else {
             chartRow.classList.add('open');
+            newsRow.classList.add('open');
             openCharts.add(b.ticker);
-            // Create chart if not yet created and we have data
             const container = document.getElementById('chart-' + b.ticker);
             const candles = candleData[b.ticker];
             if (container && candles && candles.length && !charts[b.ticker]) {
@@ -244,6 +293,8 @@ const server = http.createServer((req, res) => {
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', () => {
+      const payload = JSON.parse(body);
+      if (payload.snapshot_time) latestSnapshotTime = payload.snapshot_time;
       clients.forEach(client => {
         client.write('event: scan\ndata: ' + body + '\n\n');
       });
@@ -268,6 +319,21 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // POST news from Python
+  if (req.method === 'POST' && req.url === '/news') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      const payload = JSON.parse(body);
+      if (payload.ticker && payload.articles) {
+        tickerNews[payload.ticker] = payload.articles;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end('{"ok":true}');
+    });
+    return;
+  }
+
   // GET candles for a specific ticker
   if (req.method === 'GET' && req.url.startsWith('/candles?')) {
     const params = new URL(req.url, 'http://localhost').searchParams;
@@ -283,7 +349,9 @@ const server = http.createServer((req, res) => {
     const candles = {};
     breakoutTickers.forEach(t => { if (tickerCandles[t]) candles[t] = tickerCandles[t]; });
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ...latestBreakouts, candles }));
+    const news = {};
+    breakoutTickers.forEach(t => { if (tickerNews[t]) news[t] = tickerNews[t]; });
+    res.end(JSON.stringify({ ...latestBreakouts, candles, news, snapshot_time: latestSnapshotTime }));
     return;
   }
 

@@ -1,0 +1,141 @@
+Day Momentum Scanner - 2026-03-23 05:25 UTC
+
+=== Consecutive Green Days (0 excluded) ===
+Percentages are close-to-close: (today's close / prev day's close - 1) * 100
+ Rank  Ticker     Days  Industry                             Daily Changes (latest -> earliest)
+------------------------------------------------------------------------------------------------------------------------
+    1  APA           8  CRUDE PETROLEUM & NATURAL GAS        [2.62%] 2.76%, 3.96%, 2.08%, 3.84%, 0.20%, 2.56%, 1.94%, 3.61%  https://www.tradingview.com/chart/?symbol=APA&interval=D
+    2  CTRA          8  CRUDE PETROLEUM & NATURAL GAS        [1.40%] 0.21%, 1.28%, 1.45%, 1.92%, 0.68%, 0.53%, 2.01%, 3.09%  https://www.tradingview.com/chart/?symbol=CTRA&interval=D
+    3  ARM           6                                       [2.37%] 1.95%, 1.14%, 0.82%, 4.61%, 5.14%, 0.55%  https://www.tradingview.com/chart/?symbol=ARM&interval=D
+    4  CVX           5  PETROLEUM REFINING                   [0.50%] 0.14%, 1.42%, 0.32%, 0.57%, 0.01%  https://www.tradingview.com/chart/?symbol=CVX&interval=D
+    5  SYF           5  FINANCE SERVICES                     [0.75%] 1.04%, 0.52%, 0.03%, 1.77%, 0.38%  https://www.tradingview.com/chart/?symbol=SYF&interval=D
+    6  AKAM          4  SERVICES-BUSINESS SERVICES, NEC      [1.18%] 0.44%, 1.05%, 2.85%, 0.38%  https://www.tradingview.com/chart/?symbol=AKAM&interval=D
+    7  COP           4  PETROLEUM REFINING                   [1.14%] 0.71%, 1.92%, 0.63%, 1.28%  https://www.tradingview.com/chart/?symbol=COP&interval=D
+    8  FANG          4  CRUDE PETROLEUM & NATURAL GAS        [1.37%] 1.17%, 0.33%, 1.31%, 2.68%  https://www.tradingview.com/chart/?symbol=FANG&interval=D
+    9  OXY           4  CRUDE PETROLEUM & NATURAL GAS        [1.48%] 1.90%, 2.06%, 1.13%, 0.84%  https://www.tradingview.com/chart/?symbol=OXY&interval=D
+   10  PEAK          4                                       [1.39%] 2.09%, 1.21%, 1.91%, 0.37%  https://www.tradingview.com/chart/?symbol=PEAK&interval=D
+   11  RHI           4  SERVICES-HELP SUPPLY SERVICES        [1.61%] 1.48%, 0.92%, 0.26%, 3.75%  https://www.tradingview.com/chart/?symbol=RHI&interval=D
+   12  XOP           4                                       [1.43%] 1.19%, 0.97%, 1.93%, 1.62%  https://www.tradingview.com/chart/?symbol=XOP&interval=D
+   13  AJG           3  INSURANCE AGENTS, BROKERS & SERVICE  [0.90%] 2.45%, 0.10%, 0.15%  https://www.tradingview.com/chart/?symbol=AJG&interval=D
+   14  CDW           3  RETAIL-CATALOG & MAIL-ORDER HOUSES   [0.80%] 0.52%, 1.75%, 0.13%  https://www.tradingview.com/chart/?symbol=CDW&interval=D
+   15  HOLX          3  X-RAY APPARATUS & TUBES & RELATED IRRADIATION APPARATUS  [0.16%] 0.11%, 0.24%, 0.13%  https://www.tradingview.com/chart/?symbol=HOLX&interval=D
+   16  SDS           3                                       [2.09%] 2.92%, 0.58%, 2.78%  https://www.tradingview.com/chart/?symbol=SDS&interval=D
+   17  SPXS          3                                       [3.15%] 4.44%, 0.81%, 4.21%  https://www.tradingview.com/chart/?symbol=SPXS&interval=D
+   18  SQQQ          3                                       [3.63%] 5.72%, 0.93%, 4.24%  https://www.tradingview.com/chart/?symbol=SQQQ&interval=D
+   19  AMP           2  INVESTMENT ADVICE                    [0.74%] 1.12%, 0.35%  https://www.tradingview.com/chart/?symbol=AMP&interval=D
+   20  AXP           2  FINANCE SERVICES                     [0.19%] 0.19%, 0.18%  https://www.tradingview.com/chart/?symbol=AXP&interval=D
+   21  BAC           2  NATIONAL COMMERCIAL BANKS            [0.35%] 0.32%, 0.38%  https://www.tradingview.com/chart/?symbol=BAC&interval=D
+   22  BK            2  STATE COMMERCIAL BANKS               [0.12%] 0.03%, 0.21%  https://www.tradingview.com/chart/?symbol=BK&interval=D
+   23  CHTR          2  CABLE & OTHER PAY TELEVISION SERVICES  [0.96%] 0.65%, 1.26%  https://www.tradingview.com/chart/?symbol=CHTR&interval=D
+   24  CMCSA         2  CABLE & OTHER PAY TELEVISION SERVICES  [0.79%] 0.14%, 1.44%  https://www.tradingview.com/chart/?symbol=CMCSA&interval=D
+   25  CMG           2  RETAIL-EATING PLACES                 [1.11%] 1.31%, 0.92%  https://www.tradingview.com/chart/?symbol=CMG&interval=D
+   26  CRM           2  SERVICES-PREPACKAGED SOFTWARE        [0.27%] 0.20%, 0.33%  https://www.tradingview.com/chart/?symbol=CRM&interval=D
+   27  CTSH          2  SERVICES-COMPUTER PROGRAMMING SERVICES  [1.47%] 0.84%, 2.09%  https://www.tradingview.com/chart/?symbol=CTSH&interval=D
+   28  EPAM          2  SERVICES-COMPUTER PROGRAMMING SERVICES  [1.28%] 1.30%, 1.26%  https://www.tradingview.com/chart/?symbol=EPAM&interval=D
+   29  FDS           2  SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.  [0.35%] 0.21%, 0.49%  https://www.tradingview.com/chart/?symbol=FDS&interval=D
+   30  FDX           2  AIR COURIER SERVICES                 [1.30%] 0.77%, 1.82%  https://www.tradingview.com/chart/?symbol=FDX&interval=D
+   31  FI            2                                       [1.76%] 0.16%, 3.36%  https://www.tradingview.com/chart/?symbol=FI&interval=D
+   32  FIS           2  SERVICES-BUSINESS SERVICES, NEC      [0.59%] 1.08%, 0.10%  https://www.tradingview.com/chart/?symbol=FIS&interval=D
+   33  FOXA          2  TELEVISION BROADCASTING STATIONS     [0.15%] 0.24%, 0.05%  https://www.tradingview.com/chart/?symbol=FOXA&interval=D
+   34  GS            2  SECURITY BROKERS, DEALERS & FLOTATION COMPANIES  [0.50%] 0.50%, 0.50%  https://www.tradingview.com/chart/?symbol=GS&interval=D
+   35  INTU          2  SERVICES-PREPACKAGED SOFTWARE        [0.98%] 0.07%, 1.89%  https://www.tradingview.com/chart/?symbol=INTU&interval=D
+   36  IT            2  SERVICES-MANAGEMENT SERVICES         [1.04%] 1.35%, 0.72%  https://www.tradingview.com/chart/?symbol=IT&interval=D
+   37  J             2  HEAVY CONSTRUCTION OTHER THAN BLDG CONST - CONTRACTORS  [0.25%] 0.33%, 0.18%  https://www.tradingview.com/chart/?symbol=J&interval=D
+   38  JNPR          2                                       [4.25%] 0.05%, 8.45%  https://www.tradingview.com/chart/?symbol=JNPR&interval=D
+   39  KEY           2  NATIONAL COMMERCIAL BANKS            [0.89%] 0.67%, 1.10%  https://www.tradingview.com/chart/?symbol=KEY&interval=D
+   40  MA            2  SERVICES-BUSINESS SERVICES, NEC      [0.80%] 1.05%, 0.55%  https://www.tradingview.com/chart/?symbol=MA&interval=D
+   41  NDAQ          2  SECURITY & COMMODITY BROKERS, DEALERS, EXCHANGES & SERVICES  [0.53%] 0.08%, 0.97%  https://www.tradingview.com/chart/?symbol=NDAQ&interval=D
+   42  OKE           2  NATURAL GAS TRANSMISSION & DISTRIBUTION  [1.74%] 0.93%, 2.55%  https://www.tradingview.com/chart/?symbol=OKE&interval=D
+   43  PAYX          2  SERVICES-ENGINEERING, ACCOUNTING, RESEARCH, MANAGEMENT  [1.05%] 0.92%, 1.18%  https://www.tradingview.com/chart/?symbol=PAYX&interval=D
+   44  PGR           2  FIRE, MARINE & CASUALTY INSURANCE    [1.19%] 1.64%, 0.75%  https://www.tradingview.com/chart/?symbol=PGR&interval=D
+   45  QRVO          2  SEMICONDUCTORS & RELATED DEVICES     [0.67%] 0.54%, 0.79%  https://www.tradingview.com/chart/?symbol=QRVO&interval=D
+   46  RE            2                                       [1.71%] 2.93%, 0.49%  https://www.tradingview.com/chart/?symbol=RE&interval=D
+   47  RF            2  NATIONAL COMMERCIAL BANKS            [0.32%] 0.60%, 0.04%  https://www.tradingview.com/chart/?symbol=RF&interval=D
+   48  RJF           2  SECURITY BROKERS, DEALERS & FLOTATION COMPANIES  [0.52%] 0.66%, 0.37%  https://www.tradingview.com/chart/?symbol=RJF&interval=D
+   49  ROP           2  INDUSTRIAL INSTRUMENTS FOR MEASUREMENT, DISPLAY, AND CONTROL  [0.41%] 0.12%, 0.70%  https://www.tradingview.com/chart/?symbol=ROP&interval=D
+   50  ROST          2  RETAIL-FAMILY CLOTHING STORES        [0.96%] 0.25%, 1.66%  https://www.tradingview.com/chart/?symbol=ROST&interval=D
+   51  SCHW          2  SECURITY BROKERS, DEALERS & FLOTATION COMPANIES  [0.74%] 0.71%, 0.76%  https://www.tradingview.com/chart/?symbol=SCHW&interval=D
+   52  SEE           2  PLASTIC MATERIAL, SYNTH RESIN/RUBBER, CELLULOS (NO GLASS)  [0.18%] 0.22%, 0.14%  https://www.tradingview.com/chart/?symbol=SEE&interval=D
+   53  STE           2  ORTHOPEDIC, PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES  [0.88%] 0.97%, 0.79%  https://www.tradingview.com/chart/?symbol=STE&interval=D
+   54  SWKS          2  SEMICONDUCTORS & RELATED DEVICES     [0.80%] 0.59%, 1.01%  https://www.tradingview.com/chart/?symbol=SWKS&interval=D
+   55  T             2  TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE)  [1.63%] 2.05%, 1.20%  https://www.tradingview.com/chart/?symbol=T&interval=D
+   56  TFC           2  NATIONAL COMMERCIAL BANKS            [0.35%] 0.64%, 0.07%  https://www.tradingview.com/chart/?symbol=TFC&interval=D
+   57  TJX           2  RETAIL-FAMILY CLOTHING STORES        [0.69%] 0.19%, 1.18%  https://www.tradingview.com/chart/?symbol=TJX&interval=D
+   58  TMO           2  MEASURING & CONTROLLING DEVICES, NEC  [1.04%] 0.89%, 1.19%  https://www.tradingview.com/chart/?symbol=TMO&interval=D
+   59  TYL           2  SERVICES-PREPACKAGED SOFTWARE        [0.91%] 0.04%, 1.78%  https://www.tradingview.com/chart/?symbol=TYL&interval=D
+   60  V             2  SERVICES-BUSINESS SERVICES, NEC      [0.43%] 0.64%, 0.23%  https://www.tradingview.com/chart/?symbol=V&interval=D
+   61  VFH           2                                       [0.08%] 0.06%, 0.09%  https://www.tradingview.com/chart/?symbol=VFH&interval=D
+   62  VRSN          2  SERVICES-COMPUTER PROGRAMMING SERVICES  [0.39%] 0.47%, 0.32%  https://www.tradingview.com/chart/?symbol=VRSN&interval=D
+   63  WDAY          2  SERVICES-COMPUTER PROCESSING & DATA PREPARATION  [1.38%] 1.93%, 0.82%  https://www.tradingview.com/chart/?symbol=WDAY&interval=D
+   64  WFC           2  NATIONAL COMMERCIAL BANKS            [0.92%] 1.58%, 0.26%  https://www.tradingview.com/chart/?symbol=WFC&interval=D
+   65  XLF           2  STATE COMMERCIAL BANKS               [0.11%] 0.18%, 0.04%  https://www.tradingview.com/chart/?symbol=XLF&interval=D
+   66  XOM           2  PETROLEUM REFINING                   [0.66%] 0.95%, 0.36%  https://www.tradingview.com/chart/?symbol=XOM&interval=D
+   67  ACGL          1  FIRE, MARINE & CASUALTY INSURANCE    [0.14%] 0.14%  https://www.tradingview.com/chart/?symbol=ACGL&interval=D
+   68  ADBE          1  SERVICES-PREPACKAGED SOFTWARE        [0.88%] 0.88%  https://www.tradingview.com/chart/?symbol=ADBE&interval=D
+   69  ADSK          1  SERVICES-PREPACKAGED SOFTWARE        [0.14%] 0.14%  https://www.tradingview.com/chart/?symbol=ADSK&interval=D
+   70  AIG           1  FIRE, MARINE & CASUALTY INSURANCE    [0.68%] 0.68%  https://www.tradingview.com/chart/?symbol=AIG&interval=D
+   71  AIZ           1  INSURANCE CARRIERS, NEC              [0.45%] 0.45%  https://www.tradingview.com/chart/?symbol=AIZ&interval=D
+   72  ALL           1  FIRE, MARINE & CASUALTY INSURANCE    [0.76%] 0.76%  https://www.tradingview.com/chart/?symbol=ALL&interval=D
+   73  AON           1  INSURANCE AGENTS, BROKERS & SERVICE  [2.73%] 2.73%  https://www.tradingview.com/chart/?symbol=AON&interval=D
+   74  APP           1  SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.  [0.56%] 0.56%  https://www.tradingview.com/chart/?symbol=APP&interval=D
+   75  BIL           1                                       [0.03%] 0.03%  https://www.tradingview.com/chart/?symbol=BIL&interval=D
+   76  BKNG          1  TRANSPORTATION SERVICES              [0.69%] 0.69%  https://www.tradingview.com/chart/?symbol=BKNG&interval=D
+   77  BRO           1  INSURANCE AGENTS, BROKERS & SERVICE  [0.74%] 0.74%  https://www.tradingview.com/chart/?symbol=BRO&interval=D
+   78  CHD           1  SOAP, DETERGENTS, CLEANG PREPARATIONS, PERFUMES, COSMETICS  [0.12%] 0.12%  https://www.tradingview.com/chart/?symbol=CHD&interval=D
+   79  CINF          1  FIRE, MARINE & CASUALTY INSURANCE    [0.36%] 0.36%  https://www.tradingview.com/chart/?symbol=CINF&interval=D
+   80  COF           1  NATIONAL COMMERCIAL BANKS            [0.96%] 0.96%  https://www.tradingview.com/chart/?symbol=COF&interval=D
+   81  CPAY          1  SERVICES-BUSINESS SERVICES, NEC      [1.08%] 1.08%  https://www.tradingview.com/chart/?symbol=CPAY&interval=D
+   82  CPB           1  FOOD AND KINDRED PRODUCTS            [0.19%] 0.19%  https://www.tradingview.com/chart/?symbol=CPB&interval=D
+   83  CPRT          1  RETAIL-AUTO DEALERS & GASOLINE STATIONS  [1.05%] 1.05%  https://www.tradingview.com/chart/?symbol=CPRT&interval=D
+   84  CRL           1  SERVICES-COMMERCIAL PHYSICAL & BIOLOGICAL RESEARCH  [0.36%] 0.36%  https://www.tradingview.com/chart/?symbol=CRL&interval=D
+   85  CSGP          1  SERVICES-BUSINESS SERVICES, NEC      [0.19%] 0.19%  https://www.tradingview.com/chart/?symbol=CSGP&interval=D
+   86  DAY           1                                       [1.36%] 1.36%  https://www.tradingview.com/chart/?symbol=DAY&interval=D
+   87  DBC           1  COMMODITY CONTRACTS BROKERS & DEALERS  [0.35%] 0.35%  https://www.tradingview.com/chart/?symbol=DBC&interval=D
+   88  DG            1  RETAIL-VARIETY STORES                [0.87%] 0.87%  https://www.tradingview.com/chart/?symbol=DG&interval=D
+   89  DGX           1  SERVICES-MEDICAL LABORATORIES        [0.57%] 0.57%  https://www.tradingview.com/chart/?symbol=DGX&interval=D
+   90  DIS           1  SERVICES-MISCELLANEOUS AMUSEMENT & RECREATION  [0.31%] 0.31%  https://www.tradingview.com/chart/?symbol=DIS&interval=D
+   91  DLTR          1  RETAIL-VARIETY STORES                [0.34%] 0.34%  https://www.tradingview.com/chart/?symbol=DLTR&interval=D
+   92  EL            1  PERFUMES, COSMETICS & OTHER TOILET PREPARATIONS  [0.37%] 0.37%  https://www.tradingview.com/chart/?symbol=EL&interval=D
+   93  EW            1  ORTHOPEDIC, PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES  [0.05%] 0.05%  https://www.tradingview.com/chart/?symbol=EW&interval=D
+   94  FICO          1  SERVICES-BUSINESS SERVICES, NEC      [1.30%] 1.30%  https://www.tradingview.com/chart/?symbol=FICO&interval=D
+   95  FISV          1  SERVICES-BUSINESS SERVICES, NEC      [0.09%] 0.09%  https://www.tradingview.com/chart/?symbol=FISV&interval=D
+   96  FITB          1  STATE COMMERCIAL BANKS               [1.21%] 1.21%  https://www.tradingview.com/chart/?symbol=FITB&interval=D
+   97  FOX           1  TELEVISION BROADCASTING STATIONS     [0.31%] 0.31%  https://www.tradingview.com/chart/?symbol=FOX&interval=D
+   98  GDDY          1  SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN  [1.47%] 1.47%  https://www.tradingview.com/chart/?symbol=GDDY&interval=D
+   99  GEN           1  SERVICES-PREPACKAGED SOFTWARE        [1.99%] 1.99%  https://www.tradingview.com/chart/?symbol=GEN&interval=D
+  100  GPN           1  SERVICES-BUSINESS SERVICES, NEC      [0.47%] 0.47%  https://www.tradingview.com/chart/?symbol=GPN&interval=D
+  101  HUM           1  HOSPITAL & MEDICAL SERVICE PLANS     [2.07%] 2.07%  https://www.tradingview.com/chart/?symbol=HUM&interval=D
+  102  JKHY          1  SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN  [0.58%] 0.58%  https://www.tradingview.com/chart/?symbol=JKHY&interval=D
+  103  LABD          1                                       [4.99%] 4.99%  https://www.tradingview.com/chart/?symbol=LABD&interval=D
+  104  MS            1  SECURITY BROKERS, DEALERS & FLOTATION COMPANIES  [1.84%] 1.84%  https://www.tradingview.com/chart/?symbol=MS&interval=D
+  105  MTB           1  STATE COMMERCIAL BANKS               [0.97%] 0.97%  https://www.tradingview.com/chart/?symbol=MTB&interval=D
+  106  MTD           1  LABORATORY ANALYTICAL INSTRUMENTS    [1.18%] 1.18%  https://www.tradingview.com/chart/?symbol=MTD&interval=D
+  107  NFLX          1  SERVICES-VIDEO TAPE RENTAL           [0.09%] 0.09%  https://www.tradingview.com/chart/?symbol=NFLX&interval=D
+  108  NSC           1  RAILROADS, LINE-HAUL OPERATING       [1.04%] 1.04%  https://www.tradingview.com/chart/?symbol=NSC&interval=D
+  109  NWS           1  NEWSPAPERS: PUBLISHING OR PUBLISHING & PRINTING  [0.55%] 0.55%  https://www.tradingview.com/chart/?symbol=NWS&interval=D
+  110  NWSA          1  NEWSPAPERS: PUBLISHING OR PUBLISHING & PRINTING  [0.50%] 0.50%  https://www.tradingview.com/chart/?symbol=NWSA&interval=D
+  111  ODFL          1  TRUCKING (NO LOCAL)                  [0.86%] 0.86%  https://www.tradingview.com/chart/?symbol=ODFL&interval=D
+  112  PAYC          1  SERVICES-PREPACKAGED SOFTWARE        [0.54%] 0.54%  https://www.tradingview.com/chart/?symbol=PAYC&interval=D
+  113  PDBC          1                                       [0.64%] 0.64%  https://www.tradingview.com/chart/?symbol=PDBC&interval=D
+  114  PRU           1  LIFE INSURANCE                       [0.56%] 0.56%  https://www.tradingview.com/chart/?symbol=PRU&interval=D
+  115  PXD           1                                       [0.73%] 0.73%  https://www.tradingview.com/chart/?symbol=PXD&interval=D
+  116  SHV           1                                       [0.03%] 0.03%  https://www.tradingview.com/chart/?symbol=SHV&interval=D
+  117  SOXS          1                                       [6.69%] 6.69%  https://www.tradingview.com/chart/?symbol=SOXS&interval=D
+  118  SPLK          1                                       [0.25%] 0.25%  https://www.tradingview.com/chart/?symbol=SPLK&interval=D
+  119  STT           1  STATE COMMERCIAL BANKS               [0.84%] 0.84%  https://www.tradingview.com/chart/?symbol=STT&interval=D
+  120  TMUS          1  RADIOTELEPHONE COMMUNICATIONS        [0.91%] 0.91%  https://www.tradingview.com/chart/?symbol=TMUS&interval=D
+  121  TTD           1  SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC.  [2.55%] 2.55%  https://www.tradingview.com/chart/?symbol=TTD&interval=D
+  122  TXT           1  AIRCRAFT & PARTS                     [0.09%] 0.09%  https://www.tradingview.com/chart/?symbol=TXT&interval=D
+  123  TZA           1                                       [6.64%] 6.64%  https://www.tradingview.com/chart/?symbol=TZA&interval=D
+  124  UNP           1  RAILROADS, LINE-HAUL OPERATING       [0.32%] 0.32%  https://www.tradingview.com/chart/?symbol=UNP&interval=D
+  125  USO           1  COMMODITY CONTRACTS BROKERS & DEALERS  [3.47%] 3.47%  https://www.tradingview.com/chart/?symbol=USO&interval=D
+  126  UUP           1  COMMODITY CONTRACTS BROKERS & DEALERS  [0.36%] 0.36%  https://www.tradingview.com/chart/?symbol=UUP&interval=D
+  127  UVXY          1  COMMODITY CONTRACTS BROKERS & DEALERS  [10.45%] 10.45%  https://www.tradingview.com/chart/?symbol=UVXY&interval=D
+  128  VIXY          1  COMMODITY CONTRACTS BROKERS & DEALERS  [7.11%] 7.11%  https://www.tradingview.com/chart/?symbol=VIXY&interval=D
+  129  VMC           1  MINING & QUARRYING OF NONMETALLIC MINERALS (NO FUELS)  [0.54%] 0.54%  https://www.tradingview.com/chart/?symbol=VMC&interval=D
+  130  VRSK          1  SERVICES-COMPUTER PROCESSING & DATA PREPARATION  [0.03%] 0.03%  https://www.tradingview.com/chart/?symbol=VRSK&interval=D
+  131  VXX           1                                       [6.51%] 6.51%  https://www.tradingview.com/chart/?symbol=VXX&interval=D
+  132  VZ            1  TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE)  [1.01%] 1.01%  https://www.tradingview.com/chart/?symbol=VZ&interval=D
+  133  WBA           1                                       [0.50%] 0.50%  https://www.tradingview.com/chart/?symbol=WBA&interval=D
+  134  WTW           1  INSURANCE AGENTS, BROKERS & SERVICE  [1.40%] 1.40%  https://www.tradingview.com/chart/?symbol=WTW&interval=D
+  135  YUM           1  RETAIL-EATING PLACES                 [0.10%] 0.10%  https://www.tradingview.com/chart/?symbol=YUM&interval=D
