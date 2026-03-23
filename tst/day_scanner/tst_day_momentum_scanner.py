@@ -76,9 +76,7 @@ def run_day_momentum_scanner():
     logging.info(f"Industry fetch complete in {time.time() - t1:.1f}s")
 
     # Print ticker scores with daily change percentages
-    header = (
-        f"{'Rank':>5}  {'Ticker':<8}  {'Days':>5}  {'Industry':<35}  Daily Changes (latest -> earliest)"
-    )
+    header = f"{'Rank':>5}  {'Ticker':<8}  {'Days':>5}  {'Industry':<35}  Daily Changes (latest -> earliest)"
     sep = "-" * 120
     print("\n=== Day Momentum Scanner: Consecutive Green Days (0 excluded) ===")
     print(
@@ -96,7 +94,7 @@ def run_day_momentum_scanner():
         )
 
     # Save to file
-    output_path = "day_momentum_scores.txt"
+    output_path = "tst/day_scanner/day_momentum_scores.txt"
     with open(output_path, "w") as f:
         f.write(
             f"Day Momentum Scanner - {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n\n"
