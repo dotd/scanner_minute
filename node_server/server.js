@@ -40,7 +40,7 @@ const dashboardHtml = `
     .chart-row td { padding: 0; }
     .chart-row { display: none; }
     .chart-row.open { display: table-row; }
-    .chart-container { width: 100%; height: 300px; background: #131722; }
+    .chart-container { width: 100%; height: 600px; background: #131722; }
     .tv-link { color: #00d4ff; text-decoration: none; }
     .tv-link:hover { text-decoration: underline; }
     .news-row td { padding: 4px 8px; }
@@ -86,7 +86,7 @@ const dashboardHtml = `
       const chartWidth = Math.max(Math.floor(container.clientWidth / 100), Math.floor(container.clientWidth * pct));
       const chart = LightweightCharts.createChart(container, {
         width: chartWidth,
-        height: 300,
+        height: 600,
         layout: { background: { color: '#131722' }, textColor: '#d1d4dc' },
         grid: { vertLines: { color: '#1e222d' }, horzLines: { color: '#1e222d' } },
         timeScale: { timeVisible: true, secondsVisible: false },

@@ -145,7 +145,9 @@ def fetch_market_caps(tickers, num_threads=DEFAULT_NUM_THREADS):
     Market cap = weighted_shares_outstanding * prev_day close price.
     Returns dict: ticker -> market_cap (float in dollars), or None if unavailable.
     """
-    logging.info(f"[fetch_market_caps] Fetching market caps for {len(tickers)} tickers...")
+    logging.info(
+        f"[fetch_market_caps] Fetching market caps for {len(tickers)} tickers..."
+    )
     task_queue = Queue()
     result_dict = {}
     lock = threading.Lock()
@@ -167,7 +169,9 @@ def fetch_market_caps(tickers, num_threads=DEFAULT_NUM_THREADS):
     for t in threads:
         t.join()
 
-    logging.info(f"[fetch_market_caps] Done. Got market caps for {sum(1 for v in result_dict.values() if v)} / {len(tickers)} tickers")
+    logging.info(
+        f"[fetch_market_caps] Done. Got market caps for {sum(1 for v in result_dict.values() if v)} / {len(tickers)} tickers"
+    )
     return result_dict
 
 
@@ -213,7 +217,9 @@ def fetch_ticker_industries(tickers, num_threads=DEFAULT_NUM_THREADS):
         return _load_industries_csv(csv_path)
 
     # Download from Polygon API
-    logging.info(f"[fetch_ticker_industries] Downloading industries for {len(tickers)} tickers...")
+    logging.info(
+        f"[fetch_ticker_industries] Downloading industries for {len(tickers)} tickers..."
+    )
     task_queue = Queue()
     result_dict = {}
     lock = threading.Lock()
@@ -237,7 +243,9 @@ def fetch_ticker_industries(tickers, num_threads=DEFAULT_NUM_THREADS):
 
     # Save to CSV
     _save_industries_csv(csv_path, result_dict)
-    logging.info(f"[fetch_ticker_industries] Saved {len(result_dict)} industries to {csv_path}")
+    logging.info(
+        f"[fetch_ticker_industries] Saved {len(result_dict)} industries to {csv_path}"
+    )
 
     return result_dict
 
@@ -254,7 +262,9 @@ def get_trading_days(years_back=DEFAULT_YEARS_BACK):
     return trading_days
 
 
-def download_all_daily_bars(tickers, num_threads=DEFAULT_NUM_THREADS, years_back=DEFAULT_YEARS_BACK):
+def download_all_daily_bars(
+    tickers, num_threads=DEFAULT_NUM_THREADS, years_back=DEFAULT_YEARS_BACK
+):
     """
     Multi-threaded download of grouped daily bars for all trading days.
     Uses get_grouped_daily_aggs (regular session only) — one API call per day.
@@ -323,7 +333,9 @@ def _minute_download_worker(worker_id, task_queue, result_dict, lock, progress):
             logging.error(f"{tag} Error downloading {ticker}: {e}")
 
 
-def download_minute_daily_bars(tickers, date_start, date_end=None, num_threads=DEFAULT_NUM_THREADS):
+def download_minute_daily_bars(
+    tickers, date_start, date_end=None, num_threads=DEFAULT_NUM_THREADS
+):
     """
     Multi-threaded download of 1-minute bars for the given tickers and date range.
     Assumes the date range per ticker won't exceed the 50k bar API limit.

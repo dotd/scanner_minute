@@ -62,7 +62,7 @@ def _download_worker(
     logging.info(f"{tag} Worker finished")
 
 
-def _writer_worker(db_path, result_queue):
+def _writer_worker_of_task(db_path, result_queue):
     """Writer thread: pulls from result queue, batch-writes to RocksDB."""
     db = Rdict(db_path)
     while True:
@@ -75,7 +75,9 @@ def _writer_worker(db_path, result_queue):
         wb = WriteBatch()
         for bar in data:
             timestamp_ms = bar[8]  # index 8 is epoch ms (timestamp since 1970)
-            iso_dt = datetime.utcfromtimestamp(timestamp_ms / 1000).strftime("%Y-%m-%dT%H:%M:%S")
+            iso_dt = datetime.utcfromtimestamp(timestamp_ms / 1000).strftime(
+                "%Y-%m-%dT%H:%M:%S"
+            )
             key = f"{timespan}{SEPARATOR}{ticker}{SEPARATOR}{iso_dt}"
             wb[key] = pickle.dumps(bar)
         db.write(wb)
@@ -133,7 +135,7 @@ def download_and_store(db_path, num_threads, tasks):
 
     # Start single writer thread
     writer_thread = threading.Thread(
-        target=_writer_worker, args=(db_path, result_queue)
+        target=_writer_worker_of_task, args=(db_path, result_queue)
     )
     writer_thread.start()
 
