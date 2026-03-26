@@ -169,9 +169,16 @@ def verify_ver2(k=100, db_path=DB_PATH, seed=42):
     logging.info(f"[VERIFY] {'=' * 60}")
 
     if mismatches:
-        logging.info(f"[VERIFY] First 10 mismatches:")
-        for m in mismatches[:10]:
-            logging.info(f"  {m}")
+        logging.info(f"[VERIFY] All mismatches ({len(mismatches)}):")
+        logging.info(f"[VERIFY] {'#':>4}  {'Ticker':<8}  {'Day':<12}  {'API':>6}  {'DB':>6}  {'Intersect':>9}  {'Union':>6}  {'Identical':>9}  {'IoU':>7}")
+        logging.info(f"[VERIFY] {'-' * 80}")
+        for i, m in enumerate(mismatches, 1):
+            logging.info(
+                f"[VERIFY] {i:4d}  {m['ticker']:<8}  {m['day']:<12}  "
+                f"{m['api_count']:6d}  {m['db_count']:6d}  "
+                f"{m['intersection']:9d}  {m['union']:6d}  "
+                f"{m['identical']:9d}  {m['iou_pct']:6.1f}%"
+            )
 
     return passed, failed, skipped, mismatches
 
