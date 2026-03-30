@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Minute Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'IBM Plex Mono', 'Space Mono', 'Courier New', monospace;
+            background: #f5f5f0;
+            color: #1a1a1a;
+            line-height: 1.7;
+        }
+        header {
+            padding: 60px 40px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 2px solid #1a1a1a;
+        }
+        header h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+        header p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px 60px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table td {
+            padding: 30px;
+            vertical-align: top;
+            border-bottom: 1px solid #d0d0c8;
+        }
+        table tr:hover {
+            background: #eeeee8;
+        }
+        .video-cell {
+            width: 420px;
+            min-width: 320px;
+        }
+        .video-cell a {
+            display: block;
+            position: relative;
+            border: 2px solid #1a1a1a;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .video-cell a:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0 #1a1a1a;
+        }
+        .video-cell img {
+            width: 100%;
+            display: block;
+        }
+        .play-overlay {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            background: rgba(255,255,255,0.85);
+            border: 2px solid #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .play-overlay::after {
+            content: '';
+            display: block;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 12px 0 12px 22px;
+            border-color: transparent transparent transparent #1a1a1a;
+            margin-left: 4px;
+        }
+        .summary-cell h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .summary-cell ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary-cell li {
+            padding: 8px 0;
+            border-bottom: 1px solid #d0d0c8;
+            font-size: 0.85rem;
+            color: #333;
+        }
+        .summary-cell li:last-child {
+            border-bottom: none;
+        }
+        .summary-cell strong {
+            color: #0055cc;
+        }
+        .tv-link {
+            font-size: 0.75rem;
+            color: #0055cc;
+            text-decoration: none;
+            border: 1px solid #0055cc;
+            padding: 1px 5px;
+            margin-left: 4px;
+            letter-spacing: 0.5px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .tv-link:hover {
+            background: #0055cc;
+            color: #fff;
+        }
+        @media (max-width: 800px) {
+            header { padding: 30px 20px 20px; }
+            .content { padding: 0 20px 40px; }
+            table, tbody, tr, td { display: block; width: 100%; }
+            .video-cell { width: 100%; min-width: 0; margin-bottom: 20px; }
+            table td { padding: 15px 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Recommendations</h1>
+        <p>Video insights and stock summaries</p>
+    </header>
+    <div class="content">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="video-cell">
+                        <a href="https://www.youtube.com/watch?v=JVEKSlDEQR0" target="_blank">
+                            <img src="https://img.youtube.com/vi/JVEKSlDEQR0/hqdefault.jpg" alt="Video thumbnail">
+                            <div class="play-overlay"></div>
+                        </a>
+                    </td>
+                    <td class="summary-cell">
+                        <h3>Stock Summary: NVIDIA GTC Insights</h3>
+                        <ul>
+                            <li><strong>NVIDIA (NVDA):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=NVDA&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=NVDA" target="_blank">FV</a> Positioned as the core of the AI economy, Alex predicts it will be the first $10 trillion company by owning the hardware, software agents, and robotic "brains" of the future.</li>
+                            <li><strong>Coherent (COHR):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=COHR&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=COHR" target="_blank">FV</a> &amp; <strong>Lumentum (LITE):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=LITE&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=LITE" target="_blank">FV</a> These optical networking players are highlighted as critical partners in NVIDIA's shift toward co-packaged optics to reduce power consumption in massive data centers.</li>
+                            <li><strong>Uber (UBER):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=UBER&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=UBER" target="_blank">FV</a> Mentioned for its strategic partnership to roll out NVIDIA-powered robotaxis in cities like Los Angeles and San Francisco as early as next year.</li>
+                            <li><strong>BYD (BYDDY):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=BYDDY&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=BYDDY" target="_blank">FV</a>, <strong>Geely (GELYF):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=GELYF&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=GELYF" target="_blank">FV</a>, <strong>Nissan (NSANY):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=NSANY&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=NSANY" target="_blank">FV</a> &amp; <strong>Isuzu (ISUZY):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=ISUZY&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=ISUZY" target="_blank">FV</a> These automakers are cited as key adopters of NVIDIA's Drive Hyperion platform for their upcoming fleets of Level 4 autonomous vehicles.</li>
+                            <li><strong>GXO Logistics (GXO):</strong> <a class="tv-link" href="https://www.tradingview.com/chart/?symbol=GXO&interval=D" target="_blank">TV</a> <a class="tv-link" href="https://finviz.com/quote.ashx?t=GXO" target="_blank">FV</a> Identified as a "physical AI" leader for already deploying humanoid robots (Agility) in its warehouses using NVIDIA's simulation stack.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
