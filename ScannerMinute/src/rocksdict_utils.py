@@ -16,7 +16,7 @@ from ScannerMinute.src.memory_utils import (
 )
 from ScannerMinute.definitions import PROJECT_ROOT_DIR, SEPARATOR
 
-DEFAULT_DB_PATH = f"{PROJECT_ROOT_DIR}/data_rocksdict/"
+DEFAULT_DB_PATH = f"{PROJECT_ROOT_DIR}/data/rocksdict/"
 
 
 def init_db(db_path=DEFAULT_DB_PATH):
@@ -190,6 +190,68 @@ def get_first_and_last_time(db_path, timespan, ticker):
 
     db.close()
     return first_time, last_time
+
+
+def get_ticker_stats(db_path, timespan, tickers):
+    """
+    For each ticker, return the number of bars, first timestamp, and last timestamp.
+
+    Does a single sequential scan of all keys with the given timespan prefix,
+    which is much faster than per-ticker seeks for large ticker counts.
+
+    Parameters:
+        db_path: str — path to RocksDB directory
+        timespan: str — e.g. "minute"
+        tickers: list of str
+
+    Returns:
+        dict of {ticker: {"count": int, "first_time": str|None, "last_time": str|None}}
+    """
+    from tqdm import tqdm
+
+    ticker_set = set(tickers)
+    # Initialize stats for all requested tickers
+    stats = {t: {"count": 0, "first_time": None, "last_time": None} for t in tickers}
+
+    db = Rdict(db_path, access_type=AccessType.read_only())
+    timespan_prefix = f"{timespan}{SEPARATOR}"
+
+    it = db.iter()
+    it.seek(timespan_prefix)
+
+    scanned = 0
+    pbar = tqdm(desc="Scanning DB keys", unit=" keys")
+    while it.valid():
+        key = it.key()
+        if not key.startswith(timespan_prefix):
+            break
+
+        # Parse: timespan<SEP>ticker<SEP>timestamp
+        rest = key[len(timespan_prefix):]
+        sep_pos = rest.find(SEPARATOR)
+        if sep_pos == -1:
+            it.next()
+            continue
+        ticker = rest[:sep_pos]
+        timestamp = rest[sep_pos + 1:]
+
+        if ticker in ticker_set:
+            s = stats[ticker]
+            s["count"] += 1
+            if s["first_time"] is None:
+                s["first_time"] = timestamp
+            s["last_time"] = timestamp
+
+        scanned += 1
+        if scanned % 10000 == 0:
+            pbar.update(10000)
+
+        it.next()
+
+    pbar.update(scanned % 10000)
+    pbar.close()
+    db.close()
+    return stats
 
 
 def read_bars(db_path, timespan, tickers, start_time, end_time):

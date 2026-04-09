@@ -465,7 +465,7 @@ def download_finviz_cached(
     delay_step=0.1,
     min_delay=0.05,
     max_retries=5,
-    cache_folder="./data_finviz",
+    cache_folder="./data/finviz",
     cache_max_age_seconds=100,
 ):
     """

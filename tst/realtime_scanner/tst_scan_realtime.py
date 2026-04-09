@@ -19,9 +19,9 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 DEFAULT_LOOKBACK_MINUTES = [1, 5, 10]
 DEFAULT_BREAKOUT_THRESHOLD = 1.05
-DEFAULT_ROCKSDICT_PATH = f"{PROJECT_ROOT_DIR}/data_rocksdict_snapshots"
-DEFAULT_MIN_PRICE = 2.0
-DEFAULT_MAX_PRICE = 20.0
+DEFAULT_ROCKSDICT_PATH = f"{PROJECT_ROOT_DIR}/data/rocksdict_snapshots"
+DEFAULT_MIN_PRICE = 1.0
+DEFAULT_MAX_PRICE = 40.0
 
 
 def get_args_realtime():

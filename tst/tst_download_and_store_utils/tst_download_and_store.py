@@ -4,7 +4,7 @@ from ScannerMinute.src.download_and_store_utils import download_and_store
 from ScannerMinute.src.rocksdict_utils import get_first_and_last_time, read_bars
 
 
-DB_PATH = "./data_rocksdict_test/"
+DB_PATH = "./data/rocksdict_test/"
 
 
 def main():

@@ -138,7 +138,7 @@ def run_industries_scanner(k_values=K_VALUES, m=M, min_avg=MIN_AVG):
     # Stage 5: Save to file
     file_date = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     k_suffix = "_".join(str(k) for k in k_values)
-    output_dir = "./data_industries_reports"
+    output_dir = "./data/industries_reports"
     os.makedirs(output_dir, exist_ok=True)
     output_path = (
         f"{output_dir}/industries_ranking_{file_date}_{k_suffix}.txt"
@@ -188,7 +188,8 @@ def run_industries_scanner(k_values=K_VALUES, m=M, min_avg=MIN_AVG):
                     f"std={stats['std']:.2f}%, {stats['count']} stocks)\n"
                 )
                 for ticker, ret in stats["all"]:
-                    f.write(f"    {ticker:<8s}  {ret:+7.2f}%\n")
+                    tv_link = f"https://www.tradingview.com/chart/?symbol={ticker}&interval=D"
+                    f.write(f"    {ticker:<8s}  {ret:+7.2f}%  {tv_link}\n")
                 f.write("\n")
 
             f.write("\n")
