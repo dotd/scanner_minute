@@ -217,6 +217,15 @@ def get_trading_days(
     to=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     ticker="AAPL",
 ):
+    """
+    Return a list of trading day strings ("YYYY-MM-DD") between from_ and to (inclusive).
+
+    Uses daily bars from Polygon (for the given ticker) to determine which days had trading
+    activity. Note: Polygon's daily bar for the current day is only finalized after market
+    close, so today may not appear in the daily bars even though intraday (minute/second)
+    data already exists. To handle this, if `to` is today and today is a weekday (Mon-Fri),
+    it is included as a trading day regardless of whether a daily bar exists yet.
+    """
     bars = client.get_aggs(
         ticker=ticker,
         multiplier=1,
@@ -228,7 +237,15 @@ def get_trading_days(
     trading_days = list()
     for bar in bars:
         if bar.volume > 0:
-            value = datetime.utcfromtimestamp(bar.timestamp / 1000)
+            value = datetime.fromtimestamp(bar.timestamp / 1000, tz=timezone.utc)
             datetime_str = value.strftime("%Y-%m-%d")
             trading_days.append(datetime_str)
+
+    # If `to` is today and a weekday, include it even if no daily bar exists yet
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if to == today_str and today_str not in trading_days:
+        today_weekday = datetime.now(timezone.utc).weekday()
+        if today_weekday < 5:  # Mon=0 .. Fri=4
+            trading_days.append(today_str)
+
     return trading_days

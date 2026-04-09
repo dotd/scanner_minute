@@ -131,7 +131,7 @@ def collect_stats(db_path=DB_PATH, timespan="minute", limit_tickers=None):
     )
 
 
-def examine_data(stats):
+def examine_data(stats, limit_tickers=None):
     lines = []
     now = datetime.now()
     lines.append(f"Examine Data Report — {now.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -209,7 +209,8 @@ def examine_data(stats):
     # Write report to file
     report_dir = os.path.join(PROJECT_ROOT_DIR, "reports", "ver2")
     os.makedirs(report_dir, exist_ok=True)
-    filename = f"report_{now.strftime('%Y%m%d_%H%M%S')}.txt"
+    limit_suffix = f"_limit{limit_tickers}" if limit_tickers else ""
+    filename = f"report_{now.strftime('%Y%m%d_%H%M%S')}{limit_suffix}.txt"
     report_path = os.path.join(report_dir, filename)
     with open(report_path, "w") as f:
         f.write(report)
@@ -222,9 +223,12 @@ def run_pipeline_get_stats(db_path=DB_PATH, timespan="minute", limit_tickers=Non
     report_dir = os.path.join(PROJECT_ROOT_DIR, "reports", "ver2")
     os.makedirs(report_dir, exist_ok=True)
     today = datetime.now().strftime("%Y%m%d")
+    limit_suffix = f"_limit{limit_tickers}" if limit_tickers else ""
 
     # Check for existing stats pickle from today
-    existing_pkl = sorted(glob.glob(os.path.join(report_dir, f"stats_{today}_*.pkl")))
+    existing_pkl = sorted(
+        glob.glob(os.path.join(report_dir, f"stats_{today}_*{limit_suffix}.pkl"))
+    )
     if existing_pkl:
         pkl_path = existing_pkl[-1]
         logging.info(f"[PIPELINE] Loading cached stats from {pkl_path}")
@@ -232,13 +236,13 @@ def run_pipeline_get_stats(db_path=DB_PATH, timespan="minute", limit_tickers=Non
             stats = pickle.load(f)
         # Check for existing report too
         existing_rpt = sorted(
-            glob.glob(os.path.join(report_dir, f"report_{today}_*.txt"))
+            glob.glob(os.path.join(report_dir, f"report_{today}_*{limit_suffix}.txt"))
         )
         if existing_rpt:
             report_path = existing_rpt[-1]
             logging.info(f"[PIPELINE] Report already exists: {report_path}")
         else:
-            report_path = examine_data(stats)
+            report_path = examine_data(stats, limit_tickers=limit_tickers)
         return stats, report_path
 
     # Compute fresh stats
@@ -252,12 +256,12 @@ def run_pipeline_get_stats(db_path=DB_PATH, timespan="minute", limit_tickers=Non
 
     # Save stats pickle
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
-    pkl_path = os.path.join(report_dir, f"stats_{now}.pkl")
+    pkl_path = os.path.join(report_dir, f"stats_{now}{limit_suffix}.pkl")
     with open(pkl_path, "wb") as f:
         pickle.dump(stats, f)
     logging.info(f"[PIPELINE] Stats saved to {pkl_path}")
 
-    report_path = examine_data(stats)
+    report_path = examine_data(stats, limit_tickers=limit_tickers)
 
     mc = stats.most_common_date_range
     logging.info(
