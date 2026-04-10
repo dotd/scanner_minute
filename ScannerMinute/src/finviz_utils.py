@@ -2,7 +2,8 @@ import logging
 import os
 import time
 import datetime as dt
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
+from dataclasses import dataclass, field
 from io import StringIO
 
 import pandas as pd
@@ -459,14 +460,14 @@ def download_finviz(
 
 def download_finviz_cached(
     size_filter=None,
-    max_pages=None,
+    max_pages=200,
     fields=None,
-    initial_delay=5.0,
+    initial_delay=1.0,
     delay_step=0.1,
     min_delay=0.05,
     max_retries=5,
-    cache_folder="./data_finviz",
-    cache_max_age_seconds=100,
+    cache_folder="./data/finviz",
+    cache_max_age_seconds=1000,
 ):
     """
     Like download_finviz, but caches to CSV. If a recent-enough cache exists,
@@ -521,3 +522,61 @@ def download_finviz_cached(
     logging.info(f"Saved Finviz data to {path}")
 
     return table, filename
+
+
+@dataclass
+class SectorIndustryMap:
+    sectors: list
+    industries: list
+    tickers_by_sector: dict
+    tickers_by_industry: dict
+    ticker_to_sector: dict
+    ticker_to_industry: dict
+
+
+def get_sector_industry_mappings(df):
+    """
+    Build sector/industry mappings from a Finviz DataFrame.
+
+    Args:
+        df: DataFrame with columns 'Ticker', 'Sector', 'Industry'
+            (as returned by download_finviz or download_finviz_cached).
+
+    Returns:
+        SectorIndustryMap with:
+            sectors            — sorted list of unique sectors
+            industries         — sorted list of unique industries
+            tickers_by_sector  — dict mapping sector -> sorted list of tickers
+            tickers_by_industry — dict mapping industry -> sorted list of tickers
+            ticker_to_sector   — dict mapping ticker -> sector
+            ticker_to_industry — dict mapping ticker -> industry
+    """
+    ticker_to_sector = {}
+    ticker_to_industry = {}
+    tickers_by_sector = defaultdict(list)
+    tickers_by_industry = defaultdict(list)
+
+    for _, row in df.iterrows():
+        ticker = row["Ticker"]
+        sector = row.get("Sector", "")
+        industry = row.get("Industry", "")
+
+        ticker_to_sector[ticker] = sector
+        ticker_to_industry[ticker] = industry
+        tickers_by_sector[sector].append(ticker)
+        tickers_by_industry[industry].append(ticker)
+
+    # Sort all lists
+    for k in tickers_by_sector:
+        tickers_by_sector[k].sort()
+    for k in tickers_by_industry:
+        tickers_by_industry[k].sort()
+
+    return SectorIndustryMap(
+        sectors=sorted(tickers_by_sector.keys()),
+        industries=sorted(tickers_by_industry.keys()),
+        tickers_by_sector=dict(tickers_by_sector),
+        tickers_by_industry=dict(tickers_by_industry),
+        ticker_to_sector=ticker_to_sector,
+        ticker_to_industry=ticker_to_industry,
+    )

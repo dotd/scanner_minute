@@ -2,7 +2,7 @@ import os
 from ScannerMinute.src.snapshot_utils import download_snapshots
 from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
-DATA_DIR = os.path.join(PROJECT_ROOT_DIR, "data_snapshots")
+DATA_DIR = os.path.join(PROJECT_ROOT_DIR, "data", "snapshots")
 
 if __name__ == "__main__":
     download_snapshots(

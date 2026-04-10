@@ -21,4 +21,5 @@
 **examples/**
 **tutorials/**
 **tutorials/**
-data*/**
+data/
+reports/

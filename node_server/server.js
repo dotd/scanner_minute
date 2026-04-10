@@ -156,7 +156,8 @@ const dashboardHtml = `
           '<td>$' + b.past_close.toFixed(2) + ' &rarr; $' + b.current_close.toFixed(2) + '</td>' +
           '<td>' + b.past_time + '</td>' +
           '<td>' + (b.volume_pct != null ? b.volume_pct + '%' : '') + '</td>' +
-          '<td><a class="tv-link" href="' + tvUrl + '" target="_blank">TradingView</a></td>';
+          '<td><a class="tv-link" href="' + tvUrl + '" target="_blank">TradingView</a>' +
+          ' | <a class="tv-link" href="https://finviz.com/quote.ashx?t=' + encodeURIComponent(b.ticker) + '" target="_blank">Finviz</a></td>';
         tbody.appendChild(row);
 
         // Chart row (hidden by default, toggled on click)

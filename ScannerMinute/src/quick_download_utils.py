@@ -11,7 +11,7 @@ from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 
 DEFAULT_NUM_THREADS = 30
-INDUSTRIES_DIR = os.path.join(PROJECT_ROOT_DIR, "data_industries")
+INDUSTRIES_DIR = os.path.join(PROJECT_ROOT_DIR, "data", "industries")
 DEFAULT_YEARS_BACK = 5
 
 
@@ -206,7 +206,7 @@ def _save_industries_csv(path, result_dict):
 def fetch_ticker_industries(tickers, num_threads=DEFAULT_NUM_THREADS):
     """
     Multi-threaded fetch of SIC industry description for each ticker.
-    Caches results as a CSV in data_industries/ per day and ticker count.
+    Caches results as a CSV in data/industries/ per day and ticker count.
     Returns dict: ticker -> sic_description string.
     """
     csv_path = _get_industries_csv_path(tickers)

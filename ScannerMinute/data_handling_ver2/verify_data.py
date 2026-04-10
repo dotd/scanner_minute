@@ -1,6 +1,7 @@
 import logging
 import os
 import random
+import time
 from datetime import datetime, timedelta
 
 from ScannerMinute.src import logging_utils
@@ -11,42 +12,12 @@ from ScannerMinute.src.polygon_utils import (
     get_ticker_data_from_polygon,
 )
 from ScannerMinute.src.rocksdict_utils import read_bars
-from ScannerMinute.src.download_and_store_utils import download_and_store
 
 
 DB_PATH = "./data/ver2/"
 
 
-def download_ver2(num_threads=30):
-    logging_utils.setup_logging(
-        log_level="INFO",
-        log_folder=f"{os.path.dirname(os.path.abspath(__file__))}/logs/",
-        include_time=True,
-    )
-
-    client = get_polygon_client()
-    tickers = get_all_tickers_from_snapshot(client)
-
-    date_start = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
-    date_end = datetime.now().strftime("%Y-%m-%d")
-
-    logging.info(
-        f"download_ver2: {len(tickers)} tickers, "
-        f"range: {date_start} to {date_end}, "
-        f"timespan: minute, threads: {num_threads}, db: {DB_PATH}"
-    )
-
-    download_and_store(
-        tickers=tickers,
-        date_start=date_start,
-        date_end=date_end,
-        timespan="minute",
-        db_path=DB_PATH,
-        num_threads=num_threads,
-    )
-
-
-def verify_ver2(k=100, db_path=DB_PATH, seed=42):
+def verify_data(k=100, db_path=DB_PATH, seed=42):
     """
     Verify downloaded data by randomly sampling K tickers and K days,
     then comparing fresh API downloads against what's stored in the DB.
@@ -62,7 +33,7 @@ def verify_ver2(k=100, db_path=DB_PATH, seed=42):
 
     client = get_polygon_client()
 
-    # Get all tickers and trading days for the same period as download_ver2
+    # Get all tickers and trading days for the same period as download_data
     all_tickers = get_all_tickers_from_snapshot(client)
     date_start = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
     date_end = datetime.now().strftime("%Y-%m-%d")
@@ -85,7 +56,6 @@ def verify_ver2(k=100, db_path=DB_PATH, seed=42):
     cumul_intersection = 0
     cumul_union = 0
 
-    import time
     t0 = time.time()
 
     for ticker, day in pairs:
@@ -184,6 +154,4 @@ def verify_ver2(k=100, db_path=DB_PATH, seed=42):
 
 
 if __name__ == "__main__":
-    # download_ver2()
-    verify_ver2()
-
+    verify_data()
