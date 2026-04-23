@@ -23,6 +23,7 @@
 **tutorials/**
 data/
 reports/
+tmp/
 
 # Node build artefacts
 node_modules/

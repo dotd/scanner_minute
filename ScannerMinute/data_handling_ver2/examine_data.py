@@ -274,4 +274,4 @@ def run_pipeline_get_stats(db_path=DB_PATH, timespan="minute", limit_tickers=Non
 
 
 if __name__ == "__main__":
-    run_pipeline_get_stats(limit_tickers=1000)
+    run_pipeline_get_stats(limit_tickers=None)
