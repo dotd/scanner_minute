@@ -17,14 +17,36 @@ from ScannerMinute.src.ticker_utils import ALL_TICKERS
 from ScannerMinute.definitions import PROJECT_ROOT_DIR
 
 
-DEFAULT_LOOKBACK_MINUTES = [1, 5, 10]
-DEFAULT_BREAKOUT_THRESHOLD = 1.05
+DEFAULT_LOOKBACK_MINUTES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20]
+DEFAULT_BREAKOUT_THRESHOLD = 1.07
 DEFAULT_ROCKSDICT_PATH = f"{PROJECT_ROOT_DIR}/data/rocksdict_snapshots"
 DEFAULT_MIN_PRICE = 1.0
 DEFAULT_MAX_PRICE = 40.0
+SERVER_URL = "http://127.0.0.1:3000"
+DEFAULT_VOLUME_LOOKBACK_DAYS = 10
+TRADING_START_HOUR_UTC = (
+    9  # Trading day in UTC: 09:00 to 24:00 (pre-market + regular + after-hours)
+)
+TRADING_END_HOUR_UTC = 24
+TRADING_MINUTES = (TRADING_END_HOUR_UTC - TRADING_START_HOUR_UTC) * 60  # 900 minutes
 
 
 def get_args_realtime():
+    """
+    Parse command-line arguments for the realtime breakout scanner.
+
+    Returns an argparse.Namespace with:
+        tickers              — list of tickers to scan, or None for all
+        scanning_period_secs — seconds between snapshot cycles
+        num_scans            — number of scan cycles (None = infinite)
+        lookback_minutes     — list of lookback periods for breakout detection
+        breakout_threshold   — price ratio threshold to flag a breakout
+        rocksdict_path       — path to RocksDB for storing snapshots
+        min_price / max_price — prev_day VWAP price filter range
+        include_time         — whether to include timestamps in log output
+        random_inject        — inject a fake breakout when none are detected
+        random_inject_prob   — probability of injecting per cycle
+    """
     parser = argparse.ArgumentParser(description="Realtime Scanner")
     parser.add_argument(
         "--tickers",
@@ -227,8 +249,6 @@ def process_items(items):
     return {snap["ticker"]: snap for snap in snapshots}
 
 
-SERVER_URL = "http://127.0.0.1:3000"
-
 # Track tickers we've already sent candle data for this session
 _sent_candle_tickers = set()
 
@@ -311,12 +331,6 @@ def fetch_and_post_news(client, tickers, limit=DEFAULT_NEWS_LIMIT):
             logging.warning(f"[news] Failed to fetch news for {ticker}: {e}")
     return all_news
 
-
-DEFAULT_VOLUME_LOOKBACK_DAYS = 10
-# Trading day in UTC: 09:00 to 24:00 (pre-market + regular + after-hours)
-TRADING_START_HOUR_UTC = 9
-TRADING_END_HOUR_UTC = 24
-TRADING_MINUTES = (TRADING_END_HOUR_UTC - TRADING_START_HOUR_UTC) * 60  # 900 minutes
 
 # Track tickers we've already computed volume analysis for this session
 _sent_volume_tickers = set()
@@ -458,7 +472,17 @@ def compute_volume_analysis(tickers, volume_lookback_days=DEFAULT_VOLUME_LOOKBAC
 
 
 def start_server():
-    """Start the Node.js dashboard server and open the browser."""
+    """Start the Node.js dashboard server and open the browser.
+
+    When SCANNER_MINUTE_EMBEDDED_SERVER=1 (container supervisor mode), the Node
+    server is managed externally — skip spawning and skip opening a browser.
+    """
+    if os.environ.get("SCANNER_MINUTE_EMBEDDED_SERVER") == "1":
+        logging.info(
+            "SCANNER_MINUTE_EMBEDDED_SERVER=1 — using external Node server"
+        )
+        return None
+
     server_js = os.path.join(PROJECT_ROOT_DIR, "node_server", "server.js")
     proc = subprocess.Popen(
         ["node", server_js],
@@ -498,9 +522,15 @@ def run_realtime(
     if lookback_minutes is None:
         lookback_minutes = DEFAULT_LOOKBACK_MINUTES
 
+    # In container mode the tst/ tree is mounted read-only; write logs to
+    # the writable /app/logs volume instead of next to the script.
+    if os.environ.get("SCANNER_MINUTE_EMBEDDED_SERVER") == "1":
+        log_folder = "/app/logs/"
+    else:
+        log_folder = f"{os.path.dirname(os.path.abspath(__file__))}/logs/"
     logging_utils.setup_logging(
         log_level="INFO",
-        log_folder=f"{os.path.dirname(os.path.abspath(__file__))}/logs/",
+        log_folder=log_folder,
         include_time=include_time,
     )
 
@@ -616,7 +646,8 @@ def run_realtime(
         logging.info("Scanner stopped by user")
     finally:
         db.close()
-        server_proc.terminate()
+        if server_proc is not None:
+            server_proc.terminate()
         logging.info(f"Database closed, server stopped. Total scans: {scan_count}")
 
 

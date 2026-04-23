@@ -23,3 +23,17 @@
 **tutorials/**
 data/
 reports/
+
+# Node build artefacts
+node_modules/
+package-lock.json
+
+# Keep Docker/AWS deployment scripts (parent scripts/ is globbed above)
+!scripts/docker/
+!scripts/docker/**
+!scripts/aws/
+!scripts/aws/**
+
+# Keep non-secret templates under docker/templates/ (parent **.env** globs above)
+!docker/templates/
+!docker/templates/**

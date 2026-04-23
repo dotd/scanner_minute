@@ -1,0 +1,5 @@
+polygon-api-client==1.16.3
+rocksdict==0.3.29
+requests==2.32.3
+python-dateutil==2.9.0.post0
+pytz==2025.2
